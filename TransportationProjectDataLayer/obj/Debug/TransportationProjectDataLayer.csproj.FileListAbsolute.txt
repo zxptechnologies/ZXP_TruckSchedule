@@ -1,0 +1,12 @@
+C:\Users\clloren\Documents\Repos\ZXP\Projects\Transportation Project\TransportationProjectDataLayer\bin\Debug\TransportationProjectDataLayer.dll
+C:\Users\clloren\Documents\Repos\ZXP\Projects\Transportation Project\TransportationProjectDataLayer\bin\Debug\TransportationProjectDataLayer.pdb
+C:\Users\clloren\Documents\Repos\ZXP\Projects\Transportation Project\TransportationProjectDataLayer\obj\Debug\TransportationProjectDataLayer.csproj.CoreCompileInputs.cache
+C:\Users\clloren\Documents\Repos\ZXP\Projects\Transportation Project\TransportationProjectDataLayer\obj\Debug\TransportationProjectDataLayer.dll
+C:\Users\clloren\Documents\Repos\ZXP\Projects\Transportation Project\TransportationProjectDataLayer\obj\Debug\TransportationProjectDataLayer.pdb
+C:\Users\clloren\Documents\Repos\ZXP\Projects\Transportation Project\TransportationProjectDataLayer\obj\Debug\TransportationProjectDataLayer.csprojAssemblyReference.cache
+C:\Users\clloren\Documents\Repos\ZXP\Projects\Transportation Project\TransportationProjectDataLayer\bin\Debug\NLog.config
+C:\Users\clloren\Documents\Repos\ZXP\Projects\Transportation Project\TransportationProjectDataLayer\bin\Debug\Microsoft.ApplicationBlocks.Data.dll
+C:\Users\clloren\Documents\Repos\ZXP\Projects\Transportation Project\TransportationProjectDataLayer\bin\Debug\NLog.dll
+C:\Users\clloren\Documents\Repos\ZXP\Projects\Transportation Project\TransportationProjectDataLayer\bin\Debug\NLog.xml
+C:\Users\clloren\Documents\Repos\ZXP\Projects\Transportation Project\TransportationProjectDataLayer\obj\Debug\TransportationProjectDataLayer.csproj.CopyComplete
+C:\Users\clloren\Documents\Repos\ZXP\Projects\Transportation Project\TransportationProjectDataLayer\bin\Debug\TransportationProjectDataLayer.dll.config

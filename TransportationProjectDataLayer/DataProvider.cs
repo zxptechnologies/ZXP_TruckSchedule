@@ -1,0 +1,654 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Data.SqlClient;
+using System.Configuration;
+using System.Collections.Specialized;
+using System.Data;
+using Microsoft.ApplicationBlocks.Data;
+using System.Diagnostics;
+using NLog;
+
+namespace TransportationProjectDataLayer
+{
+    public interface IDataProvider
+    {
+        IEnumerable<CMSProduct> GetProductCMS();
+        IEnumerable<CMSProduct> GetProductCMS(string product);
+        SqlConnection GetConnection();
+        List<TrailerGridData> GetTrailerGridData();
+        List<LoadTypes> GetLoadTypes(bool? isUsedForInspections);
+        List<PODetails> GetPODetails(int? MSID);
+        int GetRowCountForPO(int PO);
+        List<DomainModels.Status> GetStatuses();
+        List<DomainModels.Status> GetStatusesFilteredByLocation(string locationShort);
+        List<DomainModels.Locations> GetLocations();
+        List<DomainModels.FileTypes> GetFileTypes();
+        List<DomainModels.TruckTypes> GetTruckTypes();
+        List<DomainModels.UnitOfMeasure> GetUnitsOfMeasure();
+        List<DomainModels.MainScheduleFiles> GetMainScheduleFiles(int MSID);
+        List<DomainModels.CalendarEvents> GetDatesToDisableInSchedule();
+
+
+    }
+
+
+    public class TransportationProjectDataProvider : IDataProvider
+
+    {
+        protected static Logger logger = LogManager.GetLogger("dpLogger");
+        protected string getConnectionStringFromSettings()
+        {
+
+            try
+            {
+
+                string connStr = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+                if (connStr == String.Empty)
+                {
+                    throw new Exception("Missing SQLConnectionString in web.config");
+                }
+                return connStr;
+            }
+            catch (Exception ex)
+            {
+                string strErr = " Exception Error in TrailerOverview GetTrailerGridData(). Details: " + ex.ToString();
+                MessageLog alog = new MessageLog(MessageType.Exception, "User called function with param companyName =" + strErr);
+                logger.Error(alog.CreateAuditLogMessage());
+                throw;
+            }
+
+        }
+        public SqlConnection GetConnection()
+        {
+            string connStr = getConnectionStringFromSettings();
+            var conn = new SqlConnection(connStr);
+            return conn;
+        }
+        public List<LoadTypes> GetLoadTypes(bool? isUsedForInspections)
+        {
+            List<LoadTypes> data = new List<LoadTypes>();
+
+            try
+            {
+                string sqlCmdText;
+
+                sqlCmdText = "SELECT LoadTypeShort, LoadTypeLong , isUsedOnlyForInspections FROM dbo.LoadTypes ";
+                sqlCmdText = (isUsedForInspections.HasValue) ? string.Concat(sqlCmdText, "  WHERE(isUsedOnlyForInspections = @isForInspection) ") : sqlCmdText;
+
+                sqlCmdText = string.Concat(sqlCmdText, " ORDER BY LoadTypeLong");
+
+                using (SqlConnection sqlConn = GetConnection())
+                {
+                    sqlConn.Open();
+                    SqlDataReader sReader;
+                    using (SqlCommand cmd = new SqlCommand(sqlCmdText, sqlConn))
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        if (isUsedForInspections.HasValue)
+                        {
+                            cmd.Parameters.Add(new SqlParameter("@isForInspection", isUsedForInspections));
+                        }
+                        sReader = cmd.ExecuteReader();
+
+                    }
+
+                    while (sReader.Read())
+                    {
+
+                        string shortName = sReader["LoadTypeShort"].ToString();
+                        string longName = sReader["LoadTypeShort"].ToString();
+                        bool isForInspection = DBHelper.GetValueOrDefault<bool>(sReader, sReader.GetOrdinal("isUsedOnlyForInspections"));
+
+                        LoadTypes lData = new LoadTypes(shortName, longName, isForInspection);
+                        data.Add(lData);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                string strErr = " Exception Error in DataProvider GetLoadTypes(). Details: " + ex.ToString();
+                MessageLog alog = new MessageLog(MessageType.Exception, "GetLoadTypes Exception Message=" + strErr);
+                logger.Error(alog.CreateAuditLogMessage());
+
+                throw;
+            }
+            return data;
+
+        }
+        public List<PODetails> GetPODetails(int? MSID)
+        {
+            List<PODetails> data = new List<PODetails>();
+            try
+            {
+                string sqlCmdText;
+                sqlCmdText = string.Concat("SELECT  ProductName_CMS, PODetailsID, ProductID_CMS, MSID",
+                                          ", QTY, LotNumber, UnitOfMeasure, FileID_COFA ",
+                                          "FROM dbo.vw_PODetails ");
+                sqlCmdText = (MSID.HasValue) ? string.Concat(sqlCmdText, " WHERE MSID = @MSID ") : sqlCmdText;
+
+                sqlCmdText = string.Concat(sqlCmdText, " ORDER BY ProductName_CMS ");
+
+
+                using (SqlConnection sqlConn = GetConnection())
+                {
+                    sqlConn.Open();
+                    SqlDataReader sReader;
+                    using (SqlCommand cmd = new SqlCommand(sqlCmdText, sqlConn))
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        if (MSID.HasValue)
+                        {
+                            cmd.Parameters.Add(new SqlParameter("@MSID", MSID));
+                        }
+                        sReader = cmd.ExecuteReader();
+
+                    }
+
+                    while (sReader.Read())
+                    {
+                        PODetails pData = new PODetails();
+
+
+                        pData.ProductName_CMS = sReader["ProductName_CMS"].ToString();
+                        pData.PODetailsID = DBHelper.GetValueOrDefault<int>(sReader, sReader.GetOrdinal("PODetailsID"));
+                        pData.ProductID_CMS = sReader["ProductID_CMS"].ToString();
+                        pData.MSID = DBHelper.GetValueOrDefault<int>(sReader, sReader.GetOrdinal("MSID"));
+                        pData.QTY = DBHelper.GetValueOrDefault<int>(sReader, sReader.GetOrdinal("QTY"));
+                        pData.LotNumber = sReader["LotNumber"].ToString();
+                        pData.UnitOfMeasure = sReader["UnitOfMeasure"].ToString();
+                        pData.FileID_COFA = DBHelper.GetValueOrDefault<int>(sReader, sReader.GetOrdinal("FileID_COFA"));
+
+                        data.Add(pData);
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                string strErr = " Exception Error in DataProvider GetPODetails(). Details: " + ex.ToString();
+                MessageLog alog = new MessageLog(MessageType.Exception, "GetPODetails Exception Message=" + strErr);
+                logger.Error(alog.CreateAuditLogMessage());
+
+                throw;
+            }
+            return data;
+
+        }
+        public List<TrailerGridData> GetTrailerGridData()
+        {
+            List<TrailerGridData> data = new List<TrailerGridData>();
+
+            try
+            {
+
+                string sqlCmdText;
+                sqlCmdText = string.Concat("SELECT MSID, ETA, Comments, LoadTypeShort, LoadTypeLong, PONumber, CustomerID, isDropTrailer ",
+                                ", Shipper, DockSpotID, TruckType, isRejected, TrailerNumber, LocationShort, LocationLong ",
+                                ", StatusID, StatusText, SpotDescription, isOpenInCMS, ProdCount, topProdID ",
+                                ", ProductName_CMS, PONumber_ZXPOutbound, isUrgent, isManuallyClosed, ClosedBy ",
+                                "FROM dbo.vw_TrailerGridData ",
+                                "ORDER BY ETA, PoNumber"
+                                );
+
+                using (SqlConnection sqlConn = GetConnection())
+                {
+                    sqlConn.Open();
+                    SqlDataReader sReader;
+                    using (SqlCommand cmd = new SqlCommand(sqlCmdText, sqlConn))
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        sReader = cmd.ExecuteReader();
+
+                    }
+
+                    while (sReader.Read())
+                    {
+                        TrailerGridData tgData = new TrailerGridData();
+                        tgData.MSID = DBHelper.GetValueOrDefault<int>(sReader, sReader.GetOrdinal("MSID"));
+                        tgData.ETA = (DateTime)DBHelper.getNullableDateTime(sReader, "ETA");
+                        tgData.Comments = sReader["Comments"].ToString();
+                        tgData.LoadTypeShort = sReader["LoadTypeShort"].ToString();
+                        tgData.LoadTypeLong = sReader["LoadTypeLong"].ToString();
+                        tgData.PONumber = DBHelper.GetValueOrDefault<int>(sReader, sReader.GetOrdinal("PONumber"));
+                        tgData.CustomerID = sReader["CustomerID"].ToString();
+                        tgData.isDropTrailer = DBHelper.GetValueOrDefault<bool>(sReader, sReader.GetOrdinal("isDropTrailer"));
+                        tgData.Shipper = sReader["Shipper"].ToString();
+                        tgData.DockSpotID = DBHelper.GetValueOrDefault<int>(sReader, sReader.GetOrdinal("DockSpotID"));
+                        tgData.TruckType = sReader["TruckType"].ToString();
+                        tgData.isRejected = DBHelper.GetValueOrDefault<bool>(sReader, sReader.GetOrdinal("isRejected"));
+                        tgData.TrailerNumber = sReader["TrailerNumber"].ToString();
+                        tgData.LocationShort = sReader["LocationShort"].ToString();
+                        tgData.LocationLong = sReader["LocationLong"].ToString();
+                        tgData.StatusID = DBHelper.GetValueOrDefault<int>(sReader, sReader.GetOrdinal("StatusID"));
+                        tgData.StatusText = sReader["StatusText"].ToString();
+                        tgData.SpotDescription = sReader["SpotDescription"].ToString();
+                        tgData.isOpenInCMS = DBHelper.GetValueOrDefault<bool>(sReader, sReader.GetOrdinal("isOpenInCMS"));
+                        tgData.ProdCount = DBHelper.GetValueOrDefault<int>(sReader, sReader.GetOrdinal("ProdCount"));
+                        tgData.topProdID = sReader["topProdID"].ToString();
+                        tgData.ProductName_CMS = sReader["ProductName_CMS"].ToString();
+                        tgData.PONumber_ZXPOutbound = sReader["PONumber_ZXPOutbound"].ToString();
+                        tgData.isUrgent = DBHelper.GetValueOrDefault<bool>(sReader, sReader.GetOrdinal("isUrgent"));
+                        tgData.isManuallyClosed = DBHelper.GetValueOrDefault<bool>(sReader, sReader.GetOrdinal("isManuallyClosed"));
+                        tgData.ClosedBy = sReader["ClosedBy"].ToString();
+
+                        data.Add(tgData);
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                string strErr = " Exception Error in DataProvider GetTrailerGridData(). Details: " + ex.ToString();
+                MessageLog alog = new MessageLog(MessageType.Exception, "User called function GetTrailerGridData. Exception Message=" + strErr);
+                logger.Error(alog.CreateAuditLogMessage());
+
+                throw;
+            }
+            return data;
+        }
+
+        
+        public List<DomainModels.CalendarEvents> GetDatesToDisableInSchedule()
+        {
+            List<DomainModels.CalendarEvents> disabledDates = new List<DomainModels.CalendarEvents>();
+
+            using (SqlConnection con = GetConnection())
+            {
+                try
+                {
+                    con.Open();
+                    string qryGetUsers = "SELECT id, EventDate, Description, isDisabled FROM dbo.CalendarEvents";
+                    using (SqlCommand command = new SqlCommand(qryGetUsers, con))
+                    {
+
+                        SqlDataReader sReader = command.ExecuteReader();
+                        while (sReader.Read())
+                        {
+                            int newID = DBHelper.GetValueOrDefault<int>(sReader, sReader.GetOrdinal("id"));
+                            DateTime newDate = (DateTime)DBHelper.getNullableDateTime(sReader, "EventDate");
+                            String reason = sReader["Description"].ToString();
+                            bool dateDisabled = DBHelper.GetValueOrDefault<bool>(sReader, sReader.GetOrdinal("isDisabled"));
+
+                            DomainModels.CalendarEvents eDate = new DomainModels.CalendarEvents(newID, newDate, reason, dateDisabled);
+                            disabledDates.Add(eDate);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    string strErr = " Exception Error in DataProvider GetDatesToDisableInSchedule(). Details: " + ex.ToString();
+                    MessageLog alog = new MessageLog(MessageType.Exception, "GetDatesToDisableInSchedule Exception Message=" + strErr);
+                    logger.Error(alog.CreateAuditLogMessage());
+                    throw;
+                }
+            }
+
+            return disabledDates;
+        }
+
+
+        public IEnumerable<CMSProduct> GetProductCMS()
+        {
+            List<CMSProduct> products = new List<CMSProduct>();
+
+            using (SqlConnection con = GetConnection())
+            {
+                try
+                {
+                    con.Open();
+                    string qryGetUsers = "SELECT ProductID_CMS, ProductName_CMS, DockSpotTimeslotDuration FROM dbo.ProductsCMS";
+                    using (SqlCommand command = new SqlCommand(qryGetUsers, con))
+                    {
+
+                        SqlDataReader sReader = command.ExecuteReader();
+                        while (sReader.Read())
+                        {
+                            products.Add(CMSProduct.adaptToProductCMS(sReader));
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    string strErr = " Exception Error in DataProvider GetProductCMS(). Details: " + ex.ToString();
+                    MessageLog alog = new MessageLog(MessageType.Exception, "GetProductCMS Exception Message=" + strErr);
+                    logger.Error(alog.CreateAuditLogMessage());
+                    throw;
+                }
+            }
+
+            return products;
+        }
+        public IEnumerable<CMSProduct> GetProductCMS(string product)
+        {
+            List<CMSProduct> products = new List<CMSProduct>();
+
+            using (SqlConnection con = GetConnection())
+            {
+                try
+                {
+                    con.Open();
+                    string qryGetUsers = "SELECT ProductID_CMS, ProductName_CMS, DockSpotTimeslotDuration FROM dbo.ProductsCMS WHERE ProductID_CMS = @prod";
+                    using (SqlCommand command = new SqlCommand(qryGetUsers, con))
+                    {
+                        command.Parameters.Add(new SqlParameter("@prod", product));
+                        SqlDataReader sReader = command.ExecuteReader();
+                        while (sReader.Read())
+                        {
+                            products.Add(CMSProduct.adaptToProductCMS(sReader));
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    string strErr = " Exception Error in DataProvider GetProductCMS(). Details: " + ex.ToString();
+                    MessageLog alog = new MessageLog(MessageType.Exception, "GetProductCMS Exception Message=" + strErr);
+                    logger.Error(alog.CreateAuditLogMessage());
+                    throw;
+
+                }
+            }
+
+            return products;
+        }
+        
+        public int GetRowCountForPO(int PO)
+        {
+            int rowCount = 0;
+            using (SqlConnection con = GetConnection())
+            {
+                try
+                {
+                    con.Open();
+                    string sqlCmdText = "SELECT COUNT(*) FROM dbo.MainSchedule MS WHERE PONumber = @PONUM AND MS.isHidden = 0";
+
+                    rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(con, CommandType.Text, sqlCmdText, new SqlParameter("@PONUM", PO)));
+
+                }
+                catch (Exception ex)
+                {
+                    string strErr = " Exception Error in DataProvider GetRowCountForPO(). Details: " + ex.ToString();
+                    MessageLog alog = new MessageLog(MessageType.Exception, "GetRowCountForPO Exception Message=" + strErr);
+                    logger.Error(alog.CreateAuditLogMessage());
+                    throw;
+
+                }
+                return rowCount;
+            }
+        }
+
+        public List<DomainModels.Status> GetStatuses()
+        {
+            List<DomainModels.Status> StatusOptions = new List<DomainModels.Status>();
+            using (SqlConnection con = GetConnection())
+            {
+                try
+                {
+                    con.Open();
+                    string sqlCmdText = "SELECT StatusID, StatusText, StatusObjectID FROM dbo.Status";
+                    using (SqlCommand command = new SqlCommand(sqlCmdText, con))
+                    {
+                        SqlDataReader sReader = command.ExecuteReader();
+                        while (sReader.Read())
+                        {
+                            int id = DBHelper.GetValueOrDefault<int>(sReader, sReader.GetOrdinal("StatusID"));
+                            string text = sReader["StatusText"].ToString();
+                            int statObjId = DBHelper.GetValueOrDefault<int>(sReader, sReader.GetOrdinal("StatusObjectID"));
+                            DomainModels.Status nStat = new DomainModels.Status(id, text, statObjId);
+                            StatusOptions.Add(nStat);
+                        }
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    string strErr = " Exception Error in DataProvider GetStatuses(). Details: " + ex.ToString();
+                    MessageLog alog = new MessageLog(MessageType.Exception, " GetStatuses Exception Message=" + strErr);
+                    logger.Error(alog.CreateAuditLogMessage());
+                    throw;
+
+                }
+                return StatusOptions;
+            }
+        }
+
+        public List<DomainModels.Status> GetStatusesFilteredByLocation(string locationShort)
+        {
+            List<DomainModels.Status> StatusOptions = new List<DomainModels.Status>();
+            using (SqlConnection con = GetConnection())
+            {
+                try
+                {
+                    con.Open();
+                    string sqlCmdText = string.Empty;
+
+                    if (locationShort.CompareTo("NOS") == 0)
+                    {
+                        sqlCmdText = "SELECT S.StatusID, StatusText, StatusObjectID FROM dbo.Status S INNER JOIN dbo.LocationStatusRelation LSR ON LSR.StatusID = S.StatusID " +
+                                            "WHERE LocationShort = @LOCATION AND S.StatusID <> 10 ORDER BY SortOrder"; //Filter out Departed option
+                    }
+                    else
+                    {
+                        sqlCmdText = "SELECT S.StatusID, StatusText, StatusObjectID FROM dbo.Status S INNER JOIN dbo.LocationStatusRelation LSR ON LSR.StatusID = S.StatusID WHERE LocationShort = @LOCATION ORDER BY SortOrder";
+                    }
+
+                    using (SqlCommand command = new SqlCommand(sqlCmdText, con))
+                    {
+                        command.Parameters.Add(new SqlParameter("@LOCATION", locationShort));
+                        SqlDataReader sReader = command.ExecuteReader();
+                        while (sReader.Read())
+                        {
+                            int id = DBHelper.GetValueOrDefault<int>(sReader, sReader.GetOrdinal("StatusID"));
+                            string text = sReader["StatusText"].ToString();
+                            int? statObjId = DBHelper.GetValueOrDefault<int?>(sReader, sReader.GetOrdinal("StatusObjectID"));
+                            DomainModels.Status nStat = new DomainModels.Status(id, text, statObjId);
+                            StatusOptions.Add(nStat);
+                        }
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    string strErr = " Exception Error in DataProvider GetStatuses(). Details: " + ex.ToString();
+                    MessageLog alog = new MessageLog(MessageType.Exception, " GetStatuses Exception Message=" + strErr);
+                    logger.Error(alog.CreateAuditLogMessage());
+                    throw;
+
+                }
+                return StatusOptions;
+            }
+        }
+
+
+
+        public List<DomainModels.Locations> GetLocations()
+        {
+            List<DomainModels.Locations> locations = new List<DomainModels.Locations>();
+            using (SqlConnection con = GetConnection())
+            {
+                try
+                {
+                    con.Open();
+                    string sqlCmdText = "SELECT LocationShort, LocationLong FROM dbo.Locations";
+                    using (SqlCommand command = new SqlCommand(sqlCmdText, con))
+                    {
+                        SqlDataReader sReader = command.ExecuteReader();
+                        while (sReader.Read())
+                        {
+                            string locShort = sReader["LocationShort"].ToString();
+                            string locLong = sReader["LocationLong"].ToString();
+                            DomainModels.Locations nLoc = new DomainModels.Locations(locShort, locLong);
+                            locations.Add(nLoc);
+                        }
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    string strErr = " Exception Error in DataProvider GetLocations(). Details: " + ex.ToString();
+                    MessageLog alog = new MessageLog(MessageType.Exception, " GetLocations Exception Message=" + strErr);
+                    logger.Error(alog.CreateAuditLogMessage());
+                    throw;
+
+                }
+                return locations;
+            }
+        }
+
+        public List<DomainModels.FileTypes> GetFileTypes()
+        {
+            List<DomainModels.FileTypes> fTypes = new List<DomainModels.FileTypes>();
+            using (SqlConnection con = GetConnection())
+            {
+                try
+                {
+                    con.Open();
+                    string sqlCmdText = "SELECT FileTypeID, FileType FROM dbo.FileTypes";
+                    using (SqlCommand command = new SqlCommand(sqlCmdText, con))
+                    {
+                        SqlDataReader sReader = command.ExecuteReader();
+                        while (sReader.Read())
+                        {
+                            int id = DBHelper.GetValueOrDefault<int>(sReader, sReader.GetOrdinal("FileTypeID"));
+                            string ftypename = sReader["FileType"].ToString();
+                            DomainModels.FileTypes fType = new DomainModels.FileTypes(id, ftypename);
+                            fTypes.Add(fType);
+                        }
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    string strErr = " Exception Error in DataProvider GetFileTypes(). Details: " + ex.ToString();
+                    MessageLog alog = new MessageLog(MessageType.Exception, " GetFileTypes Exception Message=" + strErr);
+                    logger.Error(alog.CreateAuditLogMessage());
+                    throw;
+
+                }
+                return fTypes;
+            }
+        }
+        
+        public List<DomainModels.TruckTypes> GetTruckTypes()
+        {
+            List<DomainModels.TruckTypes> TTypes = new List<DomainModels.TruckTypes>();
+            using (SqlConnection con = GetConnection())
+            {
+                try
+                {
+                    con.Open();
+                    string sqlCmdText = "SELECT TruckTypeShort, TruckTypeLong FROM dbo.TruckTypes ORDER BY TruckTypeLong";
+                    using (SqlCommand command = new SqlCommand(sqlCmdText, con))
+                    {
+                        SqlDataReader sReader = command.ExecuteReader();
+                        while (sReader.Read())
+                        {
+                            string shortname = sReader["TruckTypeShort"].ToString();
+                            string longname = sReader["TruckTypeLong"].ToString();
+                            DomainModels.TruckTypes ttype = new DomainModels.TruckTypes(shortname, longname);
+                            TTypes.Add(ttype);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    string strErr = " Exception Error in DataProvider GetTruckTypes(). Details: " + ex.ToString();
+                    MessageLog alog = new MessageLog(MessageType.Exception, " GetTruckTypes Exception Message=" + strErr);
+                    logger.Error(alog.CreateAuditLogMessage());
+                    throw;
+
+                }
+                return TTypes;
+            }
+        }
+
+
+        public List<DomainModels.UnitOfMeasure> GetUnitsOfMeasure()
+        {
+            List<DomainModels.UnitOfMeasure> uMeasures = new List<DomainModels.UnitOfMeasure>();
+            using (SqlConnection con = GetConnection())
+            {
+                try
+                {
+                    con.Open();
+                    string sqlCmdText = "SELECT UnitShort, UnitLong FROM dbo.UnitOfMeasure";
+                    using (SqlCommand command = new SqlCommand(sqlCmdText, con))
+                    {
+                        SqlDataReader sReader = command.ExecuteReader();
+                        while (sReader.Read())
+                        {
+                            string shortname = sReader["UnitShort"].ToString();
+                            string longname = sReader["UnitLong"].ToString();
+                            DomainModels.UnitOfMeasure unit = new DomainModels.UnitOfMeasure(shortname, longname);
+                            uMeasures.Add(unit);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    string strErr = " Exception Error in DataProvider GetUnitsOfMeasure(). Details: " + ex.ToString();
+                    MessageLog alog = new MessageLog(MessageType.Exception, " GetUnitsOfMeasure Exception Message=" + strErr);
+                    logger.Error(alog.CreateAuditLogMessage());
+                    throw;
+
+                }
+                return uMeasures;
+            }
+        }
+
+        public List<DomainModels.MainScheduleFiles> GetMainScheduleFiles(int MSID)
+        {
+            List<DomainModels.MainScheduleFiles> msFiles = new List<DomainModels.MainScheduleFiles>();
+            using (SqlConnection con = GetConnection())
+            {
+                try
+                {
+                    con.Open();
+                    string sqlCmdText = string.Concat("SELECT FileID, MSID, MSF.FileTypeID, FileDescription, Filepath, FilenameNew, FilenameOld, MSF.isHidden FROM dbo.MainScheduleFiles MSF ", 
+                                   "INNER JOIN dbo.FileTypes FT ON FT.FileTypeID = MSF.FileTypeID " ,
+                                   "WHERE isHidden = 0 AND MSID = @PMSID");
+                    using (SqlCommand command = new SqlCommand(sqlCmdText, con))
+                    {
+                        command.Parameters.Add(new SqlParameter("@PMSID", MSID));
+                        SqlDataReader sReader = command.ExecuteReader();
+                        while (sReader.Read())
+                        {
+
+                            int fid = DBHelper.GetValueOrDefault<int>(sReader, sReader.GetOrdinal("FileID"));
+                            DomainModels.MainScheduleFiles msFile = new DomainModels.MainScheduleFiles(fid);
+                            msFile.Msid = DBHelper.GetValueOrDefault<int?>(sReader, sReader.GetOrdinal("MSID"));
+                            msFile.FileTypeId = DBHelper.GetValueOrDefault<int?>(sReader, sReader.GetOrdinal("FileTypeID"));
+                            msFile.FileDescription = sReader["FileDescription"].ToString();
+                            msFile.Filepath = sReader["Filepath"].ToString();
+                            msFile.FilenameNew = sReader["FilenameNew"].ToString();
+                            msFile.FilenameOld = sReader["FilenameOld"].ToString();
+                            msFile.IsHidden = DBHelper.GetValueOrDefault<bool>(sReader, sReader.GetOrdinal("isHidden"));
+                            msFiles.Add(msFile);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    string strErr = " Exception Error in DataProvider GetMainScheduleFiles(). Details: " + ex.ToString();
+                    MessageLog alog = new MessageLog(MessageType.Exception, " GetMainScheduleFiles Exception Message=" + strErr);
+                    logger.Error(alog.CreateAuditLogMessage());
+                    throw;
+
+                }
+                return msFiles;
+            }
+        }
+
+
+    }
+
+
+}
