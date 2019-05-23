@@ -1,0 +1,1620 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4430C3CF-61BD-49B9-BA54-EDB7A3843B20}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TransportationProject</RootNamespace>
+    <AssemblyName>TransportationProject</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>IDE1006,IDE0017, IDE0028</NoWarn>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Infragistics.Web.Mvc, Version=5.14.2.1024, Culture=neutral, PublicKeyToken=7dd5c3163f2cd0cb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Infragistics.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationBlocks.Data, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.ApplicationBlocks.Data.2.0.0\lib\net45\Microsoft.ApplicationBlocks.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.FriendlyUrls, Version=1.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\Microsoft.AspNet.FriendlyUrls.Core.1.0.2\lib\net45\Microsoft.AspNet.FriendlyUrls.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Transactions">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="AspNet.ScriptManager.jQuery">
+      <HintPath>packages\AspNet.ScriptManager.jQuery.1.8.2\lib\net45\AspNet.ScriptManager.jQuery.dll</HintPath>
+    </Reference>
+    <Reference Include="AspNet.ScriptManager.jQuery.UI.Combined">
+      <HintPath>packages\AspNet.ScriptManager.jQuery.UI.Combined.1.8.24\lib\net45\AspNet.ScriptManager.jQuery.UI.Combined.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ScriptManager.MSAjax, Version=4.5.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>packages\Microsoft.AspNet.ScriptManager.MSAjax.4.5.6\lib\net45\Microsoft.ScriptManager.MSAjax.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ScriptManager.WebForms, Version=4.5.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>packages\Microsoft.AspNet.ScriptManager.WebForms.4.5.6\lib\net45\Microsoft.ScriptManager.WebForms.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>packages\Microsoft.AspNet.Web.Optimization.1.0.0\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Providers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>packages\Microsoft.AspNet.Providers.Core.1.2\lib\net40\System.Web.Providers.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\DotNetOpenAuth.Core.4.1.4.12333\lib\net40-full\DotNetOpenAuth.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OAuth, Version=4.0.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\DotNetOpenAuth.OAuth.Core.4.1.4.12333\lib\net40-full\DotNetOpenAuth.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OAuth.Consumer, Version=4.0.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\DotNetOpenAuth.OAuth.Consumer.4.1.4.12333\lib\net40-full\DotNetOpenAuth.OAuth.Consumer.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OpenId, Version=4.0.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\DotNetOpenAuth.OpenId.Core.4.1.4.12333\lib\net40-full\DotNetOpenAuth.OpenId.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OpenId.RelyingParty, Version=4.0.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\DotNetOpenAuth.OpenId.RelyingParty.4.1.4.12333\lib\net40-full\DotNetOpenAuth.OpenId.RelyingParty.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.AspNet, Version=4.0.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\DotNetOpenAuth.AspNet.4.1.4.12333\lib\net40-full\DotNetOpenAuth.AspNet.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Membership.OpenAuth, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>packages\Microsoft.AspNet.Membership.OpenAuth.1.0.1\lib\net45\Microsoft.AspNet.Membership.OpenAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>packages\WebGrease.1.1.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>packages\WebGrease.1.1.0\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Web.Optimization.WebForms">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.Web.Optimization.WebForms.1.0.0\lib\net45\Microsoft.AspNet.Web.Optimization.WebForms.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Account\EmailReset.aspx" />
+    <Content Include="Account\Login.aspx" />
+    <Content Include="Account\Manage.aspx" />
+    <Content Include="Account\OpenAuthProviders.ascx" />
+    <Content Include="Account\PasswordReset.aspx" />
+    <Content Include="Account\Register.aspx" />
+    <Content Include="Account\RegisterExternalLogin.aspx" />
+    <Content Include="Admin_CleanUp.aspx" />
+    <Content Include="AdminMainPage.aspx" />
+    <Content Include="Admin_Alerts.aspx" />
+    <Content Include="Admin_AppSettings.aspx" />
+    <Content Include="Admin_DockSpots.aspx" />
+    <Content Include="Admin_InspectionLists.aspx" />
+    <Content Include="Admin_Inspections.aspx" />
+    <Content Include="Admin_Products.aspx" />
+    <Content Include="Admin_Tanks.aspx" />
+    <Content Include="Admin_TruckscheduleEventsCalendar.aspx" />
+    <Content Include="Admin_Users.aspx" />
+    <Content Include="Admin_CustomerVendorProducts.aspx" />
+    <Content Include="Admin_Weights.aspx" />
+    <Content Include="alertsprocessing.aspx" />
+    <Content Include="COFAUpload.aspx" />
+    <Content Include="Content\buttonStyles.css" />
+    <Content Include="Content\ElementExpansion.css" />
+    <Content Include="Content\InspectionsPageStyle.css" />
+    <Content Include="Content\scheduleGrid.css" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Content\sliderStyle.css" />
+    <Content Include="Content\StyleModifications.css" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\jquery-ui.css" />
+    <Content Include="Content\themes\base\jquery.ui.accordion.css" />
+    <Content Include="Content\themes\base\jquery.ui.all.css" />
+    <Content Include="Content\themes\base\jquery.ui.autocomplete.css" />
+    <Content Include="Content\themes\base\jquery.ui.base.css" />
+    <Content Include="Content\themes\base\jquery.ui.button.css" />
+    <Content Include="Content\themes\base\jquery.ui.core.css" />
+    <Content Include="Content\themes\base\jquery.ui.datepicker.css" />
+    <Content Include="Content\themes\base\jquery.ui.dialog.css" />
+    <Content Include="Content\themes\base\jquery.ui.progressbar.css" />
+    <Content Include="Content\themes\base\jquery.ui.resizable.css" />
+    <Content Include="Content\themes\base\jquery.ui.selectable.css" />
+    <Content Include="Content\themes\base\jquery.ui.slider.css" />
+    <Content Include="Content\themes\base\jquery.ui.tabs.css" />
+    <Content Include="Content\themes\base\jquery.ui.theme.css" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\minified\jquery-ui.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.accordion.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.autocomplete.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.button.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.core.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.datepicker.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.dialog.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.progressbar.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.resizable.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.selectable.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
+    <Content Include="Admin_UserAlerts.aspx" />
+    <Content Include="Content\TruckScheduleMobile.css" />
+    <Content Include="dataProcessingAndCleanUp.aspx" />
+    <Content Include="dockManager.aspx" />
+    <Content Include="ErrorPage.aspx" />
+    <Content Include="Images\10p_downarrow.png" />
+    <Content Include="Images\10p_uparrow.png" />
+    <Content Include="Images\camera48x48.png" />
+    <Content Include="Images\CheckMark.gif" />
+    <Content Include="Images\html-editor-sprite.png" />
+    <Content Include="Images\menuIcon.png" />
+    <Content Include="Images\no_16.png" />
+    <Content Include="Images\no_22.png" />
+    <Content Include="Images\no_32.png" />
+    <Content Include="Images\no_48.png" />
+    <Content Include="Images\ok_16.png" />
+    <Content Include="Images\ok_22.png" />
+    <Content Include="Images\ok_32.png" />
+    <Content Include="Images\ok_48.png" />
+    <Content Include="Images\ScrollUpArrow.png" />
+    <Content Include="Images\tLogMaxi.png" />
+    <Content Include="Images\tLogMini.png" />
+    <Content Include="Images\triangleDown.png" />
+    <Content Include="Images\triangleUp.png" />
+    <Content Include="Images\xclose.png" />
+    <Content Include="Images\ZXP_Large_resize300trans.png" />
+    <Content Include="InspectionMobile.aspx" />
+    <Content Include="loaderMobile.aspx" />
+    <Content Include="patternList.aspx" />
+    <Content Include="Images\accent.png" />
+    <Content Include="Images\bullet.png" />
+    <Content Include="Images\heroAccent.png" />
+    <Content Include="Images\orderedList0.png" />
+    <Content Include="Images\orderedList1.png" />
+    <Content Include="Images\orderedList2.png" />
+    <Content Include="Images\orderedList3.png" />
+    <Content Include="Images\orderedList4.png" />
+    <Content Include="Images\orderedList5.png" />
+    <Content Include="Images\orderedList6.png" />
+    <Content Include="Images\orderedList7.png" />
+    <Content Include="Images\orderedList8.png" />
+    <Content Include="Images\orderedList9.png" />
+    <Content Include="Default.aspx" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="loaderInstructions.aspx" />
+    <Content Include="loaderTimeTracking.aspx" />
+    <Content Include="packages.config" />
+    <Content Include="rejectTruck.aspx" />
+    <Content Include="Samples.aspx" />
+    <Content Include="ScaleIntEXE\TruckFileWriter.exe" />
+    <Content Include="Scripts\bootstrap-4.1.3-dist\css\bootstrap-grid.css" />
+    <Content Include="Scripts\bootstrap-4.1.3-dist\css\bootstrap-grid.min.css" />
+    <Content Include="Scripts\bootstrap-4.1.3-dist\css\bootstrap-reboot.css" />
+    <Content Include="Scripts\bootstrap-4.1.3-dist\css\bootstrap-reboot.min.css" />
+    <Content Include="Scripts\bootstrap-4.1.3-dist\css\bootstrap.css" />
+    <Content Include="Scripts\bootstrap-4.1.3-dist\css\bootstrap.min.css" />
+    <Content Include="Scripts\bootstrap-4.1.3-dist\js\bootstrap.bundle.js" />
+    <Content Include="Scripts\bootstrap-4.1.3-dist\js\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\bootstrap-4.1.3-dist\js\bootstrap.js" />
+    <Content Include="Scripts\bootstrap-4.1.3-dist\js\bootstrap.min.js" />
+    <Content Include="Scripts\bootstrap-4.1.3-dist\js\jquery-3.3.1.min.js" />
+    <Content Include="Scripts\bootstrap-4.1.3-dist\js\popper.min.js" />
+    <Content Include="Scripts\GridTemplates\DockManager_LoaderGrid.js" />
+    <Content Include="Scripts\gridCreator.js" />
+    <Content Include="Scripts\GridTemplates\DockManager_CompletedGrid.js" />
+    <Content Include="Scripts\GridTemplates\YardMuleRequestOverview_CompleteGrid.js" />
+    <Content Include="Scripts\GridTemplates\YardMuleRequestOverview_YardmuleGrid.js" />
+    <Content Include="Scripts\GridTemplates\DockManager_YardmuleGrid.js" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\icon_sprite.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igBrowserLogos.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igGrid\blank.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igGrid\diagonals-medium.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igGrid\filter-icons-333333.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igGrid\filter-icons-FFFFFF.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igGrid\group-by-label-right-edge.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igGrid\touch-icons.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igGrid\touch-icons.svg" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\arrow_collapse.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\arrow_expand.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\arrow_redo.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\arrow_undo.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\background_color.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\check.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\cut.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\decrease-font-size.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\html-editor-sprite.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\html.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\html_add.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\html_delete.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\html_go.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\html_valid.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\image_add.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\increase-font-size.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\link.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\link_add.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\link_break.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\page_copy.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\page_paste.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\table-delete-column-icon.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\table-insert-column-icon.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\table.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\table_row_delete.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\table_row_insert.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\text_align_center.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\text_align_justify.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\text_align_left.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\text_align_right.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\text_bold.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\text_color.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\text_horizontalrule.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\text_indent.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\text_indent_remove.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\text_italic.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\text_list_bullets.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\text_list_numbers.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\text_strikethrough.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igHtmlEditor\text_underline.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igLoadingSmall.gif" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igPivot\dataselector-sprite.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igPivot\kpi-icons.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igPivot\pivot-header-icons.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igPopover\igPopoverArrowBottom.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igPopover\igPopoverArrowLeft.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igPopover\igPopoverArrowRight.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igPopover\igPopoverArrows.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igPopover\igPopoverArrowTop.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igRating\ig-rating-touch.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igRating\ig-rating-touchx2.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igVideoPlayer\igBigPauseButton.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igVideoPlayer\igBigPlayButton.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igVideoPlayer\igLoadingSmall.gif" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igVideoPlayer\igPlayButton24.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igVideoPlayer\igPlayButton32.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igVideoPlayer\igPlayButton48.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igVideoPlayer\igVPBackground.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igVideoPlayer\igVPBookmarkSprite.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\igVideoPlayer\igWarningIcon.png" />
+    <Content Include="Scripts\IgniteUI\css\structure\images\ui-anim_basic_16x16.gif" />
+    <Content Include="Scripts\IgniteUI\css\structure\infragistics.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\jquery-ui.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\jquery.ui.all.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\jquery.ui.base.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\jquery.ui.core.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\jquery.ui.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\jquery.ui.datepicker.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\jquery.ui.slider.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\jquery.ui.theme.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.barcode.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.bulletgraph.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.chart.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.chart.legacy.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.colorpicker.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.combo.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.dialog.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.editors.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.editors_new.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.grid.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.html5.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.htmleditor.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.layout.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.lineargauge.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.map.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.pivot.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.popover.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.radialgauge.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.radialmenu.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.rating.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.shared.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.sparkline.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.splitbutton.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.splitter.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.tilemanager.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.toolbar.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.toolbarbutton.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.tree.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.treegrid.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.upload.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.validator.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.videoplayer.css" />
+    <Content Include="Scripts\IgniteUI\css\structure\modules\infragistics.ui.zoombar.css" />
+    <Content Include="Scripts\IgniteUI\css\themes\bootstrap\images\icon_sprite.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\bootstrap\images\igGrid\filter-icons-333333.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\bootstrap\images\igGrid\filter-icons-FFFFFF.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\bootstrap\images\igRating\ig-rating.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\bootstrap\images\igVideoPlayer\igVideoPlayerIcons.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\bootstrap\images\igVideoPlayer\igVPBackground.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\bootstrap\images\igVideoPlayer\igVPBookmarkSprite.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\bootstrap\images\ui-anim_basic_16x16.gif" />
+    <Content Include="Scripts\IgniteUI\css\themes\bootstrap\images\ui-icons_222222_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\bootstrap\images\ui-icons_888888_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\bootstrap\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\bootstrap\infragistics.theme.css" />
+    <Content Include="Scripts\IgniteUI\css\themes\bootstrap\LESS\README.txt" />
+    <Content Include="Scripts\IgniteUI\css\themes\flatly\images\icon_sprite.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\flatly\images\igGrid\filter-icons-333333.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\flatly\images\igGrid\filter-icons-FFFFFF.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\flatly\images\igRating\ig-rating.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\flatly\images\igVideoPlayer\igVideoPlayerIcons.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\flatly\images\igVideoPlayer\igVPBackground.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\flatly\images\igVideoPlayer\igVPBookmarkSprite.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\flatly\images\ui-anim_basic_16x16.gif" />
+    <Content Include="Scripts\IgniteUI\css\themes\flatly\images\ui-icons_222222_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\flatly\images\ui-icons_888888_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\flatly\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\flatly\infragistics.theme.css" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics2012\images\datepicker.gif" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics2012\images\gradient_1.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics2012\images\gradient_2.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics2012\images\gradient_3.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics2012\images\gradient_4.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics2012\images\gradient_5.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics2012\images\gradient_6.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics2012\images\gradient_7.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics2012\images\icon_sprite.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics2012\images\igRating\ig-rating.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics2012\images\igVideoPlayer\igVideoPlayerIcons.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics2012\images\igVideoPlayer\igVPBackground.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics2012\images\igVideoPlayer\igVPBookmarkSprite.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics2012\images\progress_bar.gif" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics2012\images\slider_handles.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics2012\images\slider_h_bg.gif" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics2012\images\slider_v_bg.gif" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics2012\images\tab_bg.gif" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics2012\images\ui-anim_basic_16x16.gif" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics2012\images\ui-icons_222222_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics2012\images\ui-icons_228ef1_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics2012\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics2012\infragistics.theme.css" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics\images\icon_sprite.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics\images\igRating\ig-rating.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics\images\igVideoPlayer\igVideoPlayerIcons.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics\images\igVideoPlayer\igVPBackground.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics\images\igVideoPlayer\igVPBookmarkSprite.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics\images\ui-anim_basic_16x16.gif" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics\images\ui-icons_222222_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics\images\ui-icons_228ef1_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics\images\ui-icons_888888_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics\infragistics.theme.css" />
+    <Content Include="Scripts\IgniteUI\css\themes\ios\images\icon_sprite.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\ios\images\igGrid\filter-icons-333333.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\ios\images\igGrid\filter-icons-FFFFFF.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\ios\images\igRating\ig-rating.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\ios\images\igVideoPlayer\igVideoPlayerIcons.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\ios\images\igVideoPlayer\igVPBackground.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\ios\images\igVideoPlayer\igVPBookmarkSprite.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\ios\images\ui-anim_basic_16x16.gif" />
+    <Content Include="Scripts\IgniteUI\css\themes\ios\images\ui-icons_000000_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\ios\images\ui-icons_007aff_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\ios\images\ui-icons_8e8e93_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\ios\images\ui-icons_fd472b_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\ios\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\ios\infragistics.theme.css" />
+    <Content Include="Scripts\IgniteUI\css\themes\metro\images\icon_sprite.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\metro\images\igGrid\filter-icons-858585.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\metro\images\igHtmlEditor\html-editor-sprite.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\metro\images\igRating\ig-rating-touch.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\metro\images\igRating\ig-rating-touchx2.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\metro\images\igRating\ig-rating.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\metro\images\igRating\SOURCE_ig-rating-touch.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\metro\images\igRating\SOURCE_ig-rating-touchx2.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\metro\images\igRating\SOURCE_ig-rating.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\metro\images\igTooltip\igTooltipArrows.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\metro\images\igVideoPlayer\igVideoPlayerIcons_858585.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\metro\images\igVideoPlayer\igVideoPlayerIcons_ffffff.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\metro\images\igVideoPlayer\igVPBookmarkSprite.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\metro\images\ui-anim_basic_16x16.gif" />
+    <Content Include="Scripts\IgniteUI\css\themes\metro\images\ui-icons_00AADE_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\metro\images\ui-icons_222222_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\metro\images\ui-icons_565656_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\metro\images\ui-icons_858585_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\metro\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\metro\infragistics.theme.css" />
+    <Content Include="Scripts\IgniteUI\css\themes\superhero\images\icon_sprite.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\superhero\images\igGrid\filter-icons-333333.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\superhero\images\igGrid\filter-icons-FFFFFF.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\superhero\images\igRating\ig-rating.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\superhero\images\igVideoPlayer\igVideoPlayerIcons.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\superhero\images\igVideoPlayer\igVPBackground.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\superhero\images\igVideoPlayer\igVPBookmarkSprite.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\superhero\images\ui-anim_basic_16x16.gif" />
+    <Content Include="Scripts\IgniteUI\css\themes\superhero\images\ui-icons_222222_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\superhero\images\ui-icons_888888_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\superhero\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\superhero\infragistics.theme.css" />
+    <Content Include="Scripts\IgniteUI\css\themes\yeti\images\icon_sprite.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\yeti\images\igGrid\filter-icons-333333.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\yeti\images\igGrid\filter-icons-FFFFFF.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\yeti\images\igRating\ig-rating.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\yeti\images\igVideoPlayer\igVideoPlayerIcons.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\yeti\images\igVideoPlayer\igVPBackground.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\yeti\images\igVideoPlayer\igVPBookmarkSprite.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\yeti\images\ui-anim_basic_16x16.gif" />
+    <Content Include="Scripts\IgniteUI\css\themes\yeti\images\ui-icons_222222_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\yeti\images\ui-icons_888888_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\yeti\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Scripts\IgniteUI\css\themes\yeti\infragistics.theme.css" />
+    <Content Include="Scripts\IgniteUI\js\extensions\igniteui-angular.js" />
+    <Content Include="Scripts\IgniteUI\js\extensions\infragistics.datasource.knockoutjs.js" />
+    <Content Include="Scripts\IgniteUI\js\extensions\infragistics.ui.combo.knockout-extensions.js" />
+    <Content Include="Scripts\IgniteUI\js\extensions\infragistics.ui.datachart.knockout-extensions.js" />
+    <Content Include="Scripts\IgniteUI\js\extensions\infragistics.ui.editors.knockout-extensions.js" />
+    <Content Include="Scripts\IgniteUI\js\extensions\infragistics.ui.grid.knockout-extensions.js" />
+    <Content Include="Scripts\IgniteUI\js\extensions\infragistics.ui.tree.knockout-extensions.js" />
+    <Content Include="Scripts\IgniteUI\js\extensions\README.igniteui-angular.html" />
+    <Content Include="Scripts\IgniteUI\js\i18n\infragistics-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\i18n\infragistics-de.js" />
+    <Content Include="Scripts\IgniteUI\js\i18n\infragistics-es.js" />
+    <Content Include="Scripts\IgniteUI\js\i18n\infragistics-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\i18n\infragistics-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\i18n\infragistics-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\infragistics.core.js" />
+    <Content Include="Scripts\IgniteUI\js\infragistics.dv.js" />
+    <Content Include="Scripts\IgniteUI\js\infragistics.loader.js" />
+    <Content Include="Scripts\IgniteUI\js\infragistics.lob.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding.core.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding_big5.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding_cp437.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding_gb2312.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding_iso-8859-1.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding_iso-8859-11.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding_iso-8859-13.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding_iso-8859-15.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding_iso-8859-2.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding_iso-8859-3.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding_iso-8859-4.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding_iso-8859-5.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding_iso-8859-6.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding_iso-8859-7.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding_iso-8859-8.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding_iso-8859-9.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding_iso646-us.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding_ksc5601.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding_shift_jis.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding_windows-1250.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding_windows-1251.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding_windows-1252.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\encoding\infragistics.encoding_windows-1256.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.datasource-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.datasource-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.datasource-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.datasource-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.datasource-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.datasource-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.dvcommonwidget-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.dvcommonwidget-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.dvcommonwidget-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.dvcommonwidget-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.dvcommonwidget-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.dvcommonwidget-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.shared-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.shared-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.shared-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.shared-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.shared-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.shared-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.templating-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.templating-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.templating-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.templating-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.templating-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.templating-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.barcode-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.barcode-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.barcode-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.barcode-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.barcode-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.barcode-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.combo-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.combo-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.combo-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.combo-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.combo-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.combo-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.dialog-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.dialog-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.dialog-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.dialog-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.dialog-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.dialog-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.doughnutchart-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.doughnutchart-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.doughnutchart-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.doughnutchart-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.doughnutchart-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.doughnutchart-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.editors-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.editors-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.editors-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.editors-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.editors-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.editors-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.grid-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.grid-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.grid-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.grid-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.grid-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.grid-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.htmleditor-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.htmleditor-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.htmleditor-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.htmleditor-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.htmleditor-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.htmleditor-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.pivot.shared-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.pivot.shared-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.pivot.shared-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.pivot.shared-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.pivot.shared-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.pivot.shared-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.pivotdataselector-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.pivotdataselector-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.pivotdataselector-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.pivotdataselector-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.pivotdataselector-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.pivotdataselector-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.pivotgrid-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.pivotgrid-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.pivotgrid-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.pivotgrid-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.pivotgrid-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.pivotgrid-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.popover-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.popover-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.popover-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.popover-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.popover-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.popover-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.rating-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.rating-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.rating-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.rating-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.rating-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.rating-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.splitter-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.splitter-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.splitter-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.splitter-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.splitter-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.splitter-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.tilemanager-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.tilemanager-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.tilemanager-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.tilemanager-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.tilemanager-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.tilemanager-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.toolbar-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.toolbar-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.toolbar-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.toolbar-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.toolbar-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.toolbar-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.tree-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.tree-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.tree-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.tree-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.tree-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.tree-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.treegrid-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.treegrid-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.treegrid-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.treegrid-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.treegrid-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.treegrid-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.upload-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.upload-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.upload-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.upload-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.upload-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.upload-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.validator-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.validator-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.validator-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.validator-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.validator-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.validator-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.videoplayer-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.videoplayer-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.videoplayer-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.videoplayer-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.videoplayer-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.videoplayer-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.zoombar-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.zoombar-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.zoombar-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.zoombar-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.zoombar-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.ui.zoombar-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.util-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.util-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.util-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.util-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.util-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\infragistics.util-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-af.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-ar.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-az.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-bg.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-bs.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-ca.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-cs.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-da.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-de.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-el.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-en-GB.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-en.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-es-419.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-es-MX.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-es.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-et.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-fa.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-fi.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-fo.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-fr-CH.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-fr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-he.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-hr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-hu.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-hy.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-i18n.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-id.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-is.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-it.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-ja.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-ko.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-lt.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-lv.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-ms.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-nl.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-no.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-pl.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-pt-BR.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-ro.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-ru.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-sk.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-sl.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-sq.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-sr-SR.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-sr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-sv.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-ta.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-th.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-tr.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-uk.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-vi.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-zh-CN.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-zh-HK.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\i18n\regional\infragistics.ui.regional-zh-TW.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.barcode_qrcodebarcode.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.chart_annotationchart.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.chart_categorychart.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.chart_financialchart.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.chart_funnelchart.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.chart_piechart.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.chart_polarchart.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.chart_radialchart.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.chart_rangecategorychart.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.chart_scatterchart.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.chart_sparkline.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.chart_stackedchart.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.datachart.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.datasource.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.documents.core.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.dv.core.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.dv.simple.core.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.dvcommonwidget.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.excel.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.gauge_bulletgraph.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.gauge_lineargauge.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.gauge_radialgauge.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.geographicmap_core.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.gridexcelexporter.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.olapflatdatasource.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.olapxmladatasource.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.radialmenu_core.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.templating.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.barcode.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.basechart.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.bulletgraph.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.chart.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.chartlegend.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.colorpicker.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.colorpickersplitbutton.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.combo.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.dialog.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.doughnutchart.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.editors.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.editors_new.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.funnelchart.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.grid.appendrowsondemand.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.grid.cellmerging.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.grid.columnfixing.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.grid.columnmoving.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.grid.featurechooser.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.grid.filtering.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.grid.framework.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.grid.groupby.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.grid.hiding.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.grid.hierarchical.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.grid.multicolumnheaders.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.grid.paging.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.grid.resizing.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.grid.responsive.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.grid.rowselectors.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.grid.selection.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.grid.sorting.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.grid.summaries.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.grid.tooltips.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.grid.updating.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.htmleditor.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.layoutmanager.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.lineargauge.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.map.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.pivot.shared.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.pivotdataselector.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.pivotgrid.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.pivotview.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.popover.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.radialgauge.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.radialmenu.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.rating.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.scroll.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.shared.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.sparkline.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.splitbutton.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.splitter.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.tilemanager.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.toolbar.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.toolbarbutton.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.tree.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.treegrid.columnfixing.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.treegrid.filtering.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.treegrid.hiding.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.treegrid.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.treegrid.multicolumnheaders.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.treegrid.paging.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.treegrid.selection.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.treegrid.sorting.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.treegrid.tooltips.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.treegrid.updating.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.upload.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.validator.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.videoplayer.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.ui.zoombar.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.util.js" />
+    <Content Include="Scripts\IgniteUI\js\modules\infragistics.xml.js" />
+    <Content Include="Scripts\IgniteUI\mobile\css\structure\images\ig-rating%402.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\structure\images\ig-rating.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\structure\images\igBrowserLogos.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\structure\images\toolbaricons.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\structure\infragistics.mobile.css" />
+    <Content Include="Scripts\IgniteUI\mobile\css\structure\modules\infragistics.mobile.list.css" />
+    <Content Include="Scripts\IgniteUI\mobile\css\structure\modules\infragistics.mobile.rating.css" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\android\fonts\roboto.font.css" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\android\holodark\infragistics.mobile.theme.css" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\android\hololightdark\infragistics.mobile.theme.css" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\android\hololight\infragistics.mobile.theme.css" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios6\images\icons-18-7F7F7F.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios6\images\icons-18-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios6\images\icons-36-7F7F7F.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios6\images\icons-36-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios6\images\ig-rating%402.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios6\images\ig-rating.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios6\images\ios-fabric-background.jpg" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios6\images\loading-spin.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios6\infragistics.mobile.theme.css" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios6\jquery.mobile.icons.min.css" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\ajax-loader.gif" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\action-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\action-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\alert-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\alert-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\arrow-d-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\arrow-d-l-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\arrow-d-l-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\arrow-d-r-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\arrow-d-r-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\arrow-d-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\arrow-l-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\arrow-l-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\arrow-r-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\arrow-r-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\arrow-u-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\arrow-u-l-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\arrow-u-l-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\arrow-u-r-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\arrow-u-r-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\arrow-u-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\audio-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\audio-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\back-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\back-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\bars-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\bars-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\bullets-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\bullets-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\calendar-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\calendar-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\camera-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\camera-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\carat-d-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\carat-d-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\carat-l-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\carat-l-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\carat-r-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\carat-r-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\carat-u-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\carat-u-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\check-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\check-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\clock-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\clock-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\cloud-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\cloud-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\comment-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\comment-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\delete-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\delete-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\edit-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\edit-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\eye-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\eye-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\forbidden-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\forbidden-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\forward-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\forward-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\gear-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\gear-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\grid-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\grid-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\heart-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\heart-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\home-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\home-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\info-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\info-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\location-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\location-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\lock-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\lock-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\mail-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\mail-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\minus-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\minus-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\navigation-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\navigation-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\phone-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\phone-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\plus-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\plus-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\power-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\power-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\recycle-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\recycle-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\refresh-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\refresh-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\search-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\search-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\shop-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\shop-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\star-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\star-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\tag-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\tag-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\user-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\user-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\video-black.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\images\icons-png\video-white.png" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\infragistics.mobile.theme.css" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\jquery.mobile.icons.min.css" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\windowsphone\dark\infragistics.mobile.theme.css" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\windowsphone\light\infragistics.mobile.theme.css" />
+    <Content Include="Scripts\IgniteUI\mobile\js\i18n\infragistics.mobile-bg.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\i18n\infragistics.mobile-de.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\i18n\infragistics.mobile-es.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\i18n\infragistics.mobile-fr.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\i18n\infragistics.mobile-ja.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\i18n\infragistics.mobile-ru.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\infragistics.mobile.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\infragistics.mobile.loader.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.datasource-bg.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.datasource-de.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.datasource-es.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.datasource-fr.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.datasource-ja.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.datasource-ru.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.dvcommonwidget-bg.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.dvcommonwidget-de.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.dvcommonwidget-es.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.dvcommonwidget-fr.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.dvcommonwidget-ja.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.dvcommonwidget-ru.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.mobileui.list-bg.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.mobileui.list-de.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.mobileui.list-es.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.mobileui.list-fr.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.mobileui.list-ja.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.mobileui.list-ru.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.templating-bg.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.templating-de.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.templating-es.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.templating-fr.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.templating-ja.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\infragistics.templating-ru.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-af.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-ar.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-az.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-bg.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-bs.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-ca.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-cs.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-da.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-de.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-el.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-en-GB.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-en.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-es-419.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-es-MX.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-es.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-et.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-fa.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-fi.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-fo.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-fr-CH.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-fr.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-he.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-hr.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-hu.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-hy.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-i18n.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-id.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-is.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-it.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-ja.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-ko.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-lt.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-lv.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-ms.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-nl.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-no.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-pl.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-pt-BR.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-ro.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-ru.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-sk.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-sl.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-sq.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-sr-SR.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-sr.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-sv.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-ta.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-th.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-tr.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-uk.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-vi.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-zh-CN.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-zh-HK.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\i18n\regional\infragistics.ui.regional-zh-TW.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\infragistics.datasource.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\infragistics.dvcommonwidget.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\infragistics.mobileui.list.filtering.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\infragistics.mobileui.list.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\infragistics.mobileui.list.loadondemand.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\infragistics.mobileui.list.sorting.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\infragistics.mobileui.rating.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\infragistics.templating.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\infragistics.ui.scroll.js" />
+    <Content Include="Scripts\IgniteUI\mobile\js\modules\infragistics.util.js" />
+    <Content Include="Scripts\IgniteUI\MVC\Common\Bin\Infragistics.Web.Mvc.Documents.Core.dll" />
+    <Content Include="Scripts\IgniteUI\MVC\Common\Bin\Infragistics.Web.Mvc.Documents.Core.xml" />
+    <Content Include="Scripts\IgniteUI\MVC\Common\Bin\Infragistics.Web.Mvc.Documents.Excel.dll" />
+    <Content Include="Scripts\IgniteUI\MVC\Common\Bin\Infragistics.Web.Mvc.Documents.Excel.xml" />
+    <Content Include="Scripts\IgniteUI\MVC\Common\Bin\Infragistics.Web.Mvc.Documents.IO.dll" />
+    <Content Include="Scripts\IgniteUI\MVC\Common\Bin\Infragistics.Web.Mvc.Documents.IO.xml" />
+    <Content Include="Scripts\IgniteUI\MVC\Common\Bin\Infragistics.Web.Mvc.Documents.Reports.dll" />
+    <Content Include="Scripts\IgniteUI\MVC\Common\Bin\Infragistics.Web.Mvc.Documents.Reports.xml" />
+    <Content Include="Scripts\IgniteUI\MVC\Common\Bin\Infragistics.Web.Mvc.Documents.Word.dll" />
+    <Content Include="Scripts\IgniteUI\MVC\Common\Bin\Infragistics.Web.Mvc.Documents.Word.xml" />
+    <Content Include="Scripts\IgniteUI\MVC\MVC2\Bin\Infragistics.Web.Mvc.dll" />
+    <Content Include="Scripts\IgniteUI\MVC\MVC2\Bin\Infragistics.Web.Mvc.xml" />
+    <Content Include="Scripts\IgniteUI\MVC\MVC3\Bin\Infragistics.Olap.DataProvider.Adomd.Mvc.dll" />
+    <Content Include="Scripts\IgniteUI\MVC\MVC3\Bin\Infragistics.Olap.DataProvider.Adomd.Mvc.xml" />
+    <Content Include="Scripts\IgniteUI\MVC\MVC3\Bin\Infragistics.Web.Mvc.dll" />
+    <Content Include="Scripts\IgniteUI\MVC\MVC3\Bin\Infragistics.Web.Mvc.Mobile.dll" />
+    <Content Include="Scripts\IgniteUI\MVC\MVC3\Bin\Infragistics.Web.Mvc.Mobile.xml" />
+    <Content Include="Scripts\IgniteUI\MVC\MVC3\Bin\Infragistics.Web.Mvc.xml" />
+    <Content Include="Scripts\IgniteUI\MVC\MVC4\Bin\Infragistics.Olap.DataProvider.Adomd.Mvc.dll" />
+    <Content Include="Scripts\IgniteUI\MVC\MVC4\Bin\Infragistics.Olap.DataProvider.Adomd.Mvc.xml" />
+    <Content Include="Scripts\IgniteUI\MVC\MVC4\Bin\Infragistics.Web.Mvc.dll" />
+    <Content Include="Scripts\IgniteUI\MVC\MVC4\Bin\Infragistics.Web.Mvc.Mobile.dll" />
+    <Content Include="Scripts\IgniteUI\MVC\MVC4\Bin\Infragistics.Web.Mvc.Mobile.xml" />
+    <Content Include="Scripts\IgniteUI\MVC\MVC4\Bin\Infragistics.Web.Mvc.xml" />
+    <Content Include="Scripts\IgniteUI\MVC\MVC5\Bin\Infragistics.Olap.DataProvider.Adomd.Mvc.dll" />
+    <Content Include="Scripts\IgniteUI\MVC\MVC5\Bin\Infragistics.Olap.DataProvider.Adomd.Mvc.xml" />
+    <Content Include="Scripts\IgniteUI\MVC\MVC5\Bin\Infragistics.Web.Mvc.dll" />
+    <Content Include="Scripts\IgniteUI\MVC\MVC5\Bin\Infragistics.Web.Mvc.Mobile.dll" />
+    <Content Include="Scripts\IgniteUI\MVC\MVC5\Bin\Infragistics.Web.Mvc.Mobile.xml" />
+    <Content Include="Scripts\IgniteUI\MVC\MVC5\Bin\Infragistics.Web.Mvc.xml" />
+    <Content Include="Scripts\IgniteUI\Readme.txt" />
+    <Content Include="Scripts\IgniteUI\typings\igniteui.d.ts" />
+    <Content Include="Scripts\InspectionsQuestions.js" />
+    <Content Include="Scripts\jquery-1.8.3.js" />
+    <Content Include="Scripts\jquery-1.8.3.min.js" />
+    <Content Include="Scripts\Mi4_Infragistics_Control_Helpers.js" />
+    <Content Include="AdminPage.Master" />
+    <Content Include="Scripts\TruckScheduleJS\DockSpotFunctions.js" />
+    <Content Include="Scripts\TruckScheduleJS\TruckScheduleClassesIE.js" />
+    <Content Include="Scripts\TruckScheduleJS\TruckScheduleClasses.js" />
+    <Content Include="whoami.aspx" />
+    <Content Include="yardAndWaiting.aspx" />
+    <Content Include="yardMuleRequestOverview.aspx" />
+    <Content Include="App_Code\TruckScheduleAlertMessenger.ps1" />
+    <Content Include="App_Code\TruckScheduleAutoTaskCaller.ps1" />
+    <None Include="Properties\PublishProfiles\Adriana.pubxml" />
+    <Content Include="ScaleIntEXE\TruckFileWriter.exe.config" />
+    <Content Include="Scripts\IgniteUI\css\themes\bootstrap\LESS\framework.less" />
+    <Content Include="Scripts\IgniteUI\css\themes\bootstrap\LESS\infragistics.igniteui.theme.less" />
+    <Content Include="Scripts\IgniteUI\css\themes\bootstrap\LESS\infragistics.jqueryui.theme.less" />
+    <Content Include="Scripts\IgniteUI\css\themes\bootstrap\LESS\infragistics.theme.less" />
+    <Content Include="Scripts\IgniteUI\css\themes\bootstrap\LESS\variables-igniteui.less" />
+    <Content Include="Scripts\IgniteUI\css\themes\bootstrap\LESS\variables.less" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics\framework.less" />
+    <Content Include="Scripts\IgniteUI\css\themes\infragistics\infragistics.theme.less" />
+    <Content Include="Scripts\IgniteUI\css\themes\ios\framework.less" />
+    <Content Include="Scripts\IgniteUI\css\themes\ios\infragistics.theme.less" />
+    <Content Include="Scripts\IgniteUI\Documentation %28Online%29.url" />
+    <Content Include="Scripts\IgniteUI\infragistics.IgniteUI.debug.zip" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios6\infragistics.mobile.theme.less" />
+    <Content Include="Scripts\IgniteUI\mobile\css\themes\ios\infragistics.mobile.theme.less" />
+    <Content Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="Properties\PublishProfiles\AdrianaTrans_ZXP.pubxml" />
+    <None Include="Properties\PublishProfiles\CCL_TruckSchedule.pubxml" />
+    <None Include="Properties\PublishProfiles\LocalTruckSchedule.pubxml" />
+    <Content Include="Scripts\bootstrap-4.1.3-dist\css\.DS_Store" />
+    <Content Include="Scripts\bootstrap-4.1.3-dist\css\bootstrap-grid.css.map" />
+    <Content Include="Scripts\bootstrap-4.1.3-dist\css\bootstrap-grid.min.css.map" />
+    <Content Include="Scripts\bootstrap-4.1.3-dist\css\bootstrap-reboot.css.map" />
+    <Content Include="Scripts\bootstrap-4.1.3-dist\css\bootstrap-reboot.min.css.map" />
+    <Content Include="Scripts\bootstrap-4.1.3-dist\css\bootstrap.css.map" />
+    <Content Include="Scripts\bootstrap-4.1.3-dist\css\bootstrap.min.css.map" />
+    <Content Include="Scripts\bootstrap-4.1.3-dist\js\bootstrap.bundle.js.map" />
+    <Content Include="Scripts\bootstrap-4.1.3-dist\js\bootstrap.bundle.min.js.map" />
+    <Content Include="Scripts\bootstrap-4.1.3-dist\js\bootstrap.js.map" />
+    <Content Include="Scripts\bootstrap-4.1.3-dist\js\bootstrap.min.js.map" />
+    <None Include="Scripts\jquery-1.8.2.intellisense.js" />
+    <Content Include="guardStation.aspx" />
+    <Content Include="Scripts\jquery-1.8.2.js" />
+    <Content Include="Scripts\jquery-1.8.2.min.js" />
+    <Content Include="Scripts\jquery-ui-1.8.24.js" />
+    <Content Include="Scripts\jquery-ui-1.8.24.min.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\WebForms\DetailsView.js" />
+    <Content Include="Scripts\WebForms\Focus.js" />
+    <Content Include="Scripts\WebForms\GridView.js" />
+    <Content Include="Scripts\WebForms\Menu.js" />
+    <Content Include="Scripts\WebForms\MenuStandards.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjax.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxApplicationServices.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxComponentModel.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxCore.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxGlobalization.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxHistory.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxNetwork.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxSerialization.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxTimer.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxWebForms.js" />
+    <Content Include="Scripts\WebForms\MSAjax\MicrosoftAjaxWebServices.js" />
+    <Content Include="Scripts\WebForms\SmartNav.js" />
+    <Content Include="Scripts\WebForms\TreeView.js" />
+    <Content Include="Scripts\WebForms\WebForms.js" />
+    <Content Include="Scripts\WebForms\WebParts.js" />
+    <Content Include="Scripts\WebForms\WebUIValidation.js" />
+    <Content Include="trailerOverview.aspx" />
+    <Content Include="waitAndDockOverview.aspx" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Bundle.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\_references.js" />
+    <Content Include="Site.Mobile.Master" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Account\EmailReset.aspx.cs">
+      <DependentUpon>EmailReset.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\EmailReset.aspx.designer.cs">
+      <DependentUpon>EmailReset.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\PasswordReset.aspx.cs">
+      <DependentUpon>PasswordReset.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\PasswordReset.aspx.designer.cs">
+      <DependentUpon>PasswordReset.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin_CleanUp.aspx.cs">
+      <DependentUpon>Admin_CleanUp.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin_CleanUp.aspx.designer.cs">
+      <DependentUpon>Admin_CleanUp.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AdminMainPage.aspx.cs">
+      <DependentUpon>AdminMainPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AdminMainPage.aspx.designer.cs">
+      <DependentUpon>AdminMainPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AdminPage.Master.cs">
+      <DependentUpon>AdminPage.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AdminPage.Master.designer.cs">
+      <DependentUpon>AdminPage.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Admin_Alerts.aspx.cs">
+      <DependentUpon>Admin_Alerts.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin_Alerts.aspx.designer.cs">
+      <DependentUpon>Admin_Alerts.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin_AppSettings.aspx.cs">
+      <DependentUpon>Admin_AppSettings.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin_AppSettings.aspx.designer.cs">
+      <DependentUpon>Admin_AppSettings.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin_DockSpots.aspx.cs">
+      <DependentUpon>Admin_DockSpots.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin_DockSpots.aspx.designer.cs">
+      <DependentUpon>Admin_DockSpots.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin_InspectionLists.aspx.cs">
+      <DependentUpon>Admin_InspectionLists.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin_InspectionLists.aspx.designer.cs">
+      <DependentUpon>Admin_InspectionLists.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin_Inspections.aspx.cs">
+      <DependentUpon>Admin_Inspections.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin_Inspections.aspx.designer.cs">
+      <DependentUpon>Admin_Inspections.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin_Products.aspx.cs">
+      <DependentUpon>Admin_Products.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin_Products.aspx.designer.cs">
+      <DependentUpon>Admin_Products.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin_Tanks.aspx.cs">
+      <DependentUpon>Admin_Tanks.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin_Tanks.aspx.designer.cs">
+      <DependentUpon>Admin_Tanks.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin_TruckscheduleEventsCalendar.aspx.cs">
+      <DependentUpon>Admin_TruckscheduleEventsCalendar.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin_TruckscheduleEventsCalendar.aspx.designer.cs">
+      <DependentUpon>Admin_TruckscheduleEventsCalendar.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin_Users.aspx.cs">
+      <DependentUpon>Admin_Users.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin_Users.aspx.designer.cs">
+      <DependentUpon>Admin_Users.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin_CustomerVendorProducts.aspx.cs">
+      <DependentUpon>Admin_CustomerVendorProducts.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin_CustomerVendorProducts.aspx.designer.cs">
+      <DependentUpon>Admin_CustomerVendorProducts.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin_Weights.aspx.cs">
+      <DependentUpon>Admin_Weights.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin_Weights.aspx.designer.cs">
+      <DependentUpon>Admin_Weights.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="alertsprocessing.aspx.cs">
+      <DependentUpon>alertsprocessing.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="alertsprocessing.aspx.designer.cs">
+      <DependentUpon>alertsprocessing.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="App_Code\AlertMessenger.cs" />
+    <Compile Include="App_Code\AuditLog.cs" />
+    <Compile Include="App_Code\ChangeLog.cs" />
+    <Compile Include="App_Code\DataTransformer.cs" />
+    <Compile Include="App_Code\ErrorLogging.cs" />
+    <Compile Include="App_Code\EventAlertsHelper.cs" />
+    <Compile Include="App_Code\Helper Classes\DBReaderHelper.cs" />
+    <Compile Include="App_Code\Helper Classes\TimeslotDayOfWeek.cs" />
+    <Compile Include="App_Code\Inspection.cs" />
+    <Compile Include="App_Code\InspectionList.cs" />
+    <Compile Include="App_Code\InspectionListDetail.cs" />
+    <Compile Include="App_Code\InspectionQuestion.cs" />
+    <Compile Include="App_Code\InspectionsHelperFunctions.cs" />
+    <Compile Include="App_Code\MainScheduleEvent.cs" />
+    <Compile Include="App_Code\MainScheduleEventLogger.cs" />
+    <Compile Include="App_Code\PasswordResetToken.cs" />
+    <Compile Include="App_Code\Sample.cs" />
+    <Compile Include="App_Code\ScheduledTruck.cs" />
+    <Compile Include="App_Code\SQLDataConnectionHelper.cs" />
+    <Compile Include="App_Code\TankStrapping.cs" />
+    <Compile Include="App_Code\TransportHelperFunctions.cs" />
+    <Compile Include="App_Code\TruckLogHelperFunctions.cs" />
+    <Compile Include="App_Code\TruckScheduleConfigurationKeysHelper.cs" />
+    <Compile Include="App_Code\UserAgentString.cs" />
+    <Compile Include="App_Code\ViewModels\vw_DockManagerYardMuleRequestGridData.cs" />
+    <Compile Include="App_Code\ViewModels\vw_LoadAndUnloadRequests.cs" />
+    <Compile Include="App_Code\ViewModels\vw_LoaderMobileMainGridData.cs" />
+    <Compile Include="App_Code\ZXPUserData.cs" />
+    <Compile Include="Account\Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\Manage.aspx.cs">
+      <DependentUpon>Manage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Manage.aspx.designer.cs">
+      <DependentUpon>Manage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\OpenAuthProviders.ascx.cs">
+      <DependentUpon>OpenAuthProviders.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\OpenAuthProviders.ascx.designer.cs">
+      <DependentUpon>OpenAuthProviders.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\Register.aspx.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Register.aspx.designer.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\RegisterExternalLogin.aspx.cs">
+      <DependentUpon>RegisterExternalLogin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\RegisterExternalLogin.aspx.designer.cs">
+      <DependentUpon>RegisterExternalLogin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin_UserAlerts.aspx.cs">
+      <DependentUpon>Admin_UserAlerts.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin_UserAlerts.aspx.designer.cs">
+      <DependentUpon>Admin_UserAlerts.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="App_Start\AuthConfig.cs" />
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="COFAUpload.aspx.cs">
+      <DependentUpon>COFAUpload.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="COFAUpload.aspx.designer.cs">
+      <DependentUpon>COFAUpload.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dataProcessingAndCleanUp.aspx.cs">
+      <DependentUpon>dataProcessingAndCleanUp.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dataProcessingAndCleanUp.aspx.designer.cs">
+      <DependentUpon>dataProcessingAndCleanUp.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dockManager.aspx.cs">
+      <DependentUpon>dockManager.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dockManager.aspx.designer.cs">
+      <DependentUpon>dockManager.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ErrorPage.aspx.cs">
+      <DependentUpon>ErrorPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ErrorPage.aspx.designer.cs">
+      <DependentUpon>ErrorPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="InspectionMobile.aspx.cs">
+      <DependentUpon>InspectionMobile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="InspectionMobile.aspx.designer.cs">
+      <DependentUpon>InspectionMobile.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="loaderMobile.aspx.cs">
+      <DependentUpon>loaderMobile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="loaderMobile.aspx.designer.cs">
+      <DependentUpon>loaderMobile.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="patternList.aspx.cs">
+      <DependentUpon>patternList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="patternList.aspx.designer.cs">
+      <DependentUpon>patternList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="loaderInstructions.aspx.cs">
+      <DependentUpon>loaderInstructions.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="loaderInstructions.aspx.designer.cs">
+      <DependentUpon>loaderInstructions.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="loaderTimeTracking.aspx.cs">
+      <DependentUpon>loaderTimeTracking.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="loaderTimeTracking.aspx.designer.cs">
+      <DependentUpon>loaderTimeTracking.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="guardStation.aspx.cs">
+      <DependentUpon>guardStation.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="guardStation.aspx.designer.cs">
+      <DependentUpon>guardStation.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="rejectTruck.aspx.cs">
+      <DependentUpon>rejectTruck.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="rejectTruck.aspx.designer.cs">
+      <DependentUpon>rejectTruck.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Samples.aspx.cs">
+      <DependentUpon>Samples.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Samples.aspx.designer.cs">
+      <DependentUpon>Samples.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SerialDataCommunication.cs" />
+    <Compile Include="Site.Master.cs">
+      <DependentUpon>Site.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Site.Master.designer.cs">
+      <DependentUpon>Site.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Site.Mobile.Master.cs">
+      <DependentUpon>Site.Mobile.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Site.Mobile.Master.designer.cs">
+      <DependentUpon>Site.Mobile.Master</DependentUpon>
+    </Compile>
+    <Compile Include="trailerOverview.aspx.cs">
+      <DependentUpon>trailerOverview.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="trailerOverview.aspx.designer.cs">
+      <DependentUpon>trailerOverview.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="whoami.aspx.cs">
+      <DependentUpon>whoami.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="whoami.aspx.designer.cs">
+      <DependentUpon>whoami.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="waitAndDockOverview.aspx.cs">
+      <DependentUpon>waitAndDockOverview.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="waitAndDockOverview.aspx.designer.cs">
+      <DependentUpon>waitAndDockOverview.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="yardAndWaiting.aspx.cs">
+      <DependentUpon>yardAndWaiting.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="yardAndWaiting.aspx.designer.cs">
+      <DependentUpon>yardAndWaiting.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="yardMuleRequestOverview.aspx.cs">
+      <DependentUpon>yardMuleRequestOverview.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="yardMuleRequestOverview.aspx.designer.cs">
+      <DependentUpon>yardMuleRequestOverview.aspx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="FileUploads\BOL\" />
+    <Folder Include="FileUploads\COFA\" />
+    <Folder Include="FileUploads\IMAGE\" />
+    <Folder Include="FileUploads\OTHER\" />
+    <Folder Include="FileUploads\PATTERN\" />
+    <Folder Include="ScannerApp\" />
+    <Folder Include="Upload\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Account\Web.config" />
+    <Content Include="Site.Master" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TransportationProjectDataLayer\TransportationProjectDataLayer.csproj">
+      <Project>{bf746503-2ea0-41bd-b8cf-152b204b07c3}</Project>
+      <Name>TransportationProjectDataLayer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>53880</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:44307/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

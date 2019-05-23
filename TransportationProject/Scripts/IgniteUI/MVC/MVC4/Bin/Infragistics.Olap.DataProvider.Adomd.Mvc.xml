@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Infragistics.Olap.DataProvider.Adomd.Mvc</name>
+    </assembly>
+    <members>
+        <member name="P:Infragistics.Olap.Adomd.Core.AdomdDataProvider.ConnectionString">
+            <summary>
+            Gets or sets the ADOMD connection string.
+            </summary>
+        </member>
+        <member name="T:Infragistics.Web.Mvc.AdomdDataSourceActionAttribute">
+            <summary>
+            An attribute for an action which has to handle requests for a XMLA service.
+            </summary>
+        </member>
+        <member name="M:Infragistics.Web.Mvc.AdomdDataSourceActionAttribute.OnActionExecuted(System.Web.Mvc.ActionExecutedContext)">
+            <summary>
+            Called after the action method executes.
+            </summary>
+            <param name="filterContext">The filter context.</param>
+        </member>
+        <member name="M:Infragistics.Web.Mvc.AdomdDataSourceActionAttribute.OnActionExecuting(System.Web.Mvc.ActionExecutingContext)">
+            <summary>
+            Called before an action method executes.
+            </summary>
+            <param name="filterContext">The filter context.</param>
+        </member>
+        <member name="T:Infragistics.Web.Mvc.AdomdDataSourceModel">
+            <summary>
+            A model class provided to the action result of the controllers' action decorated with <see cref="T:Infragistics.Web.Mvc.AdomdDataSourceActionAttribute"/>.
+            </summary>
+        </member>
+        <member name="P:Infragistics.Web.Mvc.AdomdDataSourceModel.ConnectionString">
+            <summary>
+            Gets or sets the ADOMD connection string.
+            </summary>
+        </member>
+        <member name="P:Infragistics.Web.Mvc.AdomdDataSourceModel.RequestSerializer">
+            <summary>
+            Gets or sets the serializer used to process the requests.
+            </summary>
+        </member>
+        <member name="P:Infragistics.Web.Mvc.AdomdDataSourceModel.ResponseSerializer">
+            <summary>
+            Gets or sets the serializer used to process the responces.
+            </summary>
+        </member>
+    </members>
+</doc>

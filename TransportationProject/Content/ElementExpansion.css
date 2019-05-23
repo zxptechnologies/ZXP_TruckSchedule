@@ -1,0 +1,35 @@
+﻿.resizeCameraImg {
+    display: block;
+    width: 100% !important;
+    max-width: 48px !important;
+}
+
+.mi4-dialog-close-button {
+    float: right;
+    margin-right: 15px
+}
+
+.mi4-disabled-element {
+    color: #999;
+    opacity: .5;
+}
+
+.mi4-expandable-click {
+    width: 48px; /*width of your image*/
+    height: 48px; /*height of your image*/
+    /*background-image:url('/Images/plus-sign.png');*/
+    content: "/Images/plus-sign.png"
+}
+
+    .mi4-expandable-click:hover {
+        background-color: lightblue;
+    }
+
+.mi4-element-hidden-before-selection {
+    display: none;
+}
+
+.mi4-center-element {
+    text-align: center;
+    vertical-align: middle;
+}

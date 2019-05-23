@@ -1,0 +1,494 @@
+
+.weightCells {
+    border:solid;
+    border-color: lightgrey;
+}
+.scrollup {
+    width: 40px;
+    height: 40px;
+    position: fixed;
+    bottom: 50px;
+    right: 100px;
+    display: none;
+    text-indent: -9999px;
+    background: url(/Images/ScrollUpArrow.png) no-repeat;
+    background-color: #000;
+}
+
+.detailBox {
+    border: 1px solid #d3d3d3;
+    padding: 5px 0;    
+    margin-top: 5px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+}
+
+.tooltip {
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 125px;
+    background-color: #e3f5ff;
+    color: black;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;    
+    border: .5px solid #2F4F4F;
+    border-radius: 5px;
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+
+
+
+/*Master Page Menu Items*/
+ul[role="menubar"]{
+    font-size: 1.3em;
+    font-weight: 600;
+    margin: 0 0 5px;
+    padding: 0;
+    text-align: right;
+}
+
+ul li[role="menuitem"] {
+    display: inline;
+    list-style: none;
+    padding-left: 15px;
+}
+
+ul li[role="menuitem"] a {
+    background: none;
+    color: #999;
+    text-decoration: none;
+}
+
+ul li[role="menuitem"] a:hover {
+    color: #333;
+    text-decoration: none;
+}
+.mobileLbl {
+    font-size: .75em;
+}
+
+
+
+
+
+/*All Grids delete button show 
+.ui-iggrid-button-icon-only, .ui-iggrid-deletebutton {
+    display: inline-block !important; 
+} */
+/*All Grids*/
+
+/*.Mi4_Hidden{
+    visibility: hidden;
+}*/
+.cl_added_iggrid_fontresize{ font-size: 10px !important; }
+ .ui-widget-content { font-size:12px !important;}
+.ui-ig-record ui-iggrid-record{ height: 10px !important; }         
+.ui-ig-altrecord ui-iggrid-altrecord{ height: 10px !important;}
+
+#inspectionLabels {font-weight:bold}
+
+/*Add new row styling - make row taller */
+td.ui-iggrid-addrow.ui-widget-header{ height: 32px !important;} 
+
+.Mi4_Right
+{
+    float:right;
+}
+/*All Grids undo icon*/
+.Mi4_CrossIcon
+{
+     background-image:url(../Images/no_32.png); 
+     width:32px;
+     height:32px;
+     /*position: absolute;*/
+     margin-left: 10px;
+     border: 1px solid grey;
+     display: inline-block;
+     /*left:50%;
+     margin-left:-8px;*/
+}
+
+.Mi4_CrossIcon:hover
+{
+    background-color: yellow
+}
+
+.Mi4_CheckIcon
+{
+     background-image:url(../Images/ok_32.png); 
+     width:32px;
+     height:32px;
+     /*position: absolute;*/
+     margin-left: 10px;
+     border: 1px solid grey;
+     display: inline-block;
+     /*left:50%;
+     margin-left:-8px;*/
+}
+
+.Mi4_CheckIcon:hover
+{
+    background-color: yellow
+}
+
+.Mi4_undoIcon
+{
+     background-image:url(../Images/html-editor-sprite.png); 
+     background-position-x:0; 
+     background-position-y:-48px; 
+     width:16px;
+     height:16px;
+     position: absolute;
+     margin-left: 10px;
+     border: 1px solid grey;
+     /*left:50%;
+     margin-left:-8px;*/
+}
+.Mi4_undoIcon:hover
+{
+    background-color: yellow
+}
+
+/*TrailerOver*/
+#dwScheduleDiv1
+{
+    font-size:large;
+    font-weight:700;
+}
+.ui-iggrid th,.ui-iggrid th.ui-state-default,.ui-iggrid th.ui-state-hover,.ui-iggrid th.ui-state-active{text-align:left;white-space:normal;height:1.6em} /*AJ:Changed white-space from nowrap*/
+
+.redCell 
+{
+    background-color:red;
+    color:red;
+}
+.orangeCell 
+{
+    background-color:orange;
+    color:orange;
+}
+.yellowCell 
+{
+    background-color:yellow;
+    color:yellow;
+}
+/*Hide infragistics upload button "upload file"*/
+ .ui-igstartupbrowsebutton, .ui-igupload .ui-igupload-browsebutton 
+    {
+        background-color: Red !important;
+        background: none;
+        border: 0px;
+        /*font-weight: normal;*/
+        text-shadow: 0 1px 0 rgba(83, 83, 83, 0.8);
+        display: none;
+    }
+
+
+ /*Wait And Dock Overview, TrailerOverview*/
+ .needsTruckMove{
+    background-color: lightcoral !important;
+    width: 100%;
+    height: 100%; 
+    display:inline-block;
+
+}
+
+  .needsTruckMoveGreen{
+    background-color: lightgreen !important;
+    width: 100%;
+    height: 100%; 
+    display:inline-block;
+
+}
+
+ /*Inspection*/
+.needsTestInput{
+    background-color: lightcoral !important;
+    width: 100%;
+    height: 100%; 
+    display:inline-block;
+
+}
+.tblTruckDetailsStyle {
+    width:100%;
+}
+.tblTruckDetailsStyle th, .tblTruckDetailsStyle td  {
+    border: 1px solid #888;
+    border-collapse: collapse;
+}
+/*.tblTruckDetailsStyle td {
+    border: 1px solid #888;
+    border-collapse: collapse;
+}*/
+.tblTruckDetailsStyle th, .tblTruckDetailsStyle td {
+    padding: 5px;
+    text-align: left;
+}
+/*.tblTruckDetailsStyle td {
+    padding: 5px;
+    text-align: left;
+}*/
+.tblTruckDetailsStyle tr:nth-child(even) {
+    background-color: #eee;
+}
+.tblTruckDetailsStyle tr:nth-child(odd) {
+   background-color:#fff;
+}
+.tblTruckDetailsStyle th	{
+    background-color: #888;
+    color: white;
+}
+
+#AdminDeleteButton {
+    right: 0;
+    float:right; 
+    position: absolute;
+}
+#AdminDeleteButton > input{
+
+}
+#tblNewInspections {
+    width: 50%
+}
+#tblNewInspections tr:nth-child(1) {
+    width: 60%
+}
+#tblNewInspections tr:nth-child(2) {
+    width: 40%
+}
+
+.radButtonLarger
+{   margin: 0px; 
+    width: 2em;
+    height: 2em;
+    background: none !important; 
+}
+  /*AdminPage Related */
+
+#AdminMainPageMenuPanel
+{
+        float:left;
+        height: 100%;
+        width:15%;
+}
+
+#AdminMainPageContent
+{
+        float:left;
+        height:100%;
+        width:100%;
+}
+.AdminInnerContent
+{   height: 100%;
+    width: 100%;
+}
+/*Grid Column Related*/
+.ColumnContentExtend
+{
+    width: 100%  !important; 
+}
+.ContentExtend
+{
+    width: 100%  !important; 
+}
+#gridFiles
+{
+    width: 100%  !important; 
+}
+ /*Progress Circle; Modal */
+#progressBackgroundFilter {position:fixed;top:0px;bottom:0px;left:0px;right:0px;overflow:hidden;padding:0;margin:0;background-color:#000;filter:alpha(opacity=50);opacity:0.5;z-index:1000;}
+#processMessage {position:fixed;top:30%;left:43%;padding:10px;width:14%;z-index:1001;background-color:#fff;border:solid 1px #000;}
+
+.yellowCell
+{
+    background-color: yellow !important;
+    height: 100%;
+    width: 100%;
+    display:inline-block;
+}
+.orangeCell
+{
+    background-color: orange !important;
+    height: 100%;
+    width: 100%;
+    display:inline-block;
+}
+.redCell
+{
+    background-color: red !important;
+    height: 100%;
+    width: 100%;
+    display:inline-block;
+}
+.normalCell
+{
+    height: 100%;
+    width: 100%;
+    display:inline-block;
+}
+/*.ui-iggrid table tbody td
+{
+        padding: 0px
+}*/
+
+
+.logWindow { /*todo change background color based on color scheme */
+             float:right;
+             background-color:white;
+             /*position: relative;
+                 border: 1px solid blue;*/
+             display: inline-block;
+             overflow: visible;
+             position: absolute;
+             width: 350px;
+             height: auto;
+   /* top: 155px;
+        overflow-y: auto;*/
+    right: 8px;
+    z-index: 3;
+    font-size: 85%;
+    border-style: solid;
+     border-color: yellow;
+}
+.logWindow:hover {
+    z-index: 2;
+}
+.logTitleBar{
+    background: #FEFEFE;
+    height: 25px;
+    width: 350px;
+}
+.logTableWrapper { 
+    width: auto;
+    /*overflow-y: auto;*/ 
+    width: 100%; 
+    padding: 0.5em; 
+    padding-bottom: 0em;
+    overflow: auto; 
+    bottom: 305px;
+    right: 5px;
+    background-color: white;
+}
+#logButton {
+    width: 25px;
+    height: 23px;
+    float: left;
+    cursor: pointer;
+    width: auto;
+}
+
+@media (max-width:750px) {
+    .ui-iggrid-header {
+        text-align: center !important;
+        font-size: 85%;
+    }
+
+    .ui-iggrid .ui-iggrid-tablebody td {
+        font-size: 75%;
+    }
+
+    /*for inspection page*/
+    #t01 {
+        min-width: 75%;
+        max-width: 100%;
+    }
+
+        #t01 th {
+            font-weight: normal;
+            font-size: 85%;
+        }
+
+        #t01 td {
+            font-size: 55%;
+        }
+
+    #dvTrailerInspections {
+        font-size: 75%;
+    }
+
+    #dvLocStatDisabled {
+        font-size: 75%;
+    }
+    /*for truck log*/
+    #logWindow {
+        border:1px solid black;
+    }
+    #logButton {
+        height:24px; 
+        width:24px; 
+        font-size: 10px;
+    }
+    #tLogMax {
+        height:24px; 
+        width:24px;
+        display:none;
+    }
+    #tLogMini {
+        height:24px; 
+        width:24px;
+    }
+    .logTitleBar {
+        font-size: 15px;
+    }
+    #logTableWrapper {
+        /*background-color:lightblue; 
+        opacity:0.9;*/
+    }
+    /*.arrowButton { 
+        background-image: url(Images/triangleDown.png);
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  height: 16px;
+  width: 16px;
+  border: none;
+    }*/
+
+   /*Style grid row elements to have smaller font and smaller row/cell height*/
+
+    /*unfinished mobile menu styling
+
+        #menuIcon {
+        width: 10%; 
+        height: auto;
+
+    }
+ul[role="menubar"]{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: block;
+    font-size: .75em;
+    font-weight: 600;
+}
+
+ul li[role="menuitem"] {
+    list-style: none;
+}
+
+ul li[role="menuitem"] a {
+    background: none;
+    color: #999;
+    text-decoration: none;
+}
+
+ul li[role="menuitem"] a:hover {
+    color: #333;
+    text-decoration: none;
+}*/
+}

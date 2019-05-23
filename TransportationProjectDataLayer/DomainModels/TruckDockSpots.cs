@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace TransportationProjectDataLayer.DomainModels
 {
-    public class vm_dd_TruckDockSpots
+    public class TruckDockSpots
     {
-        public vm_dd_TruckDockSpots()
+        public TruckDockSpots()
         { }
 
-        public vm_dd_TruckDockSpots(int id)
+        public TruckDockSpots(int id)
         {
             SpotId = id;
         }
 
-        public vm_dd_TruckDockSpots(int id, string desc, string sType, double blockHours, bool isdisabled)
+        public TruckDockSpots(int id, string desc, string sType, double blockHours, bool isdisabled)
         {
             SpotId = id;
             SpotDescription = desc;

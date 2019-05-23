@@ -178,6 +178,57 @@ namespace TransportationProjectDataLayer
             return data;
 
         }
+
+        public List<CMS_AvailablePO> GetAvailableCMSPOs()
+        {
+            List<CMS_AvailablePO> data = new List<CMS_AvailablePO>();
+            try
+            {
+                string sqlCmdText;
+                sqlCmdText = string.Concat("SELECT PONUM, Prod1 , Prod2 , Prod3 , isOrder , ZXPPONUM ",
+                                     "FROM ZXPTruckSchedules.dbo.CMS_AvailablePO ORDER BY PONUM DESC");
+               
+
+                using (SqlConnection sqlConn = GetConnection())
+                {
+                    sqlConn.Open();
+                    SqlDataReader sReader;
+                    using (SqlCommand cmd = new SqlCommand(sqlCmdText, sqlConn))
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        sReader = cmd.ExecuteReader();
+
+                    }
+
+                    while (sReader.Read())
+                    {
+                        CMS_AvailablePO pData = new CMS_AvailablePO();
+
+                        
+                        pData.PONUM = DBHelper.GetValueOrDefault<int>(sReader, sReader.GetOrdinal("PONUM"));
+                        pData.Prod1 = sReader["Prod1"].ToString();
+                        pData.Prod2 = sReader["Prod2"].ToString();
+                        pData.Prod3 = sReader["Prod3"].ToString();
+                        pData.isOrder = DBHelper.GetValueOrDefault<bool>(sReader, sReader.GetOrdinal("isOrder"));
+                        pData.ZXPPONUM = sReader["ZXPPONUM"].ToString();
+                        data.Add(pData);
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                string strErr = " Exception Error in DataProvider GetAvailableCMSPOs(). Details: " + ex.ToString();
+                MessageLog alog = new MessageLog(MessageType.Exception, "GetAvailableCMSPOs Exception Message=" + strErr);
+                logger.Error(alog.CreateAuditLogMessage());
+
+                throw;
+            }
+            return data;
+
+
+
+        }
         public List<TrailerGridData> GetTrailerGridData()
         {
             List<TrailerGridData> data = new List<TrailerGridData>();

@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransportationProject", "TransportationProject.csproj", "{4430C3CF-61BD-49B9-BA54-EDB7A3843B20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportViewer", "..\..\ReportViewer\ReportViewer\ReportViewer.csproj", "{6A9689BF-8AE3-4F16-AC4A-1B1390CE8FBE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransportationProjectDataLayer", "..\TransportationProjectDataLayer\TransportationProjectDataLayer.csproj", "{BF746503-2EA0-41BD-B8CF-152B204B07C3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4430C3CF-61BD-49B9-BA54-EDB7A3843B20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4430C3CF-61BD-49B9-BA54-EDB7A3843B20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4430C3CF-61BD-49B9-BA54-EDB7A3843B20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4430C3CF-61BD-49B9-BA54-EDB7A3843B20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A9689BF-8AE3-4F16-AC4A-1B1390CE8FBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A9689BF-8AE3-4F16-AC4A-1B1390CE8FBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A9689BF-8AE3-4F16-AC4A-1B1390CE8FBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A9689BF-8AE3-4F16-AC4A-1B1390CE8FBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF746503-2EA0-41BD-B8CF-152B204B07C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF746503-2EA0-41BD-B8CF-152B204B07C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF746503-2EA0-41BD-B8CF-152B204B07C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF746503-2EA0-41BD-B8CF-152B204B07C3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Data.6.0.1304.0\lib\NET45
+		SolutionGuid = {B31F18CE-7E16-46DD-9054-545DDA8C1AF1}
+	EndGlobalSection
+EndGlobal

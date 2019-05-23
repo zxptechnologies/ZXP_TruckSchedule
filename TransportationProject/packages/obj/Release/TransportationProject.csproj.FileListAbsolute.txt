@@ -1,0 +1,5 @@
+C:\Adriana SVN Repos\ZXP Repo\Projects\Transportation Project\TransportationProject\bin\TransportationProject.dll
+C:\Adriana SVN Repos\ZXP Repo\Projects\Transportation Project\TransportationProject\bin\TransportationProject.pdb
+C:\Adriana SVN Repos\ZXP Repo\Projects\Transportation Project\TransportationProject\obj\Release\TransportationProject.csprojResolveAssemblyReference.cache
+C:\Adriana SVN Repos\ZXP Repo\Projects\Transportation Project\TransportationProject\obj\Release\TransportationProject.dll
+C:\Adriana SVN Repos\ZXP Repo\Projects\Transportation Project\TransportationProject\obj\Release\TransportationProject.pdb

@@ -1,0 +1,32 @@
+﻿body {
+     font-size: 62.5%;
+}
+
+h2
+{
+    font-size: 1.5em;
+}
+
+.ui-iggrid-header {
+	text-align: center !important;
+	font-size: .9em;
+}
+
+.ui-iggrid .ui-iggrid-tablebody td {
+    font-size: 1em;
+    height: 50px;
+}
+
+td.ui-iggrid-addrow.ui-widget-header{ height: 3.2em} 
+
+.cl_added_iggrid_fontresize{ font-size: .9em; }
+ .ui-widget-content { font-size: .9em;}
+.ui-ig-record ui-iggrid-record{ height: .9em; }         
+.ui-ig-altrecord ui-iggrid-altrecord{ height: .9em;}
+.ui-iggrid-filterrow ui-widget{ font-size: .9em}
+
+
+
+input[type=button] {
+   white-space:normal;
+}

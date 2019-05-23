@@ -1,6 +1,0 @@
-C:\Users\clloren\Documents\Repos\ZXP\Projects\Transportation Project\TransportationProjectDataLayer\bin\Release\TransportationProjectDataLayer.dll
-C:\Users\clloren\Documents\Repos\ZXP\Projects\Transportation Project\TransportationProjectDataLayer\bin\Release\TransportationProjectDataLayer.pdb
-C:\Users\clloren\Documents\Repos\ZXP\Projects\Transportation Project\TransportationProjectDataLayer\obj\Release\TransportationProjectDataLayer.csprojAssemblyReference.cache
-C:\Users\clloren\Documents\Repos\ZXP\Projects\Transportation Project\TransportationProjectDataLayer\obj\Release\TransportationProjectDataLayer.csproj.CoreCompileInputs.cache
-C:\Users\clloren\Documents\Repos\ZXP\Projects\Transportation Project\TransportationProjectDataLayer\obj\Release\TransportationProjectDataLayer.dll
-C:\Users\clloren\Documents\Repos\ZXP\Projects\Transportation Project\TransportationProjectDataLayer\obj\Release\TransportationProjectDataLayer.pdb

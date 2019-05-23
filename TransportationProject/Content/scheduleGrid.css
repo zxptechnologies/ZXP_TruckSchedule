@@ -1,0 +1,110 @@
+﻿body {
+}
+
+
+/*---------Header---------*/
+#tblSchedGridHeader
+{
+    position:fixed; /*keep postion relative to container; keep the table floating when scrolling down  */
+}
+
+#tblSchedGridHeader th
+{
+    background-color : lightblue;
+    min-width: 70px;
+    max-width: 70px;
+    border: 1px solid lightgray;
+}
+
+/*---------
+Min-width Needs to be the same as the #tblSchedGrid td styling
+-----------*/
+#tblSchedGridHeader td 
+{
+    white-space: pre;
+    min-width: 70px;
+    max-width: 70px;
+    max-height: 1px;
+
+    border: 1px solid rgba(0, 0, 0, 0.0);
+    
+    /*styling to make td look invisible 
+    background: transparent;
+    background-color: rgba(0, 0, 0, 0.0);
+    opacity:0.0;
+    border-color: rgba(0, 0, 0, 0.0);*/
+}
+
+/*---------Grid-----------*/
+#dwScheduleTable
+{
+    /*make sure this is smaller than dialog box or container*/
+   max-height:95%;
+   /*overflow-y:auto;*/
+}
+
+
+#tblSchedGrid tr:hover {
+    background-color: lightgreen;
+}
+
+#tblSchedGrid tr:hover td {
+    background-color: transparent; /* or #000 */
+}
+
+#tblSchedGrid th
+{
+    background-color : lightblue;
+    min-width: 70px;
+    max-width: 70px;
+    border: 1px solid lightgray;
+}
+
+
+#tblSchedGrid
+{
+    background-color : lightblue;
+}
+
+/*---------
+Min-width eeds to be the same as the #tblSchedGridHeader td styling
+-----------*/
+#tblSchedGrid td
+{
+    white-space: pre;
+    min-width: 70px;
+    max-width: 70px;
+
+}
+
+#tblSchedGrid td
+{
+     border: 1px solid lightgray;
+}
+
+.cell_notAvailable.cell_offHours
+{
+    background-color : lightgrey
+}
+
+.cell_Available.cell_Other
+{
+    background-color : navajowhite
+}
+.cell_notAvailable
+{
+    background-color : lightcoral
+}
+.cell_Available
+{
+    background-color: antiquewhite
+}
+.cell_Selected
+{
+    background-color: green !important
+}
+.cell_Available.cell_ScheduledButOverWritable
+{
+    background-color: lightyellow
+
+}

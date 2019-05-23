@@ -1,0 +1,3289 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit http://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>C:\Users\clloren\Desktop\Publish_ TruckSchedule</_PublishTargetUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="Account/EmailReset.aspx">
+      <publishTime>03/01/2019 11:47:26</publishTime>
+    </File>
+    <File Include="Account/Login.aspx">
+      <publishTime>03/08/2019 11:00:18</publishTime>
+    </File>
+    <File Include="Account/Manage.aspx">
+      <publishTime>05/08/2015 10:24:12</publishTime>
+    </File>
+    <File Include="Account/OpenAuthProviders.ascx">
+      <publishTime>05/08/2015 10:24:10</publishTime>
+    </File>
+    <File Include="Account/PasswordReset.aspx">
+      <publishTime>03/08/2019 10:03:08</publishTime>
+    </File>
+    <File Include="Account/Register.aspx">
+      <publishTime>05/08/2015 10:24:12</publishTime>
+    </File>
+    <File Include="Account/RegisterExternalLogin.aspx">
+      <publishTime>05/08/2015 10:24:12</publishTime>
+    </File>
+    <File Include="Account/Web.config">
+      <publishTime>05/08/2015 10:24:10</publishTime>
+    </File>
+    <File Include="AdminMainPage.aspx">
+      <publishTime>02/01/2019 09:40:24</publishTime>
+    </File>
+    <File Include="AdminPage.Master">
+      <publishTime>03/09/2018 13:46:18</publishTime>
+    </File>
+    <File Include="Admin_Alerts.aspx">
+      <publishTime>03/22/2017 15:03:38</publishTime>
+    </File>
+    <File Include="Admin_AppSettings.aspx">
+      <publishTime>12/06/2018 13:40:18</publishTime>
+    </File>
+    <File Include="Admin_CleanUp.aspx">
+      <publishTime>03/15/2019 10:59:48</publishTime>
+    </File>
+    <File Include="Admin_CustomerVendorProducts.aspx">
+      <publishTime>11/07/2016 09:15:20</publishTime>
+    </File>
+    <File Include="Admin_DockSpots.aspx">
+      <publishTime>02/01/2019 08:56:30</publishTime>
+    </File>
+    <File Include="Admin_InspectionLists.aspx">
+      <publishTime>03/09/2018 12:04:05</publishTime>
+    </File>
+    <File Include="Admin_Inspections.aspx">
+      <publishTime>12/13/2016 12:07:40</publishTime>
+    </File>
+    <File Include="Admin_Patterns.aspx">
+      <publishTime>02/01/2019 09:31:35</publishTime>
+    </File>
+    <File Include="Admin_Products.aspx">
+      <publishTime>02/12/2019 12:17:45</publishTime>
+    </File>
+    <File Include="Admin_Tanks.aspx">
+      <publishTime>02/01/2019 09:01:35</publishTime>
+    </File>
+    <File Include="Admin_UserAlerts.aspx">
+      <publishTime>12/12/2016 12:36:08</publishTime>
+    </File>
+    <File Include="Admin_Users.aspx">
+      <publishTime>03/20/2017 15:29:40</publishTime>
+    </File>
+    <File Include="Admin_Weights.aspx">
+      <publishTime>12/12/2016 13:50:22</publishTime>
+    </File>
+    <File Include="alertsprocessing.aspx">
+      <publishTime>11/07/2016 09:15:10</publishTime>
+    </File>
+    <File Include="AppCodeCopy/TruckScheduleAlertMessenger.ps1">
+      <publishTime>08/30/2016 16:25:56</publishTime>
+    </File>
+    <File Include="AppCodeCopy/TruckScheduleAutoTaskCaller.ps1">
+      <publishTime>03/09/2018 11:21:09</publishTime>
+    </File>
+    <File Include="App_Code/TruckScheduleAlertMessenger.ps1">
+      <publishTime>08/30/2016 16:25:56</publishTime>
+    </File>
+    <File Include="App_Code/TruckScheduleAutoTaskCaller.ps1">
+      <publishTime>03/09/2018 11:21:09</publishTime>
+    </File>
+    <File Include="bin/Antlr3.Runtime.dll">
+      <publishTime>02/15/2017 13:38:38</publishTime>
+    </File>
+    <File Include="bin/AspNet.ScriptManager.jQuery.dll">
+      <publishTime>02/15/2017 13:38:10</publishTime>
+    </File>
+    <File Include="bin/AspNet.ScriptManager.jQuery.UI.Combined.dll">
+      <publishTime>02/15/2017 13:38:12</publishTime>
+    </File>
+    <File Include="bin/DotNetOpenAuth.AspNet.dll">
+      <publishTime>02/15/2017 13:38:12</publishTime>
+    </File>
+    <File Include="bin/DotNetOpenAuth.Core.dll">
+      <publishTime>02/15/2017 13:38:14</publishTime>
+    </File>
+    <File Include="bin/DotNetOpenAuth.OAuth.Consumer.dll">
+      <publishTime>02/15/2017 13:38:16</publishTime>
+    </File>
+    <File Include="bin/DotNetOpenAuth.OAuth.dll">
+      <publishTime>02/15/2017 13:38:16</publishTime>
+    </File>
+    <File Include="bin/DotNetOpenAuth.OpenId.dll">
+      <publishTime>02/15/2017 13:38:18</publishTime>
+    </File>
+    <File Include="bin/DotNetOpenAuth.OpenId.RelyingParty.dll">
+      <publishTime>02/15/2017 13:38:20</publishTime>
+    </File>
+    <File Include="bin/EntityFramework.dll">
+      <publishTime>02/15/2017 13:38:22</publishTime>
+    </File>
+    <File Include="bin/Infragistics.Web.Mvc.dll">
+      <publishTime>12/10/2015 03:44:12</publishTime>
+    </File>
+    <File Include="bin/Microsoft.ApplicationBlocks.Data.dll">
+      <publishTime>03/31/2017 12:14:00</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AspNet.FriendlyUrls.dll">
+      <publishTime>07/28/2016 17:08:30</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AspNet.Membership.OpenAuth.dll">
+      <publishTime>02/15/2017 13:38:28</publishTime>
+    </File>
+    <File Include="bin/Microsoft.AspNet.Web.Optimization.WebForms.dll">
+      <publishTime>02/15/2017 13:38:36</publishTime>
+    </File>
+    <File Include="bin/Microsoft.ScriptManager.MSAjax.dll">
+      <publishTime>02/15/2017 13:38:32</publishTime>
+    </File>
+    <File Include="bin/Microsoft.ScriptManager.WebForms.dll">
+      <publishTime>02/15/2017 13:38:34</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Web.Infrastructure.dll">
+      <publishTime>02/15/2017 13:38:36</publishTime>
+    </File>
+    <File Include="bin/Mono.Math.dll">
+      <publishTime>02/15/2017 13:38:18</publishTime>
+    </File>
+    <File Include="bin/Org.Mentalis.Security.Cryptography.dll">
+      <publishTime>02/15/2017 13:38:18</publishTime>
+    </File>
+    <File Include="bin/System.Transactions.dll">
+      <publishTime>09/26/2012 05:16:08</publishTime>
+    </File>
+    <File Include="bin/System.Web.Mvc.dll">
+      <publishTime>09/26/2014 10:51:06</publishTime>
+    </File>
+    <File Include="bin/System.Web.Optimization.dll">
+      <publishTime>02/15/2017 13:38:34</publishTime>
+    </File>
+    <File Include="bin/System.Web.Providers.dll">
+      <publishTime>02/15/2017 13:38:28</publishTime>
+    </File>
+    <File Include="bin/TransportationProject.dll">
+      <publishTime>03/15/2019 13:46:00</publishTime>
+    </File>
+    <File Include="bin/TransportationProject.pdb">
+      <publishTime>03/15/2019 13:46:00</publishTime>
+    </File>
+    <File Include="bin/TransportationProjectDataLayer.dll">
+      <publishTime>03/08/2019 15:49:10</publishTime>
+    </File>
+    <File Include="bin/TransportationProjectDataLayer.pdb">
+      <publishTime>03/08/2019 15:49:10</publishTime>
+    </File>
+    <File Include="bin/WebGrease.dll">
+      <publishTime>02/15/2017 13:38:38</publishTime>
+    </File>
+    <File Include="Bundle.config">
+      <publishTime>11/07/2016 09:15:42</publishTime>
+    </File>
+    <File Include="checkalerts.aspx">
+      <publishTime>11/07/2016 09:15:18</publishTime>
+    </File>
+    <File Include="COFAUpload.aspx">
+      <publishTime>02/01/2019 09:31:35</publishTime>
+    </File>
+    <File Include="Content/buttonStyles.css">
+      <publishTime>01/25/2019 13:20:02</publishTime>
+    </File>
+    <File Include="Content/InspectionsPageStyle.css">
+      <publishTime>09/08/2016 13:23:14</publishTime>
+    </File>
+    <File Include="Content/scheduleGrid.css">
+      <publishTime>05/09/2016 16:04:38</publishTime>
+    </File>
+    <File Include="Content/Site.css">
+      <publishTime>03/09/2018 11:51:08</publishTime>
+    </File>
+    <File Include="Content/sliderStyle.css">
+      <publishTime>12/06/2018 12:36:18</publishTime>
+    </File>
+    <File Include="Content/StyleModifications.css">
+      <publishTime>02/13/2019 11:36:07</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_flat_0_aaaaaa_40x100.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_flat_75_ffffff_40x100.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_glass_55_fbf9ee_1x400.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_glass_65_ffffff_1x400.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_glass_75_dadada_1x400.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_glass_75_e6e6e6_1x400.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_glass_95_fef1ec_1x400.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-bg_highlight-soft_75_cccccc_1x100.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-icons_222222_256x240.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-icons_2e83ff_256x240.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-icons_454545_256x240.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-icons_888888_256x240.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/images/ui-icons_cd0a0a_256x240.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery-ui.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.accordion.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.all.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.autocomplete.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.base.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.button.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.core.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.datepicker.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.dialog.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.progressbar.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.resizable.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.selectable.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.slider.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.tabs.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/jquery.ui.theme.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-bg_flat_0_aaaaaa_40x100.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-bg_flat_75_ffffff_40x100.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-bg_glass_55_fbf9ee_1x400.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-bg_glass_65_ffffff_1x400.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-bg_glass_75_dadada_1x400.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-bg_glass_75_e6e6e6_1x400.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-bg_glass_95_fef1ec_1x400.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-bg_highlight-soft_75_cccccc_1x100.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-icons_222222_256x240.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-icons_2e83ff_256x240.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-icons_454545_256x240.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-icons_888888_256x240.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/images/ui-icons_cd0a0a_256x240.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery-ui.min.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.accordion.min.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.autocomplete.min.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.button.min.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.core.min.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.datepicker.min.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.dialog.min.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.progressbar.min.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.resizable.min.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.selectable.min.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.slider.min.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.tabs.min.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/themes/base/minified/jquery.ui.theme.min.css">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Content/TruckScheduleMobile.css">
+      <publishTime>12/14/2018 10:00:42</publishTime>
+    </File>
+    <File Include="dataProcessingAndCleanUp.aspx">
+      <publishTime>03/28/2018 11:53:29</publishTime>
+    </File>
+    <File Include="Default.aspx">
+      <publishTime>12/12/2018 14:06:39</publishTime>
+    </File>
+    <File Include="dockManager.aspx">
+      <publishTime>02/01/2019 09:26:52</publishTime>
+    </File>
+    <File Include="DummyPDF.pdf">
+      <publishTime>11/07/2016 09:15:42</publishTime>
+    </File>
+    <File Include="ErrorPage.aspx">
+      <publishTime>11/07/2016 09:15:42</publishTime>
+    </File>
+    <File Include="favicon.ico">
+      <publishTime>11/07/2016 09:15:42</publishTime>
+    </File>
+    <File Include="FileUploadAndScans.aspx">
+      <publishTime>05/03/2018 15:55:34</publishTime>
+    </File>
+    <File Include="Global.asax">
+      <publishTime>11/07/2016 09:15:42</publishTime>
+    </File>
+    <File Include="guardStation.aspx">
+      <publishTime>03/15/2019 10:27:12</publishTime>
+    </File>
+    <File Include="Images/10p_downarrow.png">
+      <publishTime>11/01/2016 16:45:46</publishTime>
+    </File>
+    <File Include="Images/10p_uparrow.png">
+      <publishTime>11/01/2016 16:45:52</publishTime>
+    </File>
+    <File Include="Images/accent.png">
+      <publishTime>05/08/2015 10:24:24</publishTime>
+    </File>
+    <File Include="Images/bullet.png">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Images/camera48x48.png">
+      <publishTime>07/06/2016 18:19:42</publishTime>
+    </File>
+    <File Include="Images/CheckMark.gif">
+      <publishTime>09/17/2015 18:21:58</publishTime>
+    </File>
+    <File Include="Images/heroAccent.png">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Images/html-editor-sprite.png">
+      <publishTime>11/19/2015 15:09:26</publishTime>
+    </File>
+    <File Include="Images/menuIcon.png">
+      <publishTime>11/01/2016 12:42:22</publishTime>
+    </File>
+    <File Include="Images/no_16.png">
+      <publishTime>12/10/2015 12:59:30</publishTime>
+    </File>
+    <File Include="Images/no_22.png">
+      <publishTime>12/10/2015 12:59:30</publishTime>
+    </File>
+    <File Include="Images/no_32.png">
+      <publishTime>12/10/2015 12:59:30</publishTime>
+    </File>
+    <File Include="Images/no_48.png">
+      <publishTime>12/10/2015 12:59:30</publishTime>
+    </File>
+    <File Include="Images/ok_16.png">
+      <publishTime>12/10/2015 12:59:30</publishTime>
+    </File>
+    <File Include="Images/ok_22.png">
+      <publishTime>12/10/2015 12:59:30</publishTime>
+    </File>
+    <File Include="Images/ok_32.png">
+      <publishTime>12/10/2015 12:59:30</publishTime>
+    </File>
+    <File Include="Images/ok_48.png">
+      <publishTime>12/10/2015 12:59:30</publishTime>
+    </File>
+    <File Include="Images/orderedList0.png">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Images/orderedList1.png">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Images/orderedList2.png">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Images/orderedList3.png">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Images/orderedList4.png">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Images/orderedList5.png">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Images/orderedList6.png">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Images/orderedList7.png">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Images/orderedList8.png">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Images/orderedList9.png">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Images/ScrollUpArrow.png">
+      <publishTime>11/01/2016 13:34:54</publishTime>
+    </File>
+    <File Include="Images/tLogMaxi.png">
+      <publishTime>02/22/2016 18:15:28</publishTime>
+    </File>
+    <File Include="Images/tLogMini.png">
+      <publishTime>02/22/2016 18:15:30</publishTime>
+    </File>
+    <File Include="Images/triangleDown.png">
+      <publishTime>05/14/2015 09:31:32</publishTime>
+    </File>
+    <File Include="Images/triangleUp.png">
+      <publishTime>04/27/2016 13:40:14</publishTime>
+    </File>
+    <File Include="Images/xclose.png">
+      <publishTime>05/14/2015 09:31:32</publishTime>
+    </File>
+    <File Include="Images/ZXP_Large_resize300trans.png">
+      <publishTime>11/12/2015 13:19:16</publishTime>
+    </File>
+    <File Include="inspection.aspx">
+      <publishTime>02/01/2019 09:18:06</publishTime>
+    </File>
+    <File Include="InspectionMobile.aspx">
+      <publishTime>02/01/2019 09:31:35</publishTime>
+    </File>
+    <File Include="inspectionNew.aspx">
+      <publishTime>02/01/2019 09:31:35</publishTime>
+    </File>
+    <File Include="loaderInstructions.aspx">
+      <publishTime>11/07/2016 09:15:18</publishTime>
+    </File>
+    <File Include="loaderMobile.aspx">
+      <publishTime>03/08/2019 13:46:16</publishTime>
+    </File>
+    <File Include="loaderTimeTracking.aspx">
+      <publishTime>02/01/2019 09:31:35</publishTime>
+    </File>
+    <File Include="packages.config">
+      <publishTime>03/31/2017 12:14:02</publishTime>
+    </File>
+    <File Include="patternList.aspx">
+      <publishTime>02/01/2019 09:36:50</publishTime>
+    </File>
+    <File Include="rejectTruck.aspx">
+      <publishTime>03/08/2019 14:08:21</publishTime>
+    </File>
+    <File Include="Samples.aspx">
+      <publishTime>02/13/2019 09:38:36</publishTime>
+    </File>
+    <File Include="ScaleIntEXE/TruckFileWriter.exe">
+      <publishTime>09/29/2016 18:08:36</publishTime>
+    </File>
+    <File Include="ScaleIntEXE/TruckFileWriter.exe.config">
+      <publishTime>09/29/2016 17:46:06</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-4.1.3-dist/css/.DS_Store">
+      <publishTime>11/12/2018 09:53:54</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-4.1.3-dist/css/bootstrap-grid.css">
+      <publishTime>11/12/2018 09:53:54</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-4.1.3-dist/css/bootstrap-grid.css.map">
+      <publishTime>11/12/2018 09:53:54</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-4.1.3-dist/css/bootstrap-grid.min.css">
+      <publishTime>11/12/2018 09:53:54</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-4.1.3-dist/css/bootstrap-grid.min.css.map">
+      <publishTime>11/12/2018 09:53:54</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-4.1.3-dist/css/bootstrap-reboot.css">
+      <publishTime>11/12/2018 09:53:54</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-4.1.3-dist/css/bootstrap-reboot.css.map">
+      <publishTime>11/12/2018 09:53:54</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-4.1.3-dist/css/bootstrap-reboot.min.css">
+      <publishTime>11/12/2018 09:53:54</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-4.1.3-dist/css/bootstrap-reboot.min.css.map">
+      <publishTime>11/12/2018 09:53:54</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-4.1.3-dist/css/bootstrap.css">
+      <publishTime>11/12/2018 09:53:54</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-4.1.3-dist/css/bootstrap.css.map">
+      <publishTime>11/12/2018 09:53:54</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-4.1.3-dist/css/bootstrap.min.css">
+      <publishTime>11/12/2018 09:53:54</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-4.1.3-dist/css/bootstrap.min.css.map">
+      <publishTime>11/12/2018 09:53:54</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-4.1.3-dist/js/bootstrap.bundle.js">
+      <publishTime>11/12/2018 09:53:54</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-4.1.3-dist/js/bootstrap.bundle.js.map">
+      <publishTime>11/12/2018 09:53:54</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-4.1.3-dist/js/bootstrap.bundle.min.js">
+      <publishTime>11/12/2018 09:53:54</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-4.1.3-dist/js/bootstrap.bundle.min.js.map">
+      <publishTime>11/12/2018 09:53:54</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-4.1.3-dist/js/bootstrap.js">
+      <publishTime>11/12/2018 09:53:54</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-4.1.3-dist/js/bootstrap.js.map">
+      <publishTime>11/12/2018 09:53:54</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-4.1.3-dist/js/bootstrap.min.js">
+      <publishTime>11/12/2018 09:53:54</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-4.1.3-dist/js/bootstrap.min.js.map">
+      <publishTime>11/12/2018 09:53:54</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-4.1.3-dist/js/jquery-3.3.1.min.js">
+      <publishTime>11/12/2018 10:00:52</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap-4.1.3-dist/js/popper.min.js">
+      <publishTime>11/12/2018 10:00:59</publishTime>
+    </File>
+    <File Include="Scripts/gridCreator.js">
+      <publishTime>01/27/2017 09:32:17</publishTime>
+    </File>
+    <File Include="Scripts/GridTemplates/DockManager_CompletedGrid.js">
+      <publishTime>10/22/2018 16:19:46</publishTime>
+    </File>
+    <File Include="Scripts/GridTemplates/DockManager_LoaderGrid.js">
+      <publishTime>02/01/2019 09:26:53</publishTime>
+    </File>
+    <File Include="Scripts/GridTemplates/DockManager_YardmuleGrid.js">
+      <publishTime>02/01/2019 13:14:19</publishTime>
+    </File>
+    <File Include="Scripts/GridTemplates/YardMuleRequestOverview_CompleteGrid.js">
+      <publishTime>02/01/2019 09:10:34</publishTime>
+    </File>
+    <File Include="Scripts/GridTemplates/YardMuleRequestOverview_YardmuleGrid.js">
+      <publishTime>02/01/2019 09:09:55</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/icon_sprite.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igBrowserLogos.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igGrid/blank.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igGrid/diagonals-medium.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igGrid/filter-icons-333333.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igGrid/filter-icons-FFFFFF.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igGrid/group-by-label-right-edge.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igGrid/touch-icons.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igGrid/touch-icons.svg">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/arrow_collapse.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/arrow_expand.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/arrow_redo.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/arrow_undo.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/background_color.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/check.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/cut.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/decrease-font-size.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/html-editor-sprite.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/html.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/html_add.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/html_delete.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/html_go.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/html_valid.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/image_add.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/increase-font-size.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/link.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/link_add.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/link_break.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/page_copy.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/page_paste.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/table-delete-column-icon.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/table-insert-column-icon.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/table.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/table_row_delete.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/table_row_insert.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/text_align_center.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/text_align_justify.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/text_align_left.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/text_align_right.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/text_bold.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/text_color.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/text_horizontalrule.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/text_indent.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/text_indent_remove.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/text_italic.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/text_list_bullets.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/text_list_numbers.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/text_strikethrough.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igHtmlEditor/text_underline.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igLoadingSmall.gif">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igPivot/dataselector-sprite.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igPivot/kpi-icons.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igPivot/pivot-header-icons.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igPopover/igPopoverArrowBottom.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igPopover/igPopoverArrowLeft.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igPopover/igPopoverArrowRight.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igPopover/igPopoverArrows.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igPopover/igPopoverArrowTop.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igRating/ig-rating-touch.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igRating/ig-rating-touchx2.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igVideoPlayer/igBigPauseButton.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igVideoPlayer/igBigPlayButton.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igVideoPlayer/igLoadingSmall.gif">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igVideoPlayer/igPlayButton24.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igVideoPlayer/igPlayButton32.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igVideoPlayer/igPlayButton48.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igVideoPlayer/igVPBackground.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igVideoPlayer/igVPBookmarkSprite.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/igVideoPlayer/igWarningIcon.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/images/ui-anim_basic_16x16.gif">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/infragistics.css">
+      <publishTime>12/10/2015 04:11:12</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/jquery-ui.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/jquery.ui.all.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/jquery.ui.base.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/jquery.ui.core.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/jquery.ui.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/jquery.ui.datepicker.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/jquery.ui.slider.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/jquery.ui.theme.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.barcode.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.bulletgraph.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.chart.css">
+      <publishTime>12/10/2015 04:11:12</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.chart.legacy.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.colorpicker.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.combo.css">
+      <publishTime>12/10/2015 04:11:12</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.dialog.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.editors.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.editors_new.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.grid.css">
+      <publishTime>12/10/2015 04:11:12</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.html5.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.htmleditor.css">
+      <publishTime>12/10/2015 04:11:12</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.layout.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.lineargauge.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.map.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.pivot.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.popover.css">
+      <publishTime>12/10/2015 04:11:12</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.radialgauge.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.radialmenu.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.rating.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.shared.css">
+      <publishTime>12/10/2015 04:11:12</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.sparkline.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.splitbutton.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.splitter.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.tilemanager.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.toolbar.css">
+      <publishTime>12/10/2015 04:11:12</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.toolbarbutton.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.tree.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.treegrid.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.upload.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.validator.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.videoplayer.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/structure/modules/infragistics.ui.zoombar.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/bootstrap/images/icon_sprite.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/bootstrap/images/igGrid/filter-icons-333333.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/bootstrap/images/igGrid/filter-icons-FFFFFF.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/bootstrap/images/igRating/ig-rating.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/bootstrap/images/igVideoPlayer/igVideoPlayerIcons.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/bootstrap/images/igVideoPlayer/igVPBackground.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/bootstrap/images/igVideoPlayer/igVPBookmarkSprite.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/bootstrap/images/ui-anim_basic_16x16.gif">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/bootstrap/images/ui-icons_222222_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/bootstrap/images/ui-icons_888888_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/bootstrap/images/ui-icons_ffffff_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/bootstrap/infragistics.theme.css">
+      <publishTime>12/10/2015 04:11:12</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/bootstrap/LESS/framework.less">
+      <publishTime>12/10/2015 03:03:40</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/bootstrap/LESS/infragistics.igniteui.theme.less">
+      <publishTime>12/10/2015 03:03:40</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/bootstrap/LESS/infragistics.jqueryui.theme.less">
+      <publishTime>12/10/2015 03:03:40</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/bootstrap/LESS/infragistics.theme.less">
+      <publishTime>12/10/2015 03:03:40</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/bootstrap/LESS/README.txt">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/bootstrap/LESS/variables-igniteui.less">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/bootstrap/LESS/variables.less">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/flatly/images/icon_sprite.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/flatly/images/igGrid/filter-icons-333333.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/flatly/images/igGrid/filter-icons-FFFFFF.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/flatly/images/igRating/ig-rating.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/flatly/images/igVideoPlayer/igVideoPlayerIcons.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/flatly/images/igVideoPlayer/igVPBackground.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/flatly/images/igVideoPlayer/igVPBookmarkSprite.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/flatly/images/ui-anim_basic_16x16.gif">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/flatly/images/ui-icons_222222_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/flatly/images/ui-icons_888888_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/flatly/images/ui-icons_ffffff_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/flatly/infragistics.theme.css">
+      <publishTime>12/10/2015 04:11:12</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics/framework.less">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics/images/icon_sprite.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics/images/igRating/ig-rating.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics/images/igVideoPlayer/igVideoPlayerIcons.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics/images/igVideoPlayer/igVPBackground.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics/images/igVideoPlayer/igVPBookmarkSprite.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics/images/ui-anim_basic_16x16.gif">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics/images/ui-icons_222222_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics/images/ui-icons_228ef1_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics/images/ui-icons_888888_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics/images/ui-icons_ffffff_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics/infragistics.theme.css">
+      <publishTime>12/10/2015 04:11:12</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics/infragistics.theme.less">
+      <publishTime>12/10/2015 03:03:40</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics2012/images/datepicker.gif">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics2012/images/gradient_1.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics2012/images/gradient_2.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics2012/images/gradient_3.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics2012/images/gradient_4.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics2012/images/gradient_5.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics2012/images/gradient_6.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics2012/images/gradient_7.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics2012/images/icon_sprite.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics2012/images/igRating/ig-rating.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics2012/images/igVideoPlayer/igVideoPlayerIcons.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics2012/images/igVideoPlayer/igVPBackground.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics2012/images/igVideoPlayer/igVPBookmarkSprite.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics2012/images/progress_bar.gif">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics2012/images/slider_handles.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics2012/images/slider_h_bg.gif">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics2012/images/slider_v_bg.gif">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics2012/images/tab_bg.gif">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics2012/images/ui-anim_basic_16x16.gif">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics2012/images/ui-icons_222222_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics2012/images/ui-icons_228ef1_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics2012/images/ui-icons_ffffff_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/infragistics2012/infragistics.theme.css">
+      <publishTime>12/10/2015 04:11:12</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/ios/framework.less">
+      <publishTime>12/10/2015 03:03:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/ios/images/icon_sprite.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/ios/images/igGrid/filter-icons-333333.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/ios/images/igGrid/filter-icons-FFFFFF.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/ios/images/igRating/ig-rating.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/ios/images/igVideoPlayer/igVideoPlayerIcons.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/ios/images/igVideoPlayer/igVPBackground.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/ios/images/igVideoPlayer/igVPBookmarkSprite.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/ios/images/ui-anim_basic_16x16.gif">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/ios/images/ui-icons_000000_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/ios/images/ui-icons_007aff_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/ios/images/ui-icons_8e8e93_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/ios/images/ui-icons_fd472b_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/ios/images/ui-icons_ffffff_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/ios/infragistics.theme.css">
+      <publishTime>12/10/2015 04:11:12</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/ios/infragistics.theme.less">
+      <publishTime>12/10/2015 03:03:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/metro/images/icon_sprite.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/metro/images/igGrid/filter-icons-858585.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/metro/images/igHtmlEditor/html-editor-sprite.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/metro/images/igRating/ig-rating-touch.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/metro/images/igRating/ig-rating-touchx2.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/metro/images/igRating/ig-rating.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/metro/images/igRating/SOURCE_ig-rating-touch.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/metro/images/igRating/SOURCE_ig-rating-touchx2.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/metro/images/igRating/SOURCE_ig-rating.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/metro/images/igTooltip/igTooltipArrows.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/metro/images/igVideoPlayer/igVideoPlayerIcons_858585.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/metro/images/igVideoPlayer/igVideoPlayerIcons_ffffff.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/metro/images/igVideoPlayer/igVPBookmarkSprite.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/metro/images/ui-anim_basic_16x16.gif">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/metro/images/ui-icons_00AADE_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/metro/images/ui-icons_222222_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/metro/images/ui-icons_565656_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/metro/images/ui-icons_858585_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/metro/images/ui-icons_ffffff_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/metro/infragistics.theme.css">
+      <publishTime>12/10/2015 04:11:12</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/superhero/images/icon_sprite.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/superhero/images/igGrid/filter-icons-333333.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/superhero/images/igGrid/filter-icons-FFFFFF.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/superhero/images/igRating/ig-rating.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/superhero/images/igVideoPlayer/igVideoPlayerIcons.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/superhero/images/igVideoPlayer/igVPBackground.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/superhero/images/igVideoPlayer/igVPBookmarkSprite.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/superhero/images/ui-anim_basic_16x16.gif">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/superhero/images/ui-icons_222222_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/superhero/images/ui-icons_888888_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/superhero/images/ui-icons_ffffff_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/superhero/infragistics.theme.css">
+      <publishTime>12/10/2015 04:11:12</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/yeti/images/icon_sprite.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/yeti/images/igGrid/filter-icons-333333.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/yeti/images/igGrid/filter-icons-FFFFFF.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/yeti/images/igRating/ig-rating.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/yeti/images/igVideoPlayer/igVideoPlayerIcons.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/yeti/images/igVideoPlayer/igVPBackground.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/yeti/images/igVideoPlayer/igVPBookmarkSprite.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/yeti/images/ui-anim_basic_16x16.gif">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/yeti/images/ui-icons_222222_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/yeti/images/ui-icons_888888_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/yeti/images/ui-icons_ffffff_256x240.png">
+      <publishTime>03/18/2015 14:39:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/css/themes/yeti/infragistics.theme.css">
+      <publishTime>12/10/2015 04:11:12</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/Documentation %28Online%29.url">
+      <publishTime>03/18/2015 14:39:36</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/infragistics.IgniteUI.debug.zip">
+      <publishTime>12/10/2015 04:06:32</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/extensions/igniteui-angular.js">
+      <publishTime>03/18/2015 15:59:38</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/extensions/infragistics.datasource.knockoutjs.js">
+      <publishTime>12/10/2015 04:06:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/extensions/infragistics.ui.combo.knockout-extensions.js">
+      <publishTime>12/10/2015 04:06:52</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/extensions/infragistics.ui.datachart.knockout-extensions.js">
+      <publishTime>12/10/2015 04:06:54</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/extensions/infragistics.ui.editors.knockout-extensions.js">
+      <publishTime>12/10/2015 04:06:54</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/extensions/infragistics.ui.grid.knockout-extensions.js">
+      <publishTime>12/10/2015 04:06:54</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/extensions/infragistics.ui.tree.knockout-extensions.js">
+      <publishTime>12/10/2015 04:06:54</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/extensions/README.igniteui-angular.html">
+      <publishTime>03/18/2015 14:39:56</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/i18n/infragistics-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/i18n/infragistics-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/i18n/infragistics-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/i18n/infragistics-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/i18n/infragistics-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/i18n/infragistics-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/infragistics.core.js">
+      <publishTime>12/10/2015 04:08:12</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/infragistics.dv.js">
+      <publishTime>12/10/2015 04:08:16</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/infragistics.loader.js">
+      <publishTime>12/10/2015 04:08:16</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/infragistics.lob.js">
+      <publishTime>12/10/2015 04:08:18</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding.core.js">
+      <publishTime>12/10/2015 04:07:26</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding.js">
+      <publishTime>12/10/2015 04:07:28</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding_big5.js">
+      <publishTime>12/10/2015 04:07:30</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding_cp437.js">
+      <publishTime>12/10/2015 04:07:30</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding_gb2312.js">
+      <publishTime>12/10/2015 04:07:32</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding_iso-8859-1.js">
+      <publishTime>12/10/2015 04:07:32</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding_iso-8859-11.js">
+      <publishTime>12/10/2015 04:07:32</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding_iso-8859-13.js">
+      <publishTime>12/10/2015 04:07:32</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding_iso-8859-15.js">
+      <publishTime>12/10/2015 04:07:32</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding_iso-8859-2.js">
+      <publishTime>12/10/2015 04:07:32</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding_iso-8859-3.js">
+      <publishTime>12/10/2015 04:07:34</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding_iso-8859-4.js">
+      <publishTime>12/10/2015 04:07:34</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding_iso-8859-5.js">
+      <publishTime>12/10/2015 04:07:34</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding_iso-8859-6.js">
+      <publishTime>12/10/2015 04:07:34</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding_iso-8859-7.js">
+      <publishTime>12/10/2015 04:07:34</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding_iso-8859-8.js">
+      <publishTime>12/10/2015 04:07:36</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding_iso-8859-9.js">
+      <publishTime>12/10/2015 04:07:36</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding_iso646-us.js">
+      <publishTime>12/10/2015 04:07:36</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding_ksc5601.js">
+      <publishTime>12/10/2015 04:07:38</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding_shift_jis.js">
+      <publishTime>12/10/2015 04:07:38</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding_windows-1250.js">
+      <publishTime>12/10/2015 04:07:38</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding_windows-1251.js">
+      <publishTime>12/10/2015 04:07:38</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding_windows-1252.js">
+      <publishTime>12/10/2015 04:07:38</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/encoding/infragistics.encoding_windows-1256.js">
+      <publishTime>12/10/2015 04:07:38</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.datasource-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.datasource-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.datasource-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.datasource-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.datasource-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.datasource-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.dvcommonwidget-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.dvcommonwidget-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.dvcommonwidget-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.dvcommonwidget-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.dvcommonwidget-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.dvcommonwidget-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.shared-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.shared-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.shared-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.shared-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.shared-ja.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.shared-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.templating-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.templating-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.templating-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.templating-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.templating-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.templating-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.barcode-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.barcode-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.barcode-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.barcode-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.barcode-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.barcode-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.combo-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.combo-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.combo-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.combo-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.combo-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.combo-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.dialog-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.dialog-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.dialog-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.dialog-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.dialog-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.dialog-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.doughnutchart-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.doughnutchart-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.doughnutchart-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.doughnutchart-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.doughnutchart-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.doughnutchart-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.editors-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.editors-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.editors-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.editors-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.editors-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.editors-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.grid-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.grid-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.grid-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.grid-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.grid-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.grid-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.htmleditor-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.htmleditor-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.htmleditor-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.htmleditor-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.htmleditor-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.htmleditor-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.pivot.shared-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.pivot.shared-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.pivot.shared-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.pivot.shared-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.pivot.shared-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.pivot.shared-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.pivotdataselector-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.pivotdataselector-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.pivotdataselector-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.pivotdataselector-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.pivotdataselector-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.pivotdataselector-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.pivotgrid-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.pivotgrid-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.pivotgrid-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.pivotgrid-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.pivotgrid-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.pivotgrid-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.popover-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.popover-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.popover-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.popover-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.popover-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.popover-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.rating-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.rating-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.rating-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.rating-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.rating-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.rating-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.splitter-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.splitter-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.splitter-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.splitter-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.splitter-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.splitter-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.tilemanager-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.tilemanager-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.tilemanager-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.tilemanager-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.tilemanager-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.tilemanager-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.toolbar-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.toolbar-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.toolbar-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.toolbar-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.toolbar-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.toolbar-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.tree-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.tree-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.tree-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.tree-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.tree-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.tree-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.treegrid-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.treegrid-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.treegrid-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.treegrid-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.treegrid-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.treegrid-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.upload-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.upload-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.upload-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.upload-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.upload-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.upload-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.validator-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.validator-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.validator-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.validator-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.validator-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.validator-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.videoplayer-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.videoplayer-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.videoplayer-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.videoplayer-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.videoplayer-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.videoplayer-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.zoombar-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.zoombar-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.zoombar-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.zoombar-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.zoombar-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.ui.zoombar-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.util-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.util-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.util-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.util-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.util-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/infragistics.util-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-af.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-ar.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-az.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-bg.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-bs.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-ca.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-cs.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-da.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-de.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-el.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-en-GB.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-en.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-es-419.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-es-MX.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-es.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-et.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-fa.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-fi.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-fo.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-fr-CH.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-fr.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-he.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-hr.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-hu.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-hy.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-i18n.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-id.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-is.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-it.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-ja.js">
+      <publishTime>03/18/2015 15:36:44</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-ko.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-lt.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-lv.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-ms.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-nl.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-no.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-pl.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-pt-BR.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-ro.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-ru.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-sk.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-sl.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-sq.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-sr-SR.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-sr.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-sv.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-ta.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-th.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-tr.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-uk.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-vi.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-zh-CN.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-zh-HK.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/i18n/regional/infragistics.ui.regional-zh-TW.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.barcode_qrcodebarcode.js">
+      <publishTime>12/10/2015 04:06:54</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.chart_annotationchart.js">
+      <publishTime>12/10/2015 04:06:54</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.chart_categorychart.js">
+      <publishTime>12/10/2015 04:06:54</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.chart_financialchart.js">
+      <publishTime>12/10/2015 04:06:56</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.chart_funnelchart.js">
+      <publishTime>12/10/2015 04:06:56</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.chart_piechart.js">
+      <publishTime>12/10/2015 04:06:56</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.chart_polarchart.js">
+      <publishTime>12/10/2015 04:06:56</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.chart_radialchart.js">
+      <publishTime>12/10/2015 04:06:58</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.chart_rangecategorychart.js">
+      <publishTime>12/10/2015 04:06:58</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.chart_scatterchart.js">
+      <publishTime>12/10/2015 04:06:58</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.chart_sparkline.js">
+      <publishTime>12/10/2015 04:06:58</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.chart_stackedchart.js">
+      <publishTime>12/10/2015 04:07:00</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.datachart.js">
+      <publishTime>12/10/2015 04:07:02</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.datasource.js">
+      <publishTime>12/10/2015 04:08:38</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.documents.core.js">
+      <publishTime>12/10/2015 04:07:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.dv.core.js">
+      <publishTime>12/10/2015 04:07:10</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.dv.simple.core.js">
+      <publishTime>12/10/2015 04:07:10</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.dvcommonwidget.js">
+      <publishTime>12/10/2015 04:08:38</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.excel.js">
+      <publishTime>12/10/2015 04:07:16</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.gauge_bulletgraph.js">
+      <publishTime>12/10/2015 04:07:18</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.gauge_lineargauge.js">
+      <publishTime>12/10/2015 04:07:18</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.gauge_radialgauge.js">
+      <publishTime>12/10/2015 04:07:20</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.geographicmap_core.js">
+      <publishTime>12/10/2015 04:07:20</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.gridexcelexporter.js">
+      <publishTime>12/10/2015 04:08:18</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.olapflatdatasource.js">
+      <publishTime>12/10/2015 04:07:22</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.olapxmladatasource.js">
+      <publishTime>12/10/2015 04:07:24</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.radialmenu_core.js">
+      <publishTime>12/10/2015 04:07:24</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.templating.js">
+      <publishTime>12/10/2015 04:08:40</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.barcode.js">
+      <publishTime>12/10/2015 04:08:20</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.basechart.js">
+      <publishTime>12/10/2015 04:08:20</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.bulletgraph.js">
+      <publishTime>12/10/2015 04:07:24</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.chart.js">
+      <publishTime>12/10/2015 04:08:20</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.chartlegend.js">
+      <publishTime>12/10/2015 04:08:20</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.colorpicker.js">
+      <publishTime>12/10/2015 04:08:20</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.colorpickersplitbutton.js">
+      <publishTime>12/10/2015 04:08:20</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.combo.js">
+      <publishTime>12/10/2015 04:08:20</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.dialog.js">
+      <publishTime>12/10/2015 04:08:20</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.doughnutchart.js">
+      <publishTime>12/10/2015 04:08:20</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.editors.js">
+      <publishTime>12/10/2015 04:08:20</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.editors_new.js">
+      <publishTime>12/10/2015 04:08:20</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.funnelchart.js">
+      <publishTime>12/10/2015 04:07:26</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.grid.appendrowsondemand.js">
+      <publishTime>12/10/2015 04:08:20</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.grid.cellmerging.js">
+      <publishTime>12/10/2015 04:08:22</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.grid.columnfixing.js">
+      <publishTime>12/10/2015 04:08:22</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.grid.columnmoving.js">
+      <publishTime>12/10/2015 04:08:22</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.grid.featurechooser.js">
+      <publishTime>12/10/2015 04:08:22</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.grid.filtering.js">
+      <publishTime>12/10/2015 04:08:22</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.grid.framework.js">
+      <publishTime>12/10/2015 04:08:22</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.grid.groupby.js">
+      <publishTime>12/10/2015 04:08:22</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.grid.hiding.js">
+      <publishTime>12/10/2015 04:08:24</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.grid.hierarchical.js">
+      <publishTime>12/10/2015 04:08:24</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.grid.multicolumnheaders.js">
+      <publishTime>12/10/2015 04:08:24</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.grid.paging.js">
+      <publishTime>12/10/2015 04:08:24</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.grid.resizing.js">
+      <publishTime>12/10/2015 04:08:24</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.grid.responsive.js">
+      <publishTime>12/10/2015 04:08:24</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.grid.rowselectors.js">
+      <publishTime>12/10/2015 04:08:24</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.grid.selection.js">
+      <publishTime>12/10/2015 04:08:24</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.grid.sorting.js">
+      <publishTime>12/10/2015 04:08:26</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.grid.summaries.js">
+      <publishTime>12/10/2015 04:08:26</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.grid.tooltips.js">
+      <publishTime>12/10/2015 04:08:26</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.grid.updating.js">
+      <publishTime>12/10/2015 04:08:26</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.htmleditor.js">
+      <publishTime>12/10/2015 04:08:26</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.layoutmanager.js">
+      <publishTime>12/10/2015 04:08:26</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.lineargauge.js">
+      <publishTime>12/10/2015 04:07:26</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.map.js">
+      <publishTime>12/10/2015 04:08:26</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.pivot.shared.js">
+      <publishTime>12/10/2015 04:08:26</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.pivotdataselector.js">
+      <publishTime>12/10/2015 04:08:26</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.pivotgrid.js">
+      <publishTime>12/10/2015 04:08:28</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.pivotview.js">
+      <publishTime>12/10/2015 04:08:28</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.popover.js">
+      <publishTime>12/10/2015 04:08:28</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.radialgauge.js">
+      <publishTime>12/10/2015 04:07:26</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.radialmenu.js">
+      <publishTime>12/10/2015 04:07:26</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.rating.js">
+      <publishTime>12/10/2015 04:08:28</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.scroll.js">
+      <publishTime>12/10/2015 04:08:40</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.shared.js">
+      <publishTime>12/10/2015 04:08:28</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.sparkline.js">
+      <publishTime>12/10/2015 04:07:26</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.splitbutton.js">
+      <publishTime>12/10/2015 04:08:28</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.splitter.js">
+      <publishTime>12/10/2015 04:08:30</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.tilemanager.js">
+      <publishTime>12/10/2015 04:08:30</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.toolbar.js">
+      <publishTime>12/10/2015 04:08:30</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.toolbarbutton.js">
+      <publishTime>12/10/2015 04:08:30</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.tree.js">
+      <publishTime>12/10/2015 04:08:30</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.treegrid.columnfixing.js">
+      <publishTime>12/10/2015 04:08:30</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.treegrid.filtering.js">
+      <publishTime>12/10/2015 04:08:30</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.treegrid.hiding.js">
+      <publishTime>12/10/2015 04:08:30</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.treegrid.js">
+      <publishTime>12/10/2015 04:08:32</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.treegrid.multicolumnheaders.js">
+      <publishTime>12/10/2015 04:08:32</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.treegrid.paging.js">
+      <publishTime>12/10/2015 04:08:32</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.treegrid.selection.js">
+      <publishTime>12/10/2015 04:08:32</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.treegrid.sorting.js">
+      <publishTime>12/10/2015 04:08:32</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.treegrid.tooltips.js">
+      <publishTime>12/10/2015 04:08:32</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.treegrid.updating.js">
+      <publishTime>12/10/2015 04:08:32</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.upload.js">
+      <publishTime>12/10/2015 04:08:32</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.validator.js">
+      <publishTime>12/10/2015 04:08:32</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.videoplayer.js">
+      <publishTime>12/10/2015 04:08:32</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.ui.zoombar.js">
+      <publishTime>12/10/2015 04:08:32</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.util.js">
+      <publishTime>12/10/2015 04:08:40</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/js/modules/infragistics.xml.js">
+      <publishTime>12/10/2015 04:07:26</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/structure/images/ig-rating%402.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/structure/images/ig-rating.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/structure/images/igBrowserLogos.png">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/structure/images/toolbaricons.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/structure/infragistics.mobile.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/structure/modules/infragistics.mobile.list.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/structure/modules/infragistics.mobile.rating.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/android/fonts/roboto.font.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/android/holodark/infragistics.mobile.theme.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/android/hololight/infragistics.mobile.theme.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/android/hololightdark/infragistics.mobile.theme.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/ajax-loader.gif">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/action-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/action-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/alert-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/alert-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/arrow-d-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/arrow-d-l-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/arrow-d-l-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/arrow-d-r-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/arrow-d-r-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/arrow-d-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/arrow-l-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/arrow-l-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/arrow-r-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/arrow-r-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/arrow-u-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/arrow-u-l-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/arrow-u-l-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/arrow-u-r-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/arrow-u-r-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/arrow-u-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/audio-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/audio-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/back-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/back-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/bars-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/bars-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/bullets-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/bullets-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/calendar-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/calendar-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/camera-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/camera-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/carat-d-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/carat-d-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/carat-l-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/carat-l-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/carat-r-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/carat-r-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/carat-u-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/carat-u-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/check-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/check-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/clock-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/clock-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/cloud-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/cloud-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/comment-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/comment-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/delete-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/delete-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/edit-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/edit-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/eye-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/eye-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/forbidden-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/forbidden-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/forward-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/forward-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/gear-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/gear-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/grid-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/grid-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/heart-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/heart-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/home-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/home-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/info-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/info-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/location-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/location-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/lock-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/lock-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/mail-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/mail-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/minus-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/minus-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/navigation-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/navigation-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/phone-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/phone-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/plus-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/plus-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/power-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/power-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/recycle-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/recycle-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/refresh-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/refresh-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/search-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/search-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/shop-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/shop-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/star-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/star-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/tag-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/tag-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/user-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/user-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/video-black.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/images/icons-png/video-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/infragistics.mobile.theme.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/infragistics.mobile.theme.less">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios/jquery.mobile.icons.min.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios6/images/icons-18-7F7F7F.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios6/images/icons-18-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios6/images/icons-36-7F7F7F.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios6/images/icons-36-white.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios6/images/ig-rating%402.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios6/images/ig-rating.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios6/images/ios-fabric-background.jpg">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios6/images/loading-spin.png">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios6/infragistics.mobile.theme.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios6/infragistics.mobile.theme.less">
+      <publishTime>03/18/2015 14:40:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/ios6/jquery.mobile.icons.min.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/windowsphone/dark/infragistics.mobile.theme.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/css/themes/windowsphone/light/infragistics.mobile.theme.css">
+      <publishTime>03/18/2015 16:09:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/i18n/infragistics.mobile-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/i18n/infragistics.mobile-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/i18n/infragistics.mobile-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/i18n/infragistics.mobile-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/i18n/infragistics.mobile-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/i18n/infragistics.mobile-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/infragistics.mobile.js">
+      <publishTime>12/10/2015 04:08:38</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/infragistics.mobile.loader.js">
+      <publishTime>12/10/2015 04:08:38</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.datasource-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.datasource-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.datasource-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.datasource-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.datasource-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.datasource-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.dvcommonwidget-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.dvcommonwidget-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.dvcommonwidget-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.dvcommonwidget-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.dvcommonwidget-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.dvcommonwidget-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.mobileui.list-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.mobileui.list-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.mobileui.list-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.mobileui.list-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.mobileui.list-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.mobileui.list-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.templating-bg.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.templating-de.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.templating-es.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.templating-fr.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.templating-ja.js">
+      <publishTime>12/10/2015 03:45:06</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/infragistics.templating-ru.js">
+      <publishTime>12/10/2015 03:45:04</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-af.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-ar.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-az.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-bg.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-bs.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-ca.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-cs.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-da.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-de.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-el.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-en-GB.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-en.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-es-419.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-es-MX.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-es.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-et.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-fa.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-fi.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-fo.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-fr-CH.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-fr.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-he.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-hr.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-hu.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-hy.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-i18n.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-id.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-is.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-it.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-ja.js">
+      <publishTime>03/18/2015 15:36:44</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-ko.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-lt.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-lv.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-ms.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-nl.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-no.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-pl.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-pt-BR.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-ro.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-ru.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-sk.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-sl.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-sq.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-sr-SR.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-sr.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-sv.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-ta.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-th.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-tr.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-uk.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-vi.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-zh-CN.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-zh-HK.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/i18n/regional/infragistics.ui.regional-zh-TW.js">
+      <publishTime>03/18/2015 15:36:42</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/infragistics.datasource.js">
+      <publishTime>12/10/2015 04:08:38</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/infragistics.dvcommonwidget.js">
+      <publishTime>12/10/2015 04:08:38</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/infragistics.mobileui.list.filtering.js">
+      <publishTime>12/10/2015 04:08:38</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/infragistics.mobileui.list.js">
+      <publishTime>12/10/2015 04:08:38</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/infragistics.mobileui.list.loadondemand.js">
+      <publishTime>12/10/2015 04:08:38</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/infragistics.mobileui.list.sorting.js">
+      <publishTime>12/10/2015 04:08:40</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/infragistics.mobileui.rating.js">
+      <publishTime>12/10/2015 04:08:40</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/infragistics.templating.js">
+      <publishTime>12/10/2015 04:08:40</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/infragistics.ui.scroll.js">
+      <publishTime>12/10/2015 04:08:40</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/mobile/js/modules/infragistics.util.js">
+      <publishTime>12/10/2015 04:08:40</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/Common/Bin/Infragistics.Web.Mvc.Documents.Core.dll">
+      <publishTime>12/10/2015 03:44:34</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/Common/Bin/Infragistics.Web.Mvc.Documents.Core.xml">
+      <publishTime>03/18/2015 15:35:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/Common/Bin/Infragistics.Web.Mvc.Documents.Excel.dll">
+      <publishTime>12/10/2015 03:44:36</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/Common/Bin/Infragistics.Web.Mvc.Documents.Excel.xml">
+      <publishTime>12/10/2015 03:44:36</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/Common/Bin/Infragistics.Web.Mvc.Documents.IO.dll">
+      <publishTime>12/10/2015 03:44:38</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/Common/Bin/Infragistics.Web.Mvc.Documents.IO.xml">
+      <publishTime>03/18/2015 15:35:54</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/Common/Bin/Infragistics.Web.Mvc.Documents.Reports.dll">
+      <publishTime>12/10/2015 03:44:38</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/Common/Bin/Infragistics.Web.Mvc.Documents.Reports.xml">
+      <publishTime>03/18/2015 15:35:54</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/Common/Bin/Infragistics.Web.Mvc.Documents.Word.dll">
+      <publishTime>12/10/2015 03:44:40</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/Common/Bin/Infragistics.Web.Mvc.Documents.Word.xml">
+      <publishTime>03/18/2015 15:35:56</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/MVC2/Bin/Infragistics.Web.Mvc.dll">
+      <publishTime>12/10/2015 03:44:12</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/MVC3/Bin/Infragistics.Olap.DataProvider.Adomd.Mvc.dll">
+      <publishTime>12/10/2015 03:44:30</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/MVC3/Bin/Infragistics.Olap.DataProvider.Adomd.Mvc.xml">
+      <publishTime>03/18/2015 15:24:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/MVC3/Bin/Infragistics.Web.Mvc.dll">
+      <publishTime>12/10/2015 03:44:16</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/MVC3/Bin/Infragistics.Web.Mvc.Mobile.dll">
+      <publishTime>12/10/2015 03:44:26</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/MVC3/Bin/Infragistics.Web.Mvc.Mobile.xml">
+      <publishTime>12/10/2015 03:32:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/MVC3/Bin/Infragistics.Web.Mvc.xml">
+      <publishTime>12/10/2015 03:32:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/MVC4/Bin/Infragistics.Olap.DataProvider.Adomd.Mvc.dll">
+      <publishTime>12/10/2015 03:44:32</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/MVC4/Bin/Infragistics.Olap.DataProvider.Adomd.Mvc.xml">
+      <publishTime>03/18/2015 15:24:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/MVC4/Bin/Infragistics.Web.Mvc.dll">
+      <publishTime>12/10/2015 03:44:22</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/MVC4/Bin/Infragistics.Web.Mvc.Mobile.dll">
+      <publishTime>12/10/2015 03:44:28</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/MVC4/Bin/Infragistics.Web.Mvc.Mobile.xml">
+      <publishTime>12/10/2015 03:32:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/MVC4/Bin/Infragistics.Web.Mvc.xml">
+      <publishTime>12/10/2015 03:32:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/MVC5/Bin/Infragistics.Olap.DataProvider.Adomd.Mvc.dll">
+      <publishTime>12/10/2015 03:44:32</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/MVC5/Bin/Infragistics.Olap.DataProvider.Adomd.Mvc.xml">
+      <publishTime>03/18/2015 15:24:14</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/MVC5/Bin/Infragistics.Web.Mvc.dll">
+      <publishTime>12/10/2015 03:44:26</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/MVC5/Bin/Infragistics.Web.Mvc.Mobile.dll">
+      <publishTime>12/10/2015 03:44:28</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/MVC5/Bin/Infragistics.Web.Mvc.Mobile.xml">
+      <publishTime>12/10/2015 03:32:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/MVC/MVC5/Bin/Infragistics.Web.Mvc.xml">
+      <publishTime>12/10/2015 03:32:08</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/Readme.txt">
+      <publishTime>03/18/2015 14:39:50</publishTime>
+    </File>
+    <File Include="Scripts/IgniteUI/typings/igniteui.d.ts">
+      <publishTime>12/10/2015 04:06:28</publishTime>
+    </File>
+    <File Include="Scripts/InspectionsQuestions.js">
+      <publishTime>12/06/2018 14:59:08</publishTime>
+    </File>
+    <File Include="Scripts/jquery-1.8.2.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Scripts/jquery-1.8.2.min.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Scripts/jquery-1.8.3.js">
+      <publishTime>12/21/2015 13:33:44</publishTime>
+    </File>
+    <File Include="Scripts/jquery-1.8.3.min.js">
+      <publishTime>12/21/2015 13:33:44</publishTime>
+    </File>
+    <File Include="Scripts/jquery-ui-1.8.24.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Scripts/jquery-ui-1.8.24.min.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Scripts/Mi4_Infragistics_Control_Helpers.js">
+      <publishTime>10/24/2018 18:01:22</publishTime>
+    </File>
+    <File Include="Scripts/modernizr-2.6.2.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Scripts/TruckScheduleJS/DockSpotFunctions.js">
+      <publishTime>02/01/2019 10:01:19</publishTime>
+    </File>
+    <File Include="Scripts/TruckScheduleJS/TruckScheduleClasses.js">
+      <publishTime>11/30/2018 13:15:03</publishTime>
+    </File>
+    <File Include="Scripts/TruckScheduleJS/TruckScheduleClassesIE.js">
+      <publishTime>12/14/2018 16:52:10</publishTime>
+    </File>
+    <File Include="Scripts/WebForms/DetailsView.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Scripts/WebForms/Focus.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Scripts/WebForms/GridView.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Scripts/WebForms/Menu.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Scripts/WebForms/MenuStandards.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Scripts/WebForms/MSAjax/MicrosoftAjax.js">
+      <publishTime>05/31/2016 09:55:56</publishTime>
+    </File>
+    <File Include="Scripts/WebForms/MSAjax/MicrosoftAjaxApplicationServices.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Scripts/WebForms/MSAjax/MicrosoftAjaxComponentModel.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Scripts/WebForms/MSAjax/MicrosoftAjaxCore.js">
+      <publishTime>05/31/2016 09:55:56</publishTime>
+    </File>
+    <File Include="Scripts/WebForms/MSAjax/MicrosoftAjaxGlobalization.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Scripts/WebForms/MSAjax/MicrosoftAjaxHistory.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Scripts/WebForms/MSAjax/MicrosoftAjaxNetwork.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Scripts/WebForms/MSAjax/MicrosoftAjaxSerialization.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Scripts/WebForms/MSAjax/MicrosoftAjaxTimer.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Scripts/WebForms/MSAjax/MicrosoftAjaxWebForms.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Scripts/WebForms/MSAjax/MicrosoftAjaxWebServices.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Scripts/WebForms/SmartNav.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Scripts/WebForms/TreeView.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Scripts/WebForms/WebForms.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Scripts/WebForms/WebParts.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Scripts/WebForms/WebUIValidation.js">
+      <publishTime>05/08/2015 10:24:22</publishTime>
+    </File>
+    <File Include="Site.Master">
+      <publishTime>02/13/2019 13:37:09</publishTime>
+    </File>
+    <File Include="Site.Mobile.Master">
+      <publishTime>02/13/2019 13:51:28</publishTime>
+    </File>
+    <File Include="trailerOverview.aspx">
+      <publishTime>02/01/2019 09:39:37</publishTime>
+    </File>
+    <File Include="waitAndDockOverview.aspx">
+      <publishTime>02/01/2019 09:18:09</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>03/08/2019 15:49:13</publishTime>
+    </File>
+    <File Include="whoami.aspx">
+      <publishTime>03/15/2019 11:15:38</publishTime>
+    </File>
+    <File Include="yardAndWaiting.aspx">
+      <publishTime>02/01/2019 09:39:36</publishTime>
+    </File>
+    <File Include="yardMuleRequestOverview.aspx">
+      <publishTime>02/01/2019 09:31:38</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

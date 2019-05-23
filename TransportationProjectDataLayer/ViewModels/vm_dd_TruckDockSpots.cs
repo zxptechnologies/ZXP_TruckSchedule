@@ -29,17 +29,18 @@ namespace TransportationProjectDataLayer.ViewModels
 
         public static implicit operator DomainModels.TruckDockSpots(vm_dd_TruckDockSpots vmSpot)
         {
-            DomainModels.TruckDockSpots spot = new DomainModels.TruckDockSpots(vmSpot);
-            return unitMeasure;
+            DomainModels.TruckDockSpots spot = new DomainModels.TruckDockSpots(vmSpot.Id);
+            return spot;
         }
 
-        public static implicit operator vm_UnitOfMeasure(DomainModels.UnitOfMeasure unitMeasure)
+        public static implicit operator vm_dd_TruckDockSpots(DomainModels.TruckDockSpots truckdockspot)
         {
 
-            return new vm_UnitOfMeasure
+            return new vm_dd_TruckDockSpots
             {
-                UnitShortname = unitMeasure.UnitShort,
-                UnitLongname = unitMeasure.UnitLong
+                Id = truckdockspot.SpotId,
+                Description = truckdockspot.SpotDescription,
+                Type = truckdockspot.SpotType,
             };
 
         }

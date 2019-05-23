@@ -1,0 +1,94 @@
+﻿body {
+}
+
+
+.rejectTruckButton {
+    background-color: salmon;
+}
+
+.noDisplay
+{
+    display:none;
+}
+
+.dvOutline {
+    border-style: solid;
+    border-width: 2px;
+    border-color: grey;
+}
+.dvTestRed
+{
+    background-color: red;
+}
+.dvTestGreen
+{
+    background-color: green;
+}
+.dvTestYellow
+{
+    background-color: yellow;
+}
+
+.dvLightGrey
+{
+    background-color: lightgrey;
+}
+
+
+/*Head elements styling*/
+.dvAlignMid
+{
+    display:inline-block !important; 
+    vertical-align:middle !important;
+
+}
+.sectionHeaderStyling
+{
+    display: inline-block;
+    margin-left: 5px;
+
+}
+.dvHideShowButtons
+{
+    display: inline-block;
+    margin-left: 15px;
+}
+/*table styling*/
+/* 4 column table*/
+td.col1_of_4
+{
+    width:25%;
+    font-weight:600;
+}
+
+td.col2_of_4
+{
+    width:25%;
+
+}
+
+td.col3_of_4
+{
+    width:25%;
+    font-weight:600;
+
+}
+td.col4_of_4
+{
+    width:25%;
+
+}
+
+/*2 column table*/
+td.col1_of_2
+{
+    width:50%;
+    font-weight:600;
+}
+
+td.col2_of_2
+{
+    width:50%;
+
+}
+

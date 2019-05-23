@@ -1,0 +1,305 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="TransportationProject.SiteMaster" %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /> <%--need for querySelector in IE--%>
+    <title><%: Page.Title %> ZXP Truck Schedule</title>
+    <asp:PlaceHolder runat="server">     
+          <%: Scripts.Render("~/bundles/modernizr") %>
+    </asp:PlaceHolder>  
+    <webopt:BundleReference runat="server" Path="~/Content/css" /> 
+   <%-- <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />--%>
+    <meta name="viewport" content="width=device-width" />
+   
+    <asp:ContentPlaceHolder runat="server" ID="HeadContent" />
+    <script type="text/javascript">
+     function detectIE() {
+                    var ua = window.navigator.userAgent;
+
+                    var msie = ua.indexOf('MSIE ');
+                    if (msie > 0) {
+                        // IE 10 or older => return version number
+                        return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+                    }
+
+                    var trident = ua.indexOf('Trident/');
+                    if (trident > 0) {
+                        // IE 11 => return version number
+                        var rv = ua.indexOf('rv:');
+                        return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
+                    }
+
+                    var edge = ua.indexOf('Edge/');
+                    if (edge > 0) {
+                       // Edge (IE 12+) => return version number
+                       return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
+                    }
+
+                // other browser
+                return false;
+        }
+        var versionIE = detectIE();
+        if (versionIE && versionIE < 12) 
+        {
+            document.write('<script src="https://cdn.polyfill.io/v2/polyfill.min.js"><\/script>'); <%-- need to escape the closing script tag --%>
+        }
+        
+        </script>
+    
+</head>
+<body>
+    <%--Live Server--%>
+        <link href="<%= Page.ResolveClientUrl("~/Scripts/IgniteUI/css/themes/infragistics/infragistics.theme.css") %>" rel="stylesheet" />
+    <link href="<%= Page.ResolveClientUrl("~/Scripts/IgniteUI/css/structure/infragistics.css") %>" rel="stylesheet" />
+    <link href="<%= Page.ResolveClientUrl("~/Content/StyleModifications.css") %>" rel="stylesheet" />
+
+<script src="<%= Page.ResolveClientUrl("~/Scripts/modernizr-2.6.2.js") %>"></script>
+<script src="<%= Page.ResolveClientUrl("~/Scripts/jquery-1.8.3.min.js") %>"></script>
+<script src="<%= Page.ResolveClientUrl("~/Scripts/jquery-ui-1.8.24.min.js") %>"></script>
+<script src="<%= Page.ResolveClientUrl("~/Scripts/IgniteUI/js/infragistics.core.js") %>"></script>
+<script src="<%= Page.ResolveClientUrl("~/Scripts/IgniteUI/js/infragistics.lob.js") %>"></script>
+<script src="<%= Page.ResolveClientUrl("~/Scripts/Mi4_Infragistics_Control_Helpers.js") %>"></script>
+
+    <%--Boot strap files--%>
+<%--<script src="<%= Page.ResolveClientUrl("~/Scripts/bootstrap-4.1.3-dist/css/bootstrap.min.css") %>"></script>
+<script src="<%= Page.ResolveClientUrl("~/Scripts/bootstrap-4.1.3-dist/js/jquery-3.3.1.min.js") %>"></script>
+<script src="<%= Page.ResolveClientUrl("~/Scripts/Mi4_Infragistics_Control_Helpers.js") %>"></script>
+<script src="<%= Page.ResolveClientUrl("~/Scripts/bootstrap-4.1.3-dist/js/popper.min.js") %>"></script>
+<script src="<%= Page.ResolveClientUrl("~/Scripts/bootstrap-4.1.3-dist/js/bootstrap.min.js") %>"></script>--%>
+<%--Development Server --%>
+
+   <form runat="server" enctype="multipart/form-data">
+      <%--    <link href="/Scripts/IgniteUI/css/themes/infragistics/infragistics.theme.css" rel="stylesheet" />
+    <link href="/Scripts/IgniteUI/css/structure/infragistics.css" rel="stylesheet" />
+    <link href="/Content/StyleModifications.css" rel="stylesheet" />
+    <link href="Content/Menu.css" rel="stylesheet" />
+
+    <script src="/Scripts/modernizr-2.6.2.js"></script>
+    <script src="/Scripts/jquery-1.8.3.min.js"></script>
+    <script src="/Scripts/jquery-ui-1.8.24.min.js"></script>
+
+    <script src="/Scripts/IgniteUI/js/infragistics.core.js"></script>
+    <script src="/Scripts/IgniteUI/js/infragistics.lob.js"></script>
+    <script src="/Scripts/Mi4_Infragistics_Control_Helpers.js"></script>
+
+          
+    <link href="Scripts/bootstrap-4.1.3-dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="Scripts/bootstrap-4.1.3-dist/js/jquery-3.3.1.min.js"></script>
+    <script src="Scripts/bootstrap-4.1.3-dist/js/popper.min.js"></script>
+    <script src="Scripts/bootstrap-4.1.3-dist/js/bootstrap.min.js"></script>
+	
+	--%>
+	
+	
+ <script type="text/javascript">
+
+     function makeButtonIncrement(element, action, initialDelay) {
+
+         var holdTimer, changeValue, timerIsRunning = false;
+         var isMobile = checkIfMobileDevice();
+         changeValue = function () {
+             if (action == "right")
+                 gridScrollRight();
+             else if (action == "left")
+                 gridScrollLeft();
+             holdTimer = setTimeout(changeValue, initialDelay);
+             if (!timerIsRunning) {
+                 if (isMobile) {
+
+                     document.ontouchstart = function () {
+                         clearTimeout(holdTimer);
+                         document.ontouchstart = null;
+                         timerIsRunning = false;
+                     };
+                 }
+                 else {
+                     document.onmouseup = function () {
+                         clearTimeout(holdTimer);
+                         document.onmouseup = null;
+                         timerIsRunning = false;
+                     };
+
+                 }
+
+                 timerIsRunning = true;
+             }
+
+         };
+         element.addEventListener("mousedown", function (event) {
+             event.preventDefault();
+         });
+         if (isMobile) { element.ontouchstart = changeValue; }
+         else { element.onmousedown = changeValue;}
+         
+         
+     }
+
+function gridScrollRight() {
+    $(".scrollGridClass").each(function () {
+        var IDofGrid = $(this).attr("ID");
+        var gridWidth = $("#" + IDofGrid).width();
+        var currentLeftScrollPosition = $("#" + IDofGrid + "_scroll").scrollLeft();
+
+        if (gridWidth > currentLeftScrollPosition + 5) {
+            $("#" + IDofGrid + "_scroll").scrollLeft(currentLeftScrollPosition + 5);
+
+        }
+
+    });
+}
+function gridScrollLeft() {
+    $(".scrollGridClass").each(function () {
+        var IDofGrid = $(this).attr("ID");
+        var currentLeftScrollPosition = $("#" + IDofGrid + "_scroll").scrollLeft();
+
+        if (0 < currentLeftScrollPosition - 5) {
+            $("#" + IDofGrid + "_scroll").scrollLeft(currentLeftScrollPosition - 5);
+        }
+        else {
+            $("#" + IDofGrid + "_scroll").scrollLeft(0);
+        }
+    });
+}
+     function checkIfMobileDevice() {
+         var isMobile = false;
+         if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) { isMobile = true; }
+         var width = $(window).width();
+         if (isMobile === false && width <= 850) {
+             isMobile = true;
+         }
+         return isMobile;
+     }
+
+     function loadStyleSheet(src) {
+         if (document.createStyleSheet) {
+             document.createStyleSheet(src);
+         }
+         else {
+                var htmlString = "<link rel='stylesheet' href='" + src + "' type='text/css' media='screen' />"
+                $("body").append(htmlString);
+         }
+     }
+
+
+
+     function checkCookieAndRedirect() {
+         window.setInterval(function () {
+             var currentPage = window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1).replace(".aspx", "");
+
+             if (document.cookie == null && currentPage != "Login") {
+                 window.location = "Account/Login.aspx";
+             }
+         }, 30000); <%--30 mins    1800000        --%>
+     }
+
+
+     $(function () {
+         //checkCookieAndRedirect();
+         makeButtonIncrement(document.getElementById("imgLeftArrowGridScroll"), "left", 0);
+         makeButtonIncrement(document.getElementById("imgRightArrowGridScroll"), "right", 0);
+
+         $(".arrowGridScrollButtons").hide();
+         var isMobileDevice = checkIfMobileDevice();
+         if (isMobileDevice) {
+             loadStyleSheet("/Content/TruckScheduleMobile.css");
+           //  loadStyleSheet("Content/TruckScheduleMobile.css"); <%-- test server --%>
+             $("#menuIcon").show();
+             $("#NavigationMenu").hide();
+          
+         }
+
+        
+         $('.scrollup').click(function () {
+             //var url = window.location.href;
+             //var myPageName = url.substring(url.lastIndexOf('/') + 1).substring(0, 5);
+             $("html, body").animate({
+                 scrollTop: 0
+             }, 600);
+                 return false;
+         });
+
+         $('#menuIcon').click(function () {
+             var isVisible = $("#NavigationMenu").is(':visible');
+
+             if (isVisible === true) {
+                 $("#NavigationMenu").hide();
+             } else {
+                 $("#NavigationMenu").show();
+             }
+         });
+     });
+
+ </script>
+
+    <header>
+        <div class="content-wrapper">
+            <div class="float-left">
+                <p class="site-title">
+                    <%--<a runat="server" href="~/"><img src="../Images/ZXP_Large_resize300trans.png" /></a> internal testing--%>
+                     <%--<a runat="server" href="~/"><img src="Images/ZXP_Large_resize300trans.png" /></a>zxp live--%>
+		     <a runat="server" href="~/"><asp:Image ID="ZXPLOGO" runat="server" ImageUrl="~/Images/ZXP_Large_resize300trans.png" /></a> <%--zxp live --%>
+                    <%--<a id="A1" runat="server" href="~/"><asp:Image ID="ZXPLOGO" runat="server" ImageUrl="~/Images/ZXP_Large_resize300trans.png" /></a>--%> <%--zxp live --%>
+                </p>
+                <p><asp:Label ID="deploymentInfo" runat="server" ForeColor="Black" Font-Size="small"></asp:Label></p>
+            </div>
+            <div class="float-right">
+                <section id="login">
+                    <asp:LoginView runat="server" ViewStateMode="Disabled">
+                        <AnonymousTemplate>
+                            <ul>
+                              <%--  <li><a id="registerLink" runat="server" href="~/Account/Register">Register</a></li>--%>
+                                <li><a id="loginLink" runat="server" href="~/Account/Login">Log in</a></li>
+                            </ul>
+                        </AnonymousTemplate>
+                        <LoggedInTemplate>
+                            <p>
+                               <%-- Hello, <a runat="server" class="username" href="~/Account/Manage" title="Manage your account">
+                                    <asp:LoginName runat="server" CssClass="username" /></a>!--%>
+                                Hello, <asp:LoginName ID="LoginName1" runat="server" CssClass="username" />!
+                                <%--<asp:LoginStatus runat="server" LogoutAction="Redirect" LogoutText="Log off" LogoutPageUrl="~/Account/Login.aspx?out=1" />--%>
+                                <asp:LoginStatus ID="LoginStatus1" runat="server" LogoutAction="Redirect" LogoutText="Log off" LogoutPageUrl="~/Account/Login.aspx?out=1" />
+                            </p>
+                        </LoggedInTemplate>
+                    </asp:LoginView>
+                    <a class="linkButton float-right" href="mailto:ts%40zxptech%2ecom?subject=Truckschedule Feedback">Send Feedback</a>
+                </section>
+               
+               <%--<button class="menuButton" id ="btnMenu"></button>--%>
+               <div id = "menuWithIcon"><img src="<%= Page.ResolveClientUrl("~/Images/menuIcon.png") %>" id="menuIcon" style='width:5%; height: auto; display: none' ></div>
+                    <span id = "menu">
+                        <asp:Menu ID="NavigationMenu" runat="server" Orientation="Horizontal">
+                            <Items>
+                                <asp:MenuItem NavigateUrl="~/Default.aspx" Text="Home"></asp:MenuItem>
+                            </Items>
+                        </asp:Menu>
+                   </span>
+            </div>
+        </div>
+    </header>
+    <div id="body">
+        <asp:ContentPlaceHolder runat="server" ID="FeaturedContent" />
+        <section class="content-wrapper main-content clear-fix">
+            <asp:ContentPlaceHolder runat="server" ID="MainContent" />
+        </section>
+        <br /><br /><br />
+        <div class ="arrowGridScrollButtons">
+            <div class="toolTipForScroll"><a id="leftArrowGridScroll"><img id="imgLeftArrowGridScroll" src ='<%= Page.ResolveClientUrl("~/Images/leftGridArrow.png") %>' style='width:30px; height: 30px;' /><span class="toolTipTextForScroll">Scroll left on grid(s)</span></a></div>
+            <div class="toolTipForScroll"><a id="rightArrowGridScroll"><img id="imgRightArrowGridScroll" src ='<%= Page.ResolveClientUrl("~/Images/rightGridArrow.png") %>' style='width:30px; height: 30px;' /><span class="toolTipTextForScroll">Scroll right on grid(s)</span></a></div>
+        </div>
+        <div class="toolTipForScroll"><a href="#" class="scrollup" ><img src ='<%= Page.ResolveClientUrl("~/Images/ScrollUpArrow.png") %>' style='width:50px; height: 50px;'/><span class="toolTipTextForScroll">To Top of Page</span></a></div>
+        <%--Progress Circle, Hidden until function calls to display --%> 
+        <div id="progressBackgroundFilter" style="display:none"></div>
+        <div id="processMessage" style=" text-align:center; display:none; border:3px solid black"><br />
+        <asp:Label ID="lblProgressText" runat="server" Text="Processing..." ClientIDMode = "Static"></asp:Label>
+        <br />
+        <img id="imgLoader" alt="Loading" src="Images/loader.gif" /><%--LIve Server--%>
+            <%--<asp:Image id="imgLoader" runat="server" ImageUrl="~/Images/loader.gif" />--%><%--Dev Server--%>
+        </div>
+        <%--End Progress Circle, Hidden until function calls to display --%> 
+    </div>
+    </form>
+</body>
+</html>
+
