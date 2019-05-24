@@ -12,7 +12,12 @@
        
 
      <script type="text/javascript">
-                
+    function clearButtonDivs() {
+            $("#dvButtonsInspections").empty();
+            $("#dvButtonsSample").empty();
+            $("#dvButtonsLoadUnload").empty();
+            $("#dvButtonsRejectTruck").empty();
+        }
          
         var versionIE = detectIE();
         if (versionIE && versionIE < 12) 
@@ -66,15 +71,19 @@
                              enableDataDirtyException: false,
                              autoCommit: false,
                              editRowStarting: function (evt, ui) {
-                                 var MSID = ui.rowID;
                                  
-                                var product = $('#loaderQuickGrid').igGrid("getCellValue", MSID, "ProdID");
-                                var trailer = $('#loaderQuickGrid').igGrid("getCellValue", MSID, "Trailer");
-                                 var POnumber = $('#loaderQuickGrid').igGrid("getCellValue", MSID, "PONumber");
+                                 var hasBeenClicked = $("#TruckButtonsDialogBox").data("data-isClicked")
+                                 if (!hasBeenClicked) {
+                                      $("#TruckButtonsDialogBox").data("data-isClicked", true)
+                                     var MSID = ui.rowID;
+                                     var product = $('#loaderQuickGrid').igGrid("getCellValue", MSID, "ProdID");
+                                     var trailer = $('#loaderQuickGrid').igGrid("getCellValue", MSID, "Trailer");
+                                     var POnumber = $('#loaderQuickGrid').igGrid("getCellValue", MSID, "PONumber");
 
-                                 $("#TruckButtonsDialogBox").data("data-MSID", MSID);
-                                 $("#TruckButtonsDialogBox").igDialog("option", "headerText", "PO:" + POnumber + " - Product: " + product + "- Trailer: " + trailer);
-                                 refreshInspectionListDataAndbuttons();
+                                     $("#TruckButtonsDialogBox").data("data-MSID", MSID);
+                                     $("#TruckButtonsDialogBox").igDialog("option", "headerText", "PO:" + POnumber + " - Product: " + product + "- Trailer: " + trailer);
+                                     refreshInspectionListDataAndbuttons();
+                                 }
 
                              },
                              columnSettings: [
@@ -152,12 +161,7 @@
             };
         var selectedInspectionListData;<%--Global  Var--%>
 
-        function clearButtonDivs() {
-            $("#dvButtonsInspections").empty();
-            $("#dvButtonsSample").empty();
-            $("#dvButtonsLoadUnload").empty();
-            $("#dvButtonsRejectTruck").empty();
-        }
+        
 
              $("#TruckButtonsDialogBox").igDialog({
                  width: "100%", 
@@ -171,6 +175,7 @@
                      if (ui.action === "close")
                      {
                          clearButtonDivs();
+                         $("#TruckButtonsDialogBox").data("data-isClicked", false);
                      }
                      else
                      {
@@ -640,7 +645,7 @@
 
          function onFail_getLoaderMobileGrid(value, ctx, methodName) {
             sendtoErrorPage("Error in loaderMobile.aspx, onFail_getLoaderMobileGrid");
-        }
+         }
 
          
 
