@@ -14,30 +14,19 @@ namespace TransportationProject.AdminSubPages
 {
     public partial class Admin_Users : System.Web.UI.Page
     {
-        protected static String sql_connStr;
+     
 
         protected void Page_Load(object sender, EventArgs e)
         {
             try
             {
-                //HttpCookie cookie = Request.Cookies[System.Web.Security.FormsAuthentication.FormsCookieName];
-                //if (null != cookie && !string.IsNullOrEmpty(cookie.Value))
-
                 ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                 if (zxpUD._uid != new ZXPUserData()._uid)
                 {
-                    //ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
 
-                    if (zxpUD._isAdmin) //make sure this matches whats in Site.Master and Default
+                    if (!zxpUD._isAdmin) //make sure this matches whats in Site.Master and Default
                     {
-                        sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                        if (sql_connStr == String.Empty)
-                        {
-                            throw new Exception("Missing SQLConnectionString in web.config");
-                        }
-                    }
-                    else
-                    {
+                       
                         Response.BufferOutput = true;
                         Response.Redirect("ErrorPage.aspx?ErrorCode=5", false); //zxp live url
                     }
@@ -75,7 +64,7 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //gets data specific data from table and save into readable format
                     sqlCmdText = "SELECT CellProviderID, CellProviderName FROM dbo.CellPhoneProviders";
@@ -112,7 +101,7 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //gets data specific data from table and save into readable format
                     sqlCmdText = "SELECT UserID, UserName, FirstName, LastName, EmailAddress, Phone, CellProviderID, isAdmin, isDockManager," +
@@ -148,6 +137,7 @@ namespace TransportationProject.AdminSubPages
             try
             {
                 ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
@@ -303,6 +293,7 @@ namespace TransportationProject.AdminSubPages
             try
             {
                 ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
@@ -339,6 +330,7 @@ namespace TransportationProject.AdminSubPages
             try
             {
                 ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
@@ -487,6 +479,7 @@ namespace TransportationProject.AdminSubPages
             try
             {
                 ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
@@ -511,11 +504,5 @@ namespace TransportationProject.AdminSubPages
             }
         }
 
-        //password hasher
-        //private static string getMD5Hash(string INPUT)
-        //{
-        //    return DataTransformer.PasswordHash(INPUT);
-          
-        //}
     }
 }

@@ -634,7 +634,12 @@
                                                 alert("Urgent flag can not be changed because the PO has been checked in.");
                                             }
 
-                                            if (!reply) {
+                                             var shouldChangeUrgent = true;
+                                            if (ui.oldValues.URGENT == false && ui.values.URGENT == true) {
+                                                shouldChangeUrgent  = confirm ("The truck is marked urgent. Continue saving?")
+                                            }
+
+                                            if (!reply || !shouldChangeUrgent) {
                                                 ui.keepEditing = true;
                                                 return false;
                                             }
@@ -1237,23 +1242,7 @@
                 GLOBAL_PO_OPTIONS[i] = { "ID": value[i]['PONUM'], "TEXT": poText.trim(), "ISORDER": isOrder };
             }
 
-            // for (i = 0; i < value.length; i++) {
-            //    var isOrder = value[i][4]
-            //    var part1 = value[i][1], part2 = value[i][2], part3 = value[i][3];
-            //    var custPO = value[i][5];
-            //    if (part1) {
-            //        part1 = part1.trim();
-            //    }
-            //    if (part2) {
-            //        part2 = "," + part2.trim();
-            //    }
-            //    if (part3) {
-            //        part3 = "," + part3.trim();
-            //    }
-
-            //    var poText = (isOrder == 1) ? (concatAll(value[i][0], ", Customer Order# ", custPO)) : (concatAll(value[i][0], " - Parts:", part1, part2, part3, "..."));
-            //    GLOBAL_PO_OPTIONS[i] = { "ID": value[i][0], "TEXT": poText.trim(), "ISORDER": isOrder };
-            //}
+        
         }
         function onSuccess_GetAvailablePONumberRebind(value, ctx, methodName) {
 
@@ -1269,28 +1258,11 @@
             GLOBAL_PO_OPTIONS.length = 0;
 
             setAvailablePOOptions(value);
-			
-			//$("#cboxPO_trailerOverview").igCombo("option", "dataSource", GLOBAL_PO_OPTIONS);
-            //$("#cboxPO_trailerOverview").igCombo("dataBind");
+		
             
             var isFormatting = true;
             PageMethods.GetLocationOptions(isFormatting, onSuccess_GetLocationOptions, onFail_GetLocationOptions);
-			/*
-            for (i = 0; i < value.length; i++) {
-                var part1 = value[i][1], part2 = value[i][2], part3 = value[i][3];
-                if (part1) {
-                    part1 = part1.trim();
-                }
-                if (part2) {
-                    part2 = part2.trim();
-                }
-                if (part3) {
-                    part3 = part3.trim();
-                }
-                var poText = concatAll(value[i][0], " - Parts:", part1, part2, part3);
-                GLOBAL_PO_OPTIONS[i] = { "ID": value[i][0], "TEXT": poText.trim(), "ISORDER": value[i][4] };
-            }
-			*/
+		
         }
 
         function onFail_GetAvailablePONumber(value, ctx, methodName) {
@@ -1335,7 +1307,6 @@
         function onSuccess_GetStatusOptionsRebind(value, ctx_currentVal, methodName) {
             GLOBAL_STATUSTEXT_OPTIONS.length = 0;
             for (i = 0; i < value.length; i++) {
-                //GLOBAL_STATUSTEXT_OPTIONS[i] = { "VALUE": value[i][0], "TEXT": value[i][1] };
                 GLOBAL_STATUSTEXT_OPTIONS[i] = { "VALUE": value[i]["StatusID"], "TEXT": value[i]["StatusText"] };
             }
             $("#cboxStatusText").igCombo("option", "dataSource", GLOBAL_STATUSTEXT_OPTIONS);
@@ -1438,16 +1409,11 @@
         }
 
         function setupGridDataArray(value) {
-            /* 
-                "MSID, ETA, Comments, LoadTypeShort, LoadTypeLong, PONumber, CustomerID, isDropTrailer ",
-                ", Shipper, DockSpotID, TruckType, isRejected, TrailerNumber, LocationShort, LocationLong ",
-                ", StatusID, StatusText, SpotDescription, isOpenInCMS, ProdCount, topProdID ",
-                ", ProductName_CMS, PONumber_ZXPOutbound, isUrgent, isManuallyClosed, ClosedBy ",
-             */
+          
 
             for (i = 0; i < value.length; i++) {
                 var isOpenInCMS;
-                isOpenInCMS = formatBoolAsYesOrNO(value[i][18]);
+                isOpenInCMS = formatBoolAsYesOrNO(value[i]["isOpenInCMS"]);
 
                 var strETATime = ("00" + value[i]["ETA"].getHours()).slice(-2) + ":" + ("00" + value[i]["ETA"].getMinutes()).slice(-2);
                 var prodCount = value[i]["ProdCount"]
@@ -1464,25 +1430,7 @@
                     "ZXPPONUM": value[i]["PONumber_ZXPOutbound"], "URGENT": value[i]["isUrgent"]
                 };
             }
-
-               //for (i = 0; i < value.length; i++) {
-            //    var isOpenInCMS;
-            //    isOpenInCMS = formatBoolAsYesOrNO(value[i][18]);
-            //    var strETATime = ("00" + value[i][1].getHours()).slice(-2) + ":" + ("00" + value[i][1].getMinutes()).slice(-2);
-            //    var prodCount = value[i][19]
-            //    var prodDetail = prodCount < 2 ? value[i][21] : "multiple";
-            //    var prodID = prodCount < 2 ? value[i][20] : "multiple";
-            //    GLOBAL_GRID_DATA[i] = {
-
-            //        "MSID": value[i][0], "ETA": value[i][1], "ETADATE": value[i][1], "ETATIME": strETATime, "COMMENTS": value[i][2],
-            //        "LOAD": value[i][3], "LOADTEXT": value[i][4], "PONUM": value[i][5],
-            //        "CUSTOMER": value[i][6], "DROP": value[i][7], "SHIPPER": value[i][8], "SPOT": value[i][9], "TRUCKTYPE": value[i][10],
-            //        "REJECTED": value[i][11], "TRAILER": value[i][12], "WARNING": "", "LOCSHORT": value[i][13], "LOCLONG": value[i][14],
-            //        "STATID": value[i][15], "STATIDTEXT": value[i][16], "SPOTDESC": value[i][17], "SPOTID": value[i][9],
-            //        "boolCMSOPEN": value[i][18], "isOpenInCMS": isOpenInCMS, "PRODCOUNT": prodCount, "PRODID": prodID, "PRODDETAIL": prodDetail,
-            //        "ZXPPONUM": value[i][22], "URGENT": value[i][23]
-            //    };
-            //}
+            
 
         }
 
@@ -1491,8 +1439,7 @@
             setupGridDataArray(value);
             
             initGrid();
-            // $("#grid").igGrid("option", "dataSource", GLOBAL_GRID_DATA);
-            //$("#grid").igGrid("dataBind");
+           
             //<%--After dropdown box data are  retrieved and set to global vars, initialize grid --%>
             
             $(".logWindow").hide();
@@ -1722,7 +1669,7 @@ function onSuccess_GetTimeslotsData(value, ctx, methodName) {
             }
             var timeblock = $(this).data("timeblock");
             if (timeblock) {
-                // need the -1 to make timeblock 1 min less ( eg: 10:29 or 10:59 ) for the cell of time adjacent to it (eg: 10:30, 11:00) ; boundary condition
+                <%-- need the -1 to make timeblock 1 min less ( eg: 10:29 or 10:59 ) for the cell of time adjacent to it (eg: 10:30, 11:00) ; boundary condition --%>
                 timeblock = timeblock * 60 -1 <%--convert to min--%>
             }
             else {
@@ -1740,7 +1687,7 @@ function onSuccess_GetTimeslotsData(value, ctx, methodName) {
 
             <%--iterate from starttime to endtime and get cells within that range and spotid and check for class cell_notAvailable--%>
             while (cellDate <= endDate) {
-                <%--find cell matching and--%>
+                <%--find cell matching --%>
 
                 var newtime = ("00" + cellDate.getHours()).slice(-2) + ":" + ("00" + cellDate.getMinutes()).slice(-2);
                 var isNotAvailable = $('td[data-hour="' + newtime + '"][data-spotID="' + spotID + '"]').hasClass("cell_notAvailable");

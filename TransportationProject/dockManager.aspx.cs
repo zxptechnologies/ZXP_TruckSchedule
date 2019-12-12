@@ -13,8 +13,6 @@ namespace TransportationProject
 {
     public partial class dockManager : System.Web.UI.Page
     {
-        protected static String sql_connStr;
-        //public static ZXPUserData zxpUD = new ZXPUserData();
         public static int trailerNumberOfDaysCheck = 5; //TODO : Expose in webconfig as a setting
 
 
@@ -42,19 +40,10 @@ namespace TransportationProject
                     System.Web.Security.FormsAuthenticationTicket ticket = System.Web.Security.FormsAuthentication.Decrypt(cookie.Value);
                     zxpUD = ZXPUserData.DeserializeZXPUserData(ticket.UserData);
 
-                    if (zxpUD._isAdmin || zxpUD._isDockManager) //make sure this matches whats in Site.Master and Default
-                    {
-                        sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                        if (sql_connStr == String.Empty)
-                        {
-                            throw new Exception("Missing SQLConnectionString in web.config");
-                        }
-                    }
-                    else
+                    if (!(zxpUD._isAdmin || zxpUD._isDockManager)) //make sure this matches whats in Site.Master and Default
                     {
                         Response.BufferOutput = true;
-                        //Response.Redirect("/ErrorPage.aspx?ErrorCode=5", false); mi4 url
-                        Response.Redirect("ErrorPage.aspx?ErrorCode=5", false); //zxp live url
+                        Response.Redirect("ErrorPage.aspx?ErrorCode=5", false); 
                     }
 
                 }
@@ -69,16 +58,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in dockManager Page_Load(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager Page_Load(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
         public static string GetDayOfWeekID(DateTime selectedDate)
@@ -100,6 +85,7 @@ namespace TransportationProject
             int columncount = 0;
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 sqlConn = new SqlConnection(sql_connStr);
                 if (sqlConn.State != ConnectionState.Open)
                 {
@@ -218,16 +204,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in dockManager GetTimeslotsData(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager GetTimeslotsData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -255,25 +237,21 @@ namespace TransportationProject
             try
             {
                 
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    sqlCmdText = "SELECT UserID, UserName, FirstName, LastName FROM dbo.Users WHERE (isLoader = 1 AND isDisabled = 0) ORDER BY FirstName, LastName";
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                sqlCmdText = "SELECT UserID, UserName, FirstName, LastName FROM dbo.Users WHERE (isLoader = 1 AND isDisabled = 0) ORDER BY FirstName, LastName";
 
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
-
-                    //populate return object
-                    foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
-                    {
-                        data.Add(row.ItemArray);
-                    }
+                dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
+                
+                foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
+                {
+                    data.Add(row.ItemArray);
+                }
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager getLoaders(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -286,26 +264,23 @@ namespace TransportationProject
             try
             {
                 
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    sqlCmdText = "SELECT UserID, UserName, FirstName, LastName FROM dbo.Users WHERE (isYardMule = 1 AND isDisabled = 0) ORDER BY FirstName, LastName";
+                 string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                sqlCmdText = "SELECT UserID, UserName, FirstName, LastName FROM dbo.Users WHERE (isYardMule = 1 AND isDisabled = 0) ORDER BY FirstName, LastName";
 
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
-                    //populate return object
-                    foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
-                    {
-                        data.Add(row.ItemArray);
-                    }
+                dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
+                //populate return object
+                foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
+                {
+                    data.Add(row.ItemArray);
+                }
 
                    
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager getYardMules(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -318,36 +293,33 @@ namespace TransportationProject
             try
             {
                 
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    if (requestPersonTypeID == null)
-                    {
-                        sqlCmdText = "SELECT RT.RequestTypeID, RT.RequestType FROM dbo.RequestTypes RT WHERE RT.RequestTypeID <> 4";
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                if (requestPersonTypeID == null)
+                {
+                    sqlCmdText = "SELECT RT.RequestTypeID, RT.RequestType FROM dbo.RequestTypes RT WHERE RT.RequestTypeID <> 4";
 
-                        dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
-                    }
-                    else
-                    {
-                        sqlCmdText = "SELECT RT.RequestTypeID, RT.RequestType FROM dbo.RequestTypes RT INNER JOIN dbo.RequestTypeToPersonRelation RTPR ON RT.RequestTypeID = RTPR.RequestTypeID WHERE RTPR.RequestPersonTypeID = @PTYPEID AND  RT.RequestTypeID <> 4";
+                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
+                }
+                else
+                {
+                    sqlCmdText = "SELECT RT.RequestTypeID, RT.RequestType FROM dbo.RequestTypes RT INNER JOIN dbo.RequestTypeToPersonRelation RTPR ON RT.RequestTypeID = RTPR.RequestTypeID WHERE RTPR.RequestPersonTypeID = @PTYPEID AND  RT.RequestTypeID <> 4";
 
-                        dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@PTYPEID", requestPersonTypeID));
-                    }
+                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@PTYPEID", requestPersonTypeID));
+                }
 
-                    //populate return object
-                    foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
-                    {
-                        data.Add(row.ItemArray);
-                    }
+                //populate return object
+                foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
+                {
+                    data.Add(row.ItemArray);
+                }
 
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager getRequestTypes(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -360,26 +332,23 @@ namespace TransportationProject
             try
             {
                 
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    sqlCmdText = "SELECT RPT.RequestPersonTypeID, RPT.RequestPersonType FROM dbo.RequestPersonTypes RPT";
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                sqlCmdText = "SELECT RPT.RequestPersonTypeID, RPT.RequestPersonType FROM dbo.RequestPersonTypes RPT";
 
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
+                dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
 
-                    //populate return object
-                    foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
-                    {
-                        data.Add(row.ItemArray);
-                    }
+                //populate return object
+                foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
+                {
+                    data.Add(row.ItemArray);
+                }
                    
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager getRequestPersonTypes(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -394,27 +363,24 @@ namespace TransportationProject
             try
             {
                 
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    sqlCmdText = "SELECT -999 AS SpotID, '(NONE)' AS SpotDescription, NULL AS SpotType, 0 AS HoursInTimeBlock UNION " +
-                    "(SELECT SpotID, SpotDescription, SpotType, HoursInTimeBlock FROM dbo.TruckDockSpots  WHERE isDisabled = 0) ORDER BY SpotDescription ";
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                sqlCmdText = "SELECT -999 AS SpotID, '(NONE)' AS SpotDescription, NULL AS SpotType, 0 AS HoursInTimeBlock UNION " +
+                "(SELECT SpotID, SpotDescription, SpotType, HoursInTimeBlock FROM dbo.TruckDockSpots  WHERE isDisabled = 0) ORDER BY SpotDescription ";
 
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
+                dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
 
-                    //populate return object
-                    foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
-                    {
-                        data.Add(row.ItemArray);
-                    }
+                //populate return object
+                foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
+                {
+                    data.Add(row.ItemArray);
+                }
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager GetSpots(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -428,41 +394,38 @@ namespace TransportationProject
             try
             {
                 
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    if (MSID > 0)
-                    {
-                        sqlCmdText = "SELECT -999 AS SpotID, '(NONE)' AS SpotDescription, NULL AS SpotType, 0 AS HoursInTimeBlock UNION " +
-                         "SELECT SpotID, SpotDescription, SpotType, HoursInTimeBlock FROM dbo.TruckDockSpots WHERE SpotType = (SELECT MS.TruckType FROM MainSchedule AS MS WHERE MS.MSID = @MSID) AND isDisabled = 0 " +
-                         "UNION SELECT SpotID, SpotDescription, SpotType, HoursInTimeBlock FROM dbo.TruckDockSpots TDS INNER JOIN dbo.SpotType ST ON ST.SpotTypeShort = TDS.SpotType WHERE SpotTypeShort IN ('Yard', 'Wait') " +
+                if (MSID > 0)
+                {
+                    sqlCmdText = "SELECT -999 AS SpotID, '(NONE)' AS SpotDescription, NULL AS SpotType, 0 AS HoursInTimeBlock UNION " +
+                        "SELECT SpotID, SpotDescription, SpotType, HoursInTimeBlock FROM dbo.TruckDockSpots WHERE SpotType = (SELECT MS.TruckType FROM MainSchedule AS MS WHERE MS.MSID = @MSID) AND isDisabled = 0 " +
+                        "UNION SELECT SpotID, SpotDescription, SpotType, HoursInTimeBlock FROM dbo.TruckDockSpots TDS INNER JOIN dbo.SpotType ST ON ST.SpotTypeShort = TDS.SpotType WHERE SpotTypeShort IN ('Yard', 'Wait') " +
+                    "ORDER BY SpotDescription";
+
+                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID));
+                }
+                else //MSID = -1, PO = N/A selected
+                {
+                    sqlCmdText = "SELECT -999 AS SpotID, '(NONE)' AS SpotDescription, NULL AS SpotType, 0 AS HoursInTimeBlock " +
+                        "UNION SELECT SpotID, SpotDescription, SpotType, HoursInTimeBlock FROM dbo.TruckDockSpots TDS INNER JOIN dbo.SpotType ST ON ST.SpotTypeShort = TDS.SpotType WHERE SpotTypeShort IN ('Yard', 'Wait') " +
                         "ORDER BY SpotDescription";
 
-                        dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID));
-                    }
-                    else //MSID = -1, PO = N/A selected
-                    {
-                        sqlCmdText = "SELECT -999 AS SpotID, '(NONE)' AS SpotDescription, NULL AS SpotType, 0 AS HoursInTimeBlock " +
-                            "UNION SELECT SpotID, SpotDescription, SpotType, HoursInTimeBlock FROM dbo.TruckDockSpots TDS INNER JOIN dbo.SpotType ST ON ST.SpotTypeShort = TDS.SpotType WHERE SpotTypeShort IN ('Yard', 'Wait') " +
-                            "ORDER BY SpotDescription";
+                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
+                }
 
-                        dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
-                    }
-
-                    //populate return object
-                    foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
-                    {
-                        data.Add(row.ItemArray);
-                    }
+                //populate return object
+                foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
+                {
+                    data.Add(row.ItemArray);
+                }
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager GetSpotsByType(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -475,38 +438,35 @@ namespace TransportationProject
             try
             {
                 
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    sqlCmdText = "SELECT -1 AS MSID, '(N/A)' AS TrailerNumber " +
-                                        "UNION " +
-                                        "SELECT ISNULL(MSID, 0) AS MSID, TrailerNumber FROM  dbo.TrailersInYard " +
-                                        "UNION " +
-                                        "SELECT MSID, TrailerNumber FROM dbo.MainSchedule " +
-                                        "WHERE LTRIM(RTRIM(TrailerNumber)) IS NOT NULL AND isHidden = 0 " +
-                                        "AND (StatusID NOT IN (1, 10) AND LocationShort <> 'NOS') "; //TODO decide to only show all po's or only po's in plant + departed (filter 1 status id)&  disable start requests in ym and loader, modify also GetAvailablePONumbers...()
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                sqlCmdText = "SELECT -1 AS MSID, '(N/A)' AS TrailerNumber " +
+                                    "UNION " +
+                                    "SELECT ISNULL(MSID, 0) AS MSID, TrailerNumber FROM  dbo.TrailersInYard " +
+                                    "UNION " +
+                                    "SELECT MSID, TrailerNumber FROM dbo.MainSchedule " +
+                                    "WHERE LTRIM(RTRIM(TrailerNumber)) IS NOT NULL AND isHidden = 0 " +
+                                    "AND (StatusID NOT IN (1, 10) AND LocationShort <> 'NOS') "; //TODO decide to only show all po's or only po's in plant + departed (filter 1 status id)&  disable start requests in ym and loader, modify also GetAvailablePONumbers...()
 
 
-                    //TODO: revisit; possible add when CMS PO status is implemented
-                    //"SELECT MSID, TrailerNumber FROM dbo.MainSchedule WHERE TimeArrived > DATEADD(dd, @NUMDAYS, DATEDIFF(dd, 0, GETDATE())) AND LTRIM(RTRIM(TrailerNumber)) IS NOT NULL " +  
-                    //"AND (StatusID NOT IN (1, 10) AND LocationShort <> 'NOS')"; 
+                //TODO: revisit; possible add when CMS PO status is implemented
+                //"SELECT MSID, TrailerNumber FROM dbo.MainSchedule WHERE TimeArrived > DATEADD(dd, @NUMDAYS, DATEDIFF(dd, 0, GETDATE())) AND LTRIM(RTRIM(TrailerNumber)) IS NOT NULL " +  
+                //"AND (StatusID NOT IN (1, 10) AND LocationShort <> 'NOS')"; 
 
 
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
+                dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
 
-                    //populate return object
-                    foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
-                    {
-                        data.Add(row.ItemArray);
-                    }
+                //populate return object
+                foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
+                {
+                    data.Add(row.ItemArray);
+                }
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager getCurrentAvailableTrailers(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -519,34 +479,29 @@ namespace TransportationProject
             DataSet dataSet = new DataSet();
             try
             {
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                sqlCmdText = "SELECT -1 AS MSID, '(N/A)' AS PONum, 'NONE' AS TruckType UNION " +
+                                    "SELECT MSID, CONCAT(CAST(PONumber AS varchar(10)), '-', TrailerNumber), TruckType FROM dbo.MainSchedule " +
+                                    "WHERE isHidden = 0 AND LocationShort != 'NOS' " +
+                                    "OR ((SELECT DATEADD(dd, DATEDIFF(dd, 0, ETA), 0)) = (SELECT CAST (GETDATE() as DATE)) " +
+                                    "OR (SELECT DATEADD(dd, DATEDIFF(dd, 0, ETA), 0)) = (SELECT DATEADD(day, DATEDIFF(day, 0, GETDATE()), 1))) " +
+                    // "AND (LocationShort <> 'NOS' AND StatusID IN (1)) " +  //TODO decide to only show all po's or only po's in plant (filter 1 and 10 status id)&  disable start requests in ym and loader
+                                    "ORDER BY PONum";
+
+
+                dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
+                //populate return object
+                foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
+                {
+                    data.Add(row.ItemArray);
+                }
                 
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    sqlCmdText = "SELECT -1 AS MSID, '(N/A)' AS PONum, 'NONE' AS TruckType UNION " +
-                                        "SELECT MSID, CONCAT(CAST(PONumber AS varchar(10)), '-', TrailerNumber), TruckType FROM dbo.MainSchedule " +
-                                        "WHERE isHidden = 0 AND LocationShort != 'NOS' " +
-                                        "OR ((SELECT DATEADD(dd, DATEDIFF(dd, 0, ETA), 0)) = (SELECT CAST (GETDATE() as DATE)) " +
-                                        "OR (SELECT DATEADD(dd, DATEDIFF(dd, 0, ETA), 0)) = (SELECT DATEADD(day, DATEDIFF(day, 0, GETDATE()), 1))) " +
-                        // "AND (LocationShort <> 'NOS' AND StatusID IN (1)) " +  //TODO decide to only show all po's or only po's in plant (filter 1 and 10 status id)&  disable start requests in ym and loader
-                                        "ORDER BY PONum";
-
-
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
-                    //populate return object
-                    foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
-                    {
-                        data.Add(row.ItemArray);
-                    }
-
-                    
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager GetAvailablePONumberForLoaderRequests(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -558,38 +513,34 @@ namespace TransportationProject
             DataSet dataSet = new DataSet();
             try
             {
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                
+                sqlCmdText = "SELECT -1 AS MSID, '(N/A)' AS PONum, 'NONE' AS TruckType UNION " +
+                                    "SELECT MSID, CONCAT(CAST(PONumber AS varchar(10)), '-', TrailerNumber), TruckType FROM dbo.MainSchedule " +
+                                    "WHERE isHidden = 0 " +
+                    //"AND (ETA >= DATEADD(day, DATEDIFF(day, 0, GETDATE()), 1) " +
+                    //"OR (ETA < DATEADD(day, DATEDIFF(day, 0, GETDATE()), 1))) " +
+                                    "AND( (LocationShort <> 'NOS' AND StatusID NOT IN (1, 10) )  OR (LocationShort<> 'NOS' AND StatusID = 10 AND isDropTrailer = 1))" + 
+                                    "ORDER BY PONum";
 
-                    //TODO: revisit query to see if limit based on ETA is necessary 
-                    sqlCmdText = "SELECT -1 AS MSID, '(N/A)' AS PONum, 'NONE' AS TruckType UNION " +
-                                        "SELECT MSID, CONCAT(CAST(PONumber AS varchar(10)), '-', TrailerNumber), TruckType FROM dbo.MainSchedule " +
-                                        "WHERE isHidden = 0 " +
-                        //"AND (ETA >= DATEADD(day, DATEDIFF(day, 0, GETDATE()), 1) " +
-                        //"OR (ETA < DATEADD(day, DATEDIFF(day, 0, GETDATE()), 1))) " +
-                                        "AND( (LocationShort <> 'NOS' AND StatusID NOT IN (1, 10) )  OR (LocationShort<> 'NOS' AND StatusID = 10 AND isDropTrailer = 1))" +  //TODO decide to only show all po's or only po's in plant (filter 1 and 10 status id)&  disable start requests in ym and loader, modify also getcurrentavailabletrailers()
-                                        "ORDER BY PONum";
-
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
-                    //populate return object
-                    foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
-                    {
-                        data.Add(row.ItemArray);
-                    }
+                dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
+                //populate return object
+                foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
+                {
+                    data.Add(row.ItemArray);
+                }
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager getYardMules(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
 
-        [System.Web.Services.WebMethod]//zxczxczxc
+        [System.Web.Services.WebMethod]
         public static Object getDataForAddNewRow(int MSID)
         {
             List<object[]> data = new List<object[]>();
@@ -604,116 +555,113 @@ namespace TransportationProject
             {
                 
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    sqlCmdText = "SELECT MS.TrailerNumber, (SELECT SpotDescription FROM dbo.TruckDockSpots WHERE MS.DockSpotID = SpotID) AS AssignedDockSpot, " +
-                                            "MS.DockSpotID,  MS.MSID,  MS.isDropTrailer,  MS.LoadType, " +
-                                            "(SELECT HoursInTimeBlock FROM dbo.TruckDockSpots WHERE SpotID = DockSpotID) AS TimeBlock, " +
-                                            "MS.currentDockSpotID, MS.TruckType, (SELECT SpotDescription FROM dbo.TruckDockSpots WHERE MS.currentDockSpotID = SpotID) AS CurrentSpot " +
-                                            "From dbo.MainSchedule AS MS LEFT JOIN dbo.TruckDockSpots AS TDS ON MS.DockSpotID = TDS.SpotID WHERE MSID = @MSID";
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                sqlCmdText = "SELECT MS.TrailerNumber, (SELECT SpotDescription FROM dbo.TruckDockSpots WHERE MS.DockSpotID = SpotID) AS AssignedDockSpot, " +
+                                        "MS.DockSpotID,  MS.MSID,  MS.isDropTrailer,  MS.LoadType, " +
+                                        "(SELECT HoursInTimeBlock FROM dbo.TruckDockSpots WHERE SpotID = DockSpotID) AS TimeBlock, " +
+                                        "MS.currentDockSpotID, MS.TruckType, (SELECT SpotDescription FROM dbo.TruckDockSpots WHERE MS.currentDockSpotID = SpotID) AS CurrentSpot " +
+                                        "From dbo.MainSchedule AS MS LEFT JOIN dbo.TruckDockSpots AS TDS ON MS.DockSpotID = TDS.SpotID WHERE MSID = @MSID";
 
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID), new SqlParameter("@Now", now));
+                dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID), new SqlParameter("@Now", now));
 
-                    //populate return object
-                    foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
-                    {
-                        data.Add(row.ItemArray);
-                    }
+                //populate return object
+                foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
+                {
+                    data.Add(row.ItemArray);
+                }
 
-                    if (MSID == -1)
+                if (MSID == -1)
+                {
+                    assignedDockSpotID = 0;
+                    currentDockSpotID = 0;
+                }
+                else
+                {
+                    truckType = Convert.ToString(dataSet.Tables[0].Rows[0]["TruckType"]);
+
+                    if (dataSet.Tables[0].Rows[0]["DockSpotID"].Equals(DBNull.Value) || dataSet.Tables[0].Rows[0]["DockSpotID"].ToString() == "")
                     {
                         assignedDockSpotID = 0;
+                    }
+                    else
+                    {
+                        assignedDockSpotID = Convert.ToInt32(dataSet.Tables[0].Rows[0]["DockSpotID"]);
+                    }
+
+
+                    if (dataSet.Tables[0].Rows[0]["currentDockSpotID"].Equals(DBNull.Value) || dataSet.Tables[0].Rows[0]["currentDockSpotID"].ToString() == "")
+                    {
                         currentDockSpotID = 0;
                     }
                     else
                     {
-                        truckType = Convert.ToString(dataSet.Tables[0].Rows[0]["TruckType"]);
-
-                        if (dataSet.Tables[0].Rows[0]["DockSpotID"].Equals(DBNull.Value) || dataSet.Tables[0].Rows[0]["DockSpotID"].ToString() == "")
-                        {
-                            assignedDockSpotID = 0;
-                        }
-                        else
-                        {
-                            assignedDockSpotID = Convert.ToInt32(dataSet.Tables[0].Rows[0]["DockSpotID"]);
-                        }
-
-
-                        if (dataSet.Tables[0].Rows[0]["currentDockSpotID"].Equals(DBNull.Value) || dataSet.Tables[0].Rows[0]["currentDockSpotID"].ToString() == "")
-                        {
-                            currentDockSpotID = 0;
-                        }
-                        else
-                        {
-                            currentDockSpotID = Convert.ToInt32(dataSet.Tables[0].Rows[0]["currentDockSpotID"]);
-                        }
+                        currentDockSpotID = Convert.ToInt32(dataSet.Tables[0].Rows[0]["currentDockSpotID"]);
                     }
+                }
 
-                    if ((assignedDockSpotID == currentDockSpotID && assignedDockSpotID != 0) && truckType.ToLower() == "bulk" && truckType != null)
-                    {
-                        sqlCmdText = "DECLARE @f float " +
-                                                "SET @f = (SELECT TDS.HoursInTimeBlock " +
-                                                "FROM dbo.TruckDockSpots AS TDS " +
-                                                "INNER JOIN dbo.MainSchedule AS MS ON MS.currentDockSpotID = TDS.SpotID) " +
-                                                "SELECT " +
-                                                "DATEADD(mi, (@f - FLOOR(@f)) * 60, DATEADD(hh, FLOOR(@f), MSE.TimeStamp)) " +
-                                                "FROM dbo.MainScheduleEvents AS MSE " +
-                                                "WHERE MSE.EventTypeID = 6 AND MSE.MSID = @MSID " +
-                                                "ORDER BY MSE.TimeStamp DESC";
-                        dueDateTime = Convert.ToDateTime(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
+                if ((assignedDockSpotID == currentDockSpotID && assignedDockSpotID != 0) && truckType.ToLower() == "bulk" && truckType != null)
+                {
+                    sqlCmdText = "DECLARE @f float " +
+                                            "SET @f = (SELECT TDS.HoursInTimeBlock " +
+                                            "FROM dbo.TruckDockSpots AS TDS " +
+                                            "INNER JOIN dbo.MainSchedule AS MS ON MS.currentDockSpotID = TDS.SpotID) " +
+                                            "SELECT " +
+                                            "DATEADD(mi, (@f - FLOOR(@f)) * 60, DATEADD(hh, FLOOR(@f), MSE.TimeStamp)) " +
+                                            "FROM dbo.MainScheduleEvents AS MSE " +
+                                            "WHERE MSE.EventTypeID = 6 AND MSE.MSID = @MSID " +
+                                            "ORDER BY MSE.TimeStamp DESC";
+                    dueDateTime = Convert.ToDateTime(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
 
 
-                        object[] rowArray = new object[1];
-                        rowArray[0] = Convert.ToString(dueDateTime);
-                        data.Add(rowArray);
+                    object[] rowArray = new object[1];
+                    rowArray[0] = Convert.ToString(dueDateTime);
+                    data.Add(rowArray);
 
-                    }
-                    else if ((assignedDockSpotID == currentDockSpotID && assignedDockSpotID != 0) && truckType.ToLower() == "van" && truckType != null)
-                    {
-                        sqlCmdText = "DECLARE @f float " +
-                                                "SET @f = (SELECT TDS.HoursInTimeBlock " +
-                                                "FROM dbo.TruckDockSpots AS TDS " +
-                                                "INNER JOIN dbo.MainSchedule AS MS ON MS.currentDockSpotID = TDS.SpotID WHERE MS.MSID = @MSID) " +
-                                                "SELECT " +
-                                                "DATEADD(mi, (@f - FLOOR(@f)) * 60, DATEADD(hh, FLOOR(@f), MSE.TimeStamp)) " +
-                                                "FROM dbo.MainScheduleEvents AS MSE " +
-                                                "WHERE MSE.EventTypeID = 5 AND MSE.MSID = @MSID " +
-                                                "ORDER BY MSE.TimeStamp DESC";
-                        dueDateTime = Convert.ToDateTime(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
+                }
+                else if ((assignedDockSpotID == currentDockSpotID && assignedDockSpotID != 0) && truckType.ToLower() == "van" && truckType != null)
+                {
+                    sqlCmdText = "DECLARE @f float " +
+                                            "SET @f = (SELECT TDS.HoursInTimeBlock " +
+                                            "FROM dbo.TruckDockSpots AS TDS " +
+                                            "INNER JOIN dbo.MainSchedule AS MS ON MS.currentDockSpotID = TDS.SpotID WHERE MS.MSID = @MSID) " +
+                                            "SELECT " +
+                                            "DATEADD(mi, (@f - FLOOR(@f)) * 60, DATEADD(hh, FLOOR(@f), MSE.TimeStamp)) " +
+                                            "FROM dbo.MainScheduleEvents AS MSE " +
+                                            "WHERE MSE.EventTypeID = 5 AND MSE.MSID = @MSID " +
+                                            "ORDER BY MSE.TimeStamp DESC";
+                    dueDateTime = Convert.ToDateTime(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
 
-                        object[] rowArray = new object[1];
-                        rowArray[0] = Convert.ToString(dueDateTime);
-                        data.Add(rowArray);
-                    }
-                    else if ((currentDockSpotID == 3015 || currentDockSpotID == 3017) || ((assignedDockSpotID == 3015 || assignedDockSpotID == 3017) && currentDockSpotID == 0) || (currentDockSpotID == 0 && assignedDockSpotID == 0) || (currentDockSpotID == 0 && assignedDockSpotID == -999))
-                    {
-                        //data.Add("No dock spot assigned");
-                    }
-                    else
-                    {
-                        //sqlCmd.Parameters.Add(paramNow);
-                        sqlCmdText = "DECLARE @f float " +
-                                                "SET @f = (SELECT TDS.HoursInTimeBlock " +
-                                                "FROM dbo.TruckDockSpots AS TDS " +
-                                                "INNER JOIN dbo.MainSchedule AS MS ON MS.DockSpotID = TDS.SpotID " +
-                                                "WHERE MSID = @MSID) " +
-                                                "SELECT " +
-                                                "DATEADD(mi, (@f - FLOOR(@f)) * 60, DATEADD(hh, FLOOR(@f), @Now)) ";
-                        dueDateTime = Convert.ToDateTime(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID), new SqlParameter("@Now", now)));
+                    object[] rowArray = new object[1];
+                    rowArray[0] = Convert.ToString(dueDateTime);
+                    data.Add(rowArray);
+                }
+                else if ((currentDockSpotID == 3015 || currentDockSpotID == 3017) || ((assignedDockSpotID == 3015 || assignedDockSpotID == 3017) && currentDockSpotID == 0) || (currentDockSpotID == 0 && assignedDockSpotID == 0) || (currentDockSpotID == 0 && assignedDockSpotID == -999))
+                {
+                    //data.Add("No dock spot assigned");
+                }
+                else
+                {
+                    //sqlCmd.Parameters.Add(paramNow);
+                    sqlCmdText = "DECLARE @f float " +
+                                            "SET @f = (SELECT TDS.HoursInTimeBlock " +
+                                            "FROM dbo.TruckDockSpots AS TDS " +
+                                            "INNER JOIN dbo.MainSchedule AS MS ON MS.DockSpotID = TDS.SpotID " +
+                                            "WHERE MSID = @MSID) " +
+                                            "SELECT " +
+                                            "DATEADD(mi, (@f - FLOOR(@f)) * 60, DATEADD(hh, FLOOR(@f), @Now)) ";
+                    dueDateTime = Convert.ToDateTime(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID), new SqlParameter("@Now", now)));
 
-                        object[] rowArray = new object[1];
-                        rowArray[0] = Convert.ToString(dueDateTime);
-                        data.Add(rowArray);
-                    }
+                    object[] rowArray = new object[1];
+                    rowArray[0] = Convert.ToString(dueDateTime);
+                    data.Add(rowArray);
+                }
 
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager checkIfSpotChangeRequestExist(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -726,8 +674,7 @@ namespace TransportationProject
             try
             {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    //TODO: Modify query to show only active requests + recently finished requests (maybe recently finished today) 
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                     sqlCmdText = "SELECT TrailerNumber, SpotDescription, DockSpotID, MSID From dbo.MainSchedule LEFT JOIN dbo.TruckDockSpots ON DockSpotID = SpotID WHERE UPPER(TrailerNumber) = @TRAIL";
 
                     dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
@@ -741,27 +688,23 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager getDataForAddNewRowUsingTrailerNum(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
 
 
         [System.Web.Services.WebMethod]
-        public static List<VW_DockManagerYardMuleRequestGridEntry> getYardMuleRequestsGridData()
+        public static List<vw_DockManagerYardMuleRequestGridData> getYardMuleRequestsGridData()
         {
             List<object[]> data = new List<object[]>();
             DataSet dataSet = new DataSet();
-            List<VW_DockManagerYardMuleRequestGridEntry> vw_YardGridData = new List<VW_DockManagerYardMuleRequestGridEntry>();
+            List<vw_DockManagerYardMuleRequestGridData> vw_YardGridData = new List<vw_DockManagerYardMuleRequestGridData>();
             try
             {
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                //TODO: Modify query to show only active requests + recently finished requests (maybe recently finished today) 
-                    sqlCmdText = "SELECT * FROM ( " +
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                sqlCmdText = "SELECT * FROM ( " +
                         "SELECT R.MSID, MS.PONumber, R.RequestID,  R.Task, R.Assignee, R.Requester, R.Comment, R.NewSpotID, MS.DockSpotID AS AssignedDockSpot," +
                         "(SELECT TOP (1) Timestamp FROM MainScheduleEvents MSE1 INNER JOIN MainScheduleRequestEvents MSRE ON MSE1.MSID = R.MSID AND MSRE.EventID = MSE1.EventID WHERE (isHidden = 0 or isHidden IS NULL) AND MSRE.RequestID = R.RequestID AND EventTypeID = 17 ORDER BY TimeStamp DESC) TimeRequestSent," +
                         "(SELECT TOP (1) Timestamp FROM MainScheduleEvents MSE1 INNER JOIN MainScheduleRequestEvents MSRE ON MSE1.MSID = R.MSID AND MSRE.EventID = MSE1.EventID WHERE (isHidden = 0 or isHidden IS NULL) AND MSRE.RequestID = R.RequestID AND EventTypeID = 21 ORDER BY TimeStamp DESC) TimeRequestStart," +
@@ -786,14 +729,14 @@ namespace TransportationProject
                         "WHERE ((TimeRequestEnd > DATEADD(HOUR, -1, CURRENT_TIMESTAMP) AND TimeRequestEnd <  CURRENT_TIMESTAMP) OR TimeRequestEnd IS NULL) " +
                         "ORDER BY TimeRequestSent";//"ORDER BY RequestDueDateTime, TimeRequestSent";
 
-                VW_DockManagerYardMuleRequestGridEntry vw_YardGridRow;
+                vw_DockManagerYardMuleRequestGridData vw_YardGridRow;
 
             
 
                 SqlDataReader reader = SqlHelper.ExecuteReader(sql_connStr, CommandType.Text, sqlCmdText);
                 while (reader.Read())
                 {
-                    vw_YardGridRow = new VW_DockManagerYardMuleRequestGridEntry();
+                    vw_YardGridRow = new vw_DockManagerYardMuleRequestGridData();
                     vw_YardGridRow.MSID = reader.GetValueOrDefault<int>("MSID");
                     vw_YardGridRow.PONumber = reader.GetValueOrDefault<int>("PONumber");
                     vw_YardGridRow.RequestID = reader.GetValueOrDefault<int>("RequestID");
@@ -837,24 +780,12 @@ namespace TransportationProject
 
                     
                 }
-
-
-
-                //dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
-                //    //populate return object
-                //    foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
-                //    {
-                //        data.Add(row.ItemArray);
-                //    }
-
+                
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager getYardMuleRequestsGridData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return vw_YardGridData;
         }
@@ -866,10 +797,9 @@ namespace TransportationProject
             DataSet dataSet = new DataSet();
             try
             {
-                    string sqlCmdText;
-                    //TODO: Modify query to show only active requests + recently finished requests (maybe recently finished today) 
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    sqlCmdText = "SELECT * FROM ( " +
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                sqlCmdText = "SELECT * FROM ( " +
                          "SELECT R.MSID, MS.PONumber, R.RequestID,  R.Task, R.Assignee, R.Requester, R.Comment,  R.NewSpotID, MS.DockSpotID AS OriginallyAssignedSpot," +
                         "(SELECT TOP (1) Timestamp FROM MainScheduleEvents MSE1 INNER JOIN MainScheduleRequestEvents MSRE ON MSRE.EventID = MSE1.EventID WHERE (isHidden = 0) AND MSE1.MSID = R.MSID AND MSRE.RequestID = R.RequestID AND EventTypeID = 2027 ORDER BY TimeStamp DESC) TimeRequestSent," +
                         "(SELECT TOP (1) Timestamp FROM MainScheduleEvents MSE1 INNER JOIN MainScheduleRequestEvents MSRE ON MSRE.EventID = MSE1.EventID WHERE (isHidden = 0) AND MSE1.MSID = R.MSID AND MSRE.RequestID = R.RequestID AND (EventTypeID = 2030  OR EventTypeID =  13  OR EventTypeID =  15) ORDER BY TimeStamp DESC) TimeRequestStart," +
@@ -898,7 +828,6 @@ namespace TransportationProject
                         "ORDER BY TimeRequestSent";//"ORDER BY RequestDueDateTime, TimeRequestSent";
 
                     dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
-                    //populate return object
                     foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
                     {
                         data.Add(row.ItemArray);
@@ -908,10 +837,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager getLoaderRequestsGridData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -924,9 +850,9 @@ namespace TransportationProject
             try
             {
                
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    sqlCmdText = "SELECT * FROM ( " +
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                sqlCmdText = "SELECT * FROM ( " +
                                     "SELECT R.MSID, MS.PONumber, R.RequestID,  R.Task, " + 
                                     "(SELECT URS.FirstName FROM dbo.Users as URS WHERE R.Requester = URS.UserID) RequesterFirstName, " + 
                                     "(SELECT URS.LastName FROM dbo.Users as URS WHERE R.Requester = URS.UserID) RequesterLastName, " + 
@@ -954,10 +880,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager getYardMules(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -972,7 +895,7 @@ namespace TransportationProject
 
             try
             {
-
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 sqlConn = new SqlConnection(sql_connStr);
                 if (sqlConn.State != ConnectionState.Open)
                 {
@@ -1008,16 +931,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in dockManager checkIfSpotIsAvaialble(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager checkIfSpotIsAvaialble(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -1037,6 +956,7 @@ namespace TransportationProject
             DateTime now = DateTime.Now;
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
 
                 using (var scope = new TransactionScope())
@@ -1133,10 +1053,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager CreateRequest(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1147,7 +1064,8 @@ namespace TransportationProject
 
             try
             {
-                    string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
                     //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                     sqlCmdText = "SELECT COUNT(*) FROM dbo.Requests as REQ " +
                                      "INNER JOIN dbo.MainSchedule MS ON REQ.MSID = MS.MSID " +
@@ -1160,10 +1078,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager checkIfSpotChangeRequestExist(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return rowCount;
         }
@@ -1175,7 +1090,8 @@ namespace TransportationProject
 
             try
             {
-                    string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
                     //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                     sqlCmdText = "SELECT COUNT(*) FROM dbo.Requests as REQ " +
                                         "INNER JOIN dbo.MainSchedule MS ON REQ.MSID = MS.MSID " +
@@ -1188,10 +1104,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager checkIfSpotChangeRequestExist_OnRowEdit(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return rowCount;
         }
@@ -1204,8 +1117,8 @@ namespace TransportationProject
 
             try
             {
-                
-                    string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
                     //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                     sqlCmdText = "SELECT COUNT(*) FROM dbo.Requests REQ " +
                                      "INNER JOIN dbo.MainSchedule MS ON REQ.MSID = MS.MSID " + 
@@ -1218,10 +1131,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager checkIfRequestTypeExists(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return count;
         }
@@ -1234,8 +1144,8 @@ namespace TransportationProject
 
             try
             {
-               
-                    string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
                     //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                     //Load started = 13, Unload started 15, Yardmule Request= 21, Loader Assignment started = 2030
                     sqlCmdText = "SELECT COUNT(E.EventTypeID) FROM dbo.MainScheduleRequestEvents MSRE " +
@@ -1253,10 +1163,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager checkIfRequestStarted(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return wasStarted;
         }
@@ -1267,6 +1174,7 @@ namespace TransportationProject
             DateTime now = DateTime.Now;
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                 using (var scope = new TransactionScope())
                 {
@@ -1308,10 +1216,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager deleteRequest(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1325,6 +1230,7 @@ namespace TransportationProject
                 ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                 using (var scope = new TransactionScope())
                 {
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                     string sqlCmdText;
                     //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                     sqlCmdText = "UPDATE dbo.Requests SET  Assignee = @ASSIGN, Requester = @REQUESTER, NewSpotID = @NEWSPOT, RequestTypeID = @RTYPE, SpotReserveTime = @SPOTRESERVETIME " + // RequestDueDateTime = @DUE " +
@@ -1399,10 +1305,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager updateRequest(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1413,8 +1316,8 @@ namespace TransportationProject
             DataSet dataSet = new DataSet();
             try
             {
-              
-                    string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
                     //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                     sqlCmdText = "SELECT TOP(1) MSRE.RequestID, MSE.EventTypeID, MSE.TimeStamp, UserName from dbo.MainScheduleRequestEvents as MSRE " +
                                         "INNER JOIN dbo.MainScheduleEvents as MSE ON MSRE.EventID = MSE.EventID " +
@@ -1436,10 +1339,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager checkStatusOfYMRequest(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -1453,8 +1353,8 @@ namespace TransportationProject
             {
               
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    sqlCmdText = "SELECT TOP(1) MSRE.RequestID, MSE.EventTypeID, MSE.TimeStamp, UserName from dbo.MainScheduleRequestEvents as MSRE " +
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                sqlCmdText = "SELECT TOP(1) MSRE.RequestID, MSE.EventTypeID, MSE.TimeStamp, UserName from dbo.MainScheduleRequestEvents as MSRE " +
                                         "INNER JOIN dbo.MainScheduleEvents as MSE ON MSRE.EventID = MSE.EventID " +
                                         "INNER JOIN dbo.Requests R ON R.RequestID = MSRE.RequestID " +
                                         "LEFT JOIN dbo.Users ON R.Assignee = Users.UserID " +
@@ -1474,10 +1374,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager checkStatusOfLoaderRequest(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -1490,8 +1387,8 @@ namespace TransportationProject
             {
                 
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    sqlCmdText = "SELECT LoadType FROM dbo.MainSchedule WHERE MSID = @MSID";
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                sqlCmdText = "SELECT LoadType FROM dbo.MainSchedule WHERE MSID = @MSID";
 
                     loadType = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
                    
@@ -1499,10 +1396,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager checkLoadType(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return loadType;
         }
@@ -1516,8 +1410,8 @@ namespace TransportationProject
             try
             {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    sqlCmdText = "SELECT LoadType FROM dbo.MainSchedule WHERE MSID = @MSID";
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                sqlCmdText = "SELECT LoadType FROM dbo.MainSchedule WHERE MSID = @MSID";
 
                     loadType = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
 
@@ -1544,10 +1438,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager getRequestTypesBasedOnMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -1558,22 +1449,18 @@ namespace TransportationProject
             List<object[]> data = new List<object[]>();
             try
             {
-                //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 TruckLogHelperFunctions.logByMSIDConnection(sql_connStr, MSID, data); 
             }
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in dockManager GetLogDataByMSID(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager GetLogDataByMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -1587,22 +1474,18 @@ namespace TransportationProject
             List<object[]> data = new List<object[]>();
             try
             {
-                //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 TruckLogHelperFunctions.logListConnection(sql_connStr, data);
             }
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in dockManager GetLogList(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager GetLogList(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -1619,8 +1502,8 @@ namespace TransportationProject
             {
                 
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    sqlCmdText = "SELECT PD.PODetailsID, PD.ProductID_CMS, PD.QTY, PD.LotNumber, PD.UnitOfMeasure, PCMS.ProductName_CMS " +
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                sqlCmdText = "SELECT PD.PODetailsID, PD.ProductID_CMS, PD.QTY, PD.LotNumber, PD.UnitOfMeasure, PCMS.ProductName_CMS " +
                                     "FROM dbo.PODetails PD " +
                                     "LEFT JOIN dbo.ProductsCMS PCMS ON PCMS.ProductID_CMS = PD.ProductID_CMS " +
                                     "WHERE PD.MSID = @MSID ORDER BY PD.ProductID_CMS ";
@@ -1636,10 +1519,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager GetPODetailsFromMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }

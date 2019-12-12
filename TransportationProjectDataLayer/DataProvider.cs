@@ -17,7 +17,6 @@ namespace TransportationProjectDataLayer
     {
         IEnumerable<CMSProduct> GetProductCMS();
         IEnumerable<CMSProduct> GetProductCMS(string product);
-        SqlConnection GetConnection();
         List<TrailerGridData> GetTrailerGridData();
         List<LoadTypes> GetLoadTypes(bool? isUsedForInspections);
         List<PODetails> GetPODetails(int? MSID);
@@ -61,12 +60,7 @@ namespace TransportationProjectDataLayer
             }
 
         }
-        public SqlConnection GetConnection()
-        {
-            string connStr = getConnectionStringFromSettings();
-            var conn = new SqlConnection(connStr);
-            return conn;
-        }
+
         public List<LoadTypes> GetLoadTypes(bool? isUsedForInspections)
         {
             List<LoadTypes> data = new List<LoadTypes>();
@@ -79,8 +73,8 @@ namespace TransportationProjectDataLayer
                 sqlCmdText = (isUsedForInspections.HasValue) ? string.Concat(sqlCmdText, "  WHERE(isUsedOnlyForInspections = @isForInspection) ") : sqlCmdText;
 
                 sqlCmdText = string.Concat(sqlCmdText, " ORDER BY LoadTypeLong");
-
-                using (SqlConnection sqlConn = GetConnection())
+        
+                using (SqlConnection sqlConn = new SqlConnection(getConnectionStringFromSettings()))
                 {
                     sqlConn.Open();
                     SqlDataReader sReader;
@@ -133,7 +127,7 @@ namespace TransportationProjectDataLayer
                 sqlCmdText = string.Concat(sqlCmdText, " ORDER BY ProductName_CMS ");
 
 
-                using (SqlConnection sqlConn = GetConnection())
+                using (SqlConnection sqlConn = new SqlConnection(getConnectionStringFromSettings()))
                 {
                     sqlConn.Open();
                     SqlDataReader sReader;
@@ -189,7 +183,7 @@ namespace TransportationProjectDataLayer
                                      "FROM ZXPTruckSchedules.dbo.CMS_AvailablePO ORDER BY PONUM DESC");
                
 
-                using (SqlConnection sqlConn = GetConnection())
+                using (SqlConnection sqlConn = new SqlConnection(getConnectionStringFromSettings()))
                 {
                     sqlConn.Open();
                     SqlDataReader sReader;
@@ -245,7 +239,7 @@ namespace TransportationProjectDataLayer
                                 "ORDER BY ETA, PoNumber"
                                 );
 
-                using (SqlConnection sqlConn = GetConnection())
+                using (SqlConnection sqlConn = new SqlConnection(getConnectionStringFromSettings()))
                 {
                     sqlConn.Open();
                     SqlDataReader sReader;
@@ -308,7 +302,7 @@ namespace TransportationProjectDataLayer
         {
             List<DomainModels.CalendarEvents> disabledDates = new List<DomainModels.CalendarEvents>();
 
-            using (SqlConnection con = GetConnection())
+            using (SqlConnection con = new SqlConnection(getConnectionStringFromSettings()))
             {
                 try
                 {
@@ -347,7 +341,7 @@ namespace TransportationProjectDataLayer
         {
             List<CMSProduct> products = new List<CMSProduct>();
 
-            using (SqlConnection con = GetConnection())
+            using (SqlConnection con = new SqlConnection(getConnectionStringFromSettings()))
             {
                 try
                 {
@@ -378,7 +372,7 @@ namespace TransportationProjectDataLayer
         {
             List<CMSProduct> products = new List<CMSProduct>();
 
-            using (SqlConnection con = GetConnection())
+            using (SqlConnection con = new SqlConnection(getConnectionStringFromSettings()))
             {
                 try
                 {
@@ -410,7 +404,7 @@ namespace TransportationProjectDataLayer
         public int GetRowCountForPO(int PO)
         {
             int rowCount = 0;
-            using (SqlConnection con = GetConnection())
+            using (SqlConnection con = new SqlConnection(getConnectionStringFromSettings()))
             {
                 try
                 {
@@ -435,7 +429,7 @@ namespace TransportationProjectDataLayer
         public List<DomainModels.Status> GetStatuses()
         {
             List<DomainModels.Status> StatusOptions = new List<DomainModels.Status>();
-            using (SqlConnection con = GetConnection())
+            using (SqlConnection con = new SqlConnection(getConnectionStringFromSettings()))
             {
                 try
                 {
@@ -471,7 +465,7 @@ namespace TransportationProjectDataLayer
         public List<DomainModels.Status> GetStatusesFilteredByLocation(string locationShort)
         {
             List<DomainModels.Status> StatusOptions = new List<DomainModels.Status>();
-            using (SqlConnection con = GetConnection())
+            using (SqlConnection con = new SqlConnection(getConnectionStringFromSettings()))
             {
                 try
                 {
@@ -521,7 +515,7 @@ namespace TransportationProjectDataLayer
         public List<DomainModels.Locations> GetLocations()
         {
             List<DomainModels.Locations> locations = new List<DomainModels.Locations>();
-            using (SqlConnection con = GetConnection())
+            using (SqlConnection con = new SqlConnection(getConnectionStringFromSettings()))
             {
                 try
                 {
@@ -556,7 +550,7 @@ namespace TransportationProjectDataLayer
         public List<DomainModels.FileTypes> GetFileTypes()
         {
             List<DomainModels.FileTypes> fTypes = new List<DomainModels.FileTypes>();
-            using (SqlConnection con = GetConnection())
+            using (SqlConnection con = new SqlConnection(getConnectionStringFromSettings()))
             {
                 try
                 {
@@ -591,7 +585,7 @@ namespace TransportationProjectDataLayer
         public List<DomainModels.TruckTypes> GetTruckTypes()
         {
             List<DomainModels.TruckTypes> TTypes = new List<DomainModels.TruckTypes>();
-            using (SqlConnection con = GetConnection())
+            using (SqlConnection con = new SqlConnection(getConnectionStringFromSettings()))
             {
                 try
                 {
@@ -625,7 +619,7 @@ namespace TransportationProjectDataLayer
         public List<DomainModels.UnitOfMeasure> GetUnitsOfMeasure()
         {
             List<DomainModels.UnitOfMeasure> uMeasures = new List<DomainModels.UnitOfMeasure>();
-            using (SqlConnection con = GetConnection())
+            using (SqlConnection con = new SqlConnection(getConnectionStringFromSettings()))
             {
                 try
                 {
@@ -658,7 +652,7 @@ namespace TransportationProjectDataLayer
         public List<DomainModels.MainScheduleFiles> GetMainScheduleFiles(int MSID)
         {
             List<DomainModels.MainScheduleFiles> msFiles = new List<DomainModels.MainScheduleFiles>();
-            using (SqlConnection con = GetConnection())
+            using (SqlConnection con = new SqlConnection(getConnectionStringFromSettings()))
             {
                 try
                 {

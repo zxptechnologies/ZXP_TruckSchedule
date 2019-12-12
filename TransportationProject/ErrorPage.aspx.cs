@@ -35,16 +35,9 @@ namespace TransportationProject
                     if (!string.IsNullOrEmpty(errClientSideMsg))
                     {
                         string strErr = " Exception in client side code: " + errClientSideMsg;
-                        ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
+                        ErrorLogging.WriteEvent(strErr, EventLogEntryType.Warning, "zxptransportationproject", "Application", false);
                     }
-                    else
-                    {
-
-                        string strErr = " Exception Error in client side code: No message";
-                        ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                    }
-                    int intCode;
-                    if (int.TryParse(errCode, out intCode))
+                    if (int.TryParse(errCode, out int intCode))
                     {
                         switch (intCode)
                         {

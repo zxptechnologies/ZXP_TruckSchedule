@@ -28,18 +28,10 @@ namespace TransportationProject
                 ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                 if (zxpUD._uid != new ZXPUserData()._uid)
                 {
-                    //ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
 
-                    if (zxpUD._isAdmin) //make sure this matches whats in Site.Master and Default
+                    if (!zxpUD._isAdmin) //make sure this matches whats in Site.Master and Default
                     {
-                        sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                        if (sql_connStr == String.Empty)
-                        {
-                            throw new Exception("Missing SQLConnectionString in web.config");
-                        }
-                    }
-                    else
-                    {
+                       
                         Response.BufferOutput = true;
                         Response.Redirect("/ErrorPage.aspx?ErrorCode=5", false);
                     }

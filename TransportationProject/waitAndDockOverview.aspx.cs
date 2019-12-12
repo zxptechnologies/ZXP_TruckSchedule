@@ -13,8 +13,6 @@ namespace TransportationProject
 {
     public partial class waitAndDockOverview : System.Web.UI.Page
     {
-        protected static String sql_connStr;
-        public static ZXPUserData zxpUD = new ZXPUserData();
 
         void Page_PreInit(Object sender, EventArgs e)
         {
@@ -35,18 +33,11 @@ namespace TransportationProject
                 HttpCookie cookie = Request.Cookies[System.Web.Security.FormsAuthentication.FormsCookieName];
                 if (null != cookie && !string.IsNullOrEmpty(cookie.Value))
                 {
+                    ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                     System.Web.Security.FormsAuthenticationTicket ticket = System.Web.Security.FormsAuthentication.Decrypt(cookie.Value);
                     zxpUD = ZXPUserData.DeserializeZXPUserData(ticket.UserData);
 
-                    if (zxpUD._uid != -1) //make sure this matches whats in Site.Master and Default
-                    {
-                        sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                        if (sql_connStr == String.Empty)
-                        {
-                            throw new Exception("Missing SQLConnectionString in web.config");
-                        }
-                    }
-                    else
+                    if (zxpUD._uid == -1) //make sure this matches whats in Site.Master and Default
                     {
                         Response.BufferOutput = true;
                         Response.Redirect("ErrorPage.aspx?ErrorCode=5", false); //zxp live url
@@ -61,16 +52,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in waitAndDockOverview Page_Load(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in waitAndDockOverview Page_Load(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -83,7 +70,7 @@ namespace TransportationProject
             try
             {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT LocationShort, LocationLong FROM dbo.Locations ORDER BY LocationLong";
                     dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
@@ -97,10 +84,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in WaitAndDockOverview GetLocationOptions(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -114,7 +98,7 @@ namespace TransportationProject
             try
             {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT StatusID, StatusText FROM dbo.Status";
                     dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
@@ -129,10 +113,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in WaitAndDockOverview GetStatusOptions(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -146,7 +127,7 @@ namespace TransportationProject
             try
             {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT SpotID, SpotDescription FROM TruckDockSpots Where SpotType = 'Bulk' AND isDisabled = 0 ORDER BY SpotDescription";
                     dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
@@ -160,10 +141,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in WaitAndDockOverview getDockSpotsForBulk(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -177,7 +155,7 @@ namespace TransportationProject
             try
             {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT SpotID, SpotDescription FROM TruckDockSpots Where isDisabled = 0 ORDER BY SpotDescription";
                     dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
@@ -191,10 +169,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in WaitAndDockOverview getDockSpots(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -208,7 +183,7 @@ namespace TransportationProject
             try
             {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT SpotID, SpotDescription FROM TruckDockSpots Where SpotType = 'Van' AND isDisabled = 0 ORDER BY SpotDescription";
                     dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
@@ -222,10 +197,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in WaitAndDockOverview getDockSpotsForVan(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -239,7 +211,7 @@ namespace TransportationProject
             try
             {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT MS.MSID, MS.PONumber, MS.TrailerNumber, MS.isDropTrailer," +
                                     "(SELECT TOP 1 S.StatusText FROM dbo.Status AS S WHERE S.StatusID = MS.StatusID) AS Status,  MS.isEmpty, MS.WaitingAreaComment,  " +
@@ -260,10 +232,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in WaitAndDockOverview getWaitingAreaData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -277,7 +246,7 @@ namespace TransportationProject
             try
             {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT MS.MSID, MS.PONumber, MS.TrailerNumber, MS.currentDockSpotID, " +
                                         "(SELECT TOP(1) MSE.TimeStamp FROM dbo.MainScheduleEvents AS MSE WHERE MSE.MSID = MS.MSID AND MSE.isHidden = 'false' AND (MSE.EventTypeID = 5)) TimePlacedInDock, MS.isRejected, MS.isOpenInCMS, " +
@@ -296,10 +265,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in WaitAndDockOverview getDockVanData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -313,7 +279,7 @@ namespace TransportationProject
             try
             {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT MS.MSID, PONumber,  MS.ETA, MS.Comments, TimeArrived, TimeDeparted, " +
                             //"(SELECT TOP (1) TimeStamp FROM dbo.MainScheduleEvents MSE LEFT JOIN dbo.EventSubTypes EST ON MSE.EventSubTypeID = EST.EventSubTypeID  WHERE MSE.MSID = MS.MSID AND (MSE.EventTypeID = 2 OR (MSE.EventTypeID = 3064 AND EventSubType = 'GSO')) AND isHidden = 'false' ORDER BY TimeStamp DESC) AS CheckIn, " +
@@ -344,10 +310,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in WaitAndDockOverview getAvailableDockSpots(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -361,7 +324,7 @@ namespace TransportationProject
             try
             {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT MS.MSID, MS.PONumber, MS.TrailerNumber, " +
                                         "(SELECT TOP 1 S.StatusText FROM dbo.Status AS S WHERE S.StatusID = MS.StatusID) AS Status, MS.isDropTrailer, " +
@@ -402,10 +365,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in WaitAndDockOverview getTrailerInYardData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -420,7 +380,7 @@ namespace TransportationProject
             {
                 
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT MS.MSID, PONumber,  MS.ETA, MS.Comments, " +
                             //"(SELECT TOP (1) TimeStamp FROM dbo.MainScheduleEvents MSE LEFT JOIN dbo.EventSubTypes EST ON MSE.EventSubTypeID = EST.EventSubTypeID  WHERE MSE.MSID = MS.MSID AND (MSE.EventTypeID = 2 OR (MSE.EventTypeID = 3064 AND EventSubType = 'GSO')) AND isHidden = 'false' ORDER BY TimeStamp DESC) AS CheckIn, " +
@@ -450,10 +410,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in WaitAndDockOverview getReleasedTrucksData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -467,7 +424,7 @@ namespace TransportationProject
             try
             {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT MS.MSID, MS.PONumber, MS.LocationShort, S.SampleID, S.TestApproved, TrailerNumber, MS.StatusID, isRejected, MS.isOpenInCMS, " +
                                         "DATEDIFF(minute, (SELECT TOP 1 MSE.Timestamp FROM dbo.MainScheduleEvents MSE WHERE EventTypeID = 1025 AND MSE.MSID = MS.MSID and isHidden = 'false' ORDER BY TimeStamp DESC), GETDATE() ) AS DemurrageTime, " +
@@ -491,10 +448,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in WaitAndDockOverview getPendSamplesTruckData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -508,7 +462,7 @@ namespace TransportationProject
             try
             {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT MS.MSID, PONumber, MS.LocationShort, isRejected, TrailerNumber, MS.StatusID, " +
                                          "(SELECT TOP(1) MSE.TimeStamp FROM dbo.MainScheduleEvents AS MSE WHERE MSE.MSID = MS.MSID AND MSE.isHidden = 'false' AND (MSE.EventTypeID = 3051 OR MSE.EventTypeID = 7) ORDER BY TimeStamp DESC) AS ReOpenOrStart, " +
@@ -527,10 +481,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in WaitAndDockOverview getTruckWithInspectionsDone(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -544,7 +495,7 @@ namespace TransportationProject
             try
             {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT MS.MSID, MS.PONumber, MS.TrailerNumber, MS.currentDockSpotID, " +
                                             "(SELECT TOP(1) MSE.TimeStamp FROM dbo.MainScheduleEvents AS MSE WHERE MSE.MSID = MS.MSID AND MSE.isHidden = 'false' AND (MSE.EventTypeID = 6)) TimePlacedInDock, MS.isRejected, MS.isOpenInCMS, " +
@@ -564,10 +515,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in WaitAndDockOverview getDockBulkData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
 
@@ -579,22 +527,18 @@ namespace TransportationProject
             List<object[]> data = new List<object[]>();
             try
             {
-                //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 TruckLogHelperFunctions.logByMSIDConnection(sql_connStr, MSID, data);
             }
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in waitAndDockOverview GetLogDataByMSID(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in waitAndDockOverview GetLogDataByMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -608,22 +552,18 @@ namespace TransportationProject
             List<object[]> data = new List<object[]>();
             try
             {
-                //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 TruckLogHelperFunctions.logListConnection(sql_connStr, data);
             }
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in waitAndDockOverview GetLogList(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in waitAndDockOverview GetLogList(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -652,16 +592,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in WaitAndDockOverview getColorCellSettings(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in WaitAndDockOverview getColorCellSettings(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -679,7 +615,7 @@ namespace TransportationProject
             {
                 
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT * FROM " + 
                                     "(SELECT MS.MSID, "+
@@ -700,10 +636,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in WaitAndDockOverview getTimeDiff(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -718,7 +651,7 @@ namespace TransportationProject
             {
                 
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT PD.PODetailsID, PD.ProductID_CMS, PD.QTY, PD.LotNumber, PD.UnitOfMeasure, PCMS.ProductName_CMS " +
                                     "FROM dbo.PODetails PD " +
@@ -737,10 +670,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in WaitAndDockOverview GetPODetailsFromMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }

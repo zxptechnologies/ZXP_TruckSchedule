@@ -15,7 +15,7 @@ namespace TransportationProject
 {
     public partial class alertsprocessing : System.Web.UI.Page
     {
-        protected static String sql_connStr;
+       
         protected static String truckReservationEmail;
         public static ZXPUserData zxpUD = new ZXPUserData();
 
@@ -34,17 +34,13 @@ namespace TransportationProject
             int autotrigger = 0;
             try
             {
-                //HttpCookie cookie = Request.Cookies[System.Web.Security.FormsAuthentication.FormsCookieName];
-                //sql_connStr = ConfigurationManager.AppSettings["SQLConnectionString"];
+              
                 truckReservationEmail = ConfigurationManager.AppSettings["SmtpUser"];
-                //if (null != cookie && !string.IsNullOrEmpty(cookie.Value))
 
                 ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 if (zxpUD._uid != new ZXPUserData()._uid)
                 {
-                    //System.Web.Security.FormsAuthenticationTicket ticket = System.Web.Security.FormsAuthentication.Decrypt(cookie.Value);
-                    //zxpUD = ZXPUserData.DeserializeZXPUserData(ticket.UserData);
-
                     sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                     if (sql_connStr == String.Empty)
                     {
@@ -305,6 +301,7 @@ namespace TransportationProject
 
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
@@ -341,18 +338,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in alertsProcessing getTimesAlertRan(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
-                throw excep;
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in alertsProcessing getTimesAlertRan(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -378,18 +369,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in alertsProcessing updateAlertRunsTable(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
-                throw excep;
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in alertsProcessing updateAlertRunsTable(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -397,6 +382,7 @@ namespace TransportationProject
         {
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 using (var scope = new TransactionScope())
                 {
                     SqlHelper.ExecuteNonQuery(sql_connStr, CommandType.StoredProcedure, "sp_truckschedapp_LogAlertRuns", new SqlParameter("@pALERTID", alertID),
@@ -409,18 +395,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in alertsProcessing createAlertRunsEntry(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
-                throw excep;
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in alertsProcessing createAlertRunsEntry(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -431,6 +411,7 @@ namespace TransportationProject
         {
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
@@ -467,18 +448,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in alertsProcessing updateAlertRunsEntry(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
-                throw excep;
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in alertsProcessing updateAlertRunsEntry(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -486,154 +461,6 @@ namespace TransportationProject
         }
         
         
-        //protected void createAndSendAlertEmail(int alertID, string additionalMsg)
-        //{
-        //    SqlCommand sqlCmd;
-        //    SqlConnection sqlConn = new SqlConnection();
-        //    AlertMessenger aMsgr = new AlertMessenger();
-
-        //    try
-        //    {
-
-        //        EventAlertsHelper EAHelper = new EventAlertsHelper();
-        //        EAHelper.createAndSendAlertEmail(alertID, additionalMsg);
-
-        //        TODO CALL 
-
-        //            sqlConn = new SqlConnection(sql_connStr);
-        //            if (sqlConn.State != ConnectionState.Open)
-        //            {
-        //                sqlConn.Open();
-        //            }
-
-        //            SqlParameter paramAlertID = new SqlParameter("@pAlertID", SqlDbType.Int);
-        //            paramAlertID.Value = alertID;
-
-    
-        //            sqlCmd = new SqlCommand("sp_truckschedapp_getEmailSubscribersForAlertwAll", sqlConn);
-
-        //            sqlCmd.Parameters.Clear();
-        //            sqlCmd.Parameters.Add(paramAlertID);
-        //            sqlCmd.CommandType = CommandType.StoredProcedure;
-
-        //            DataSet dsAlertData = new DataSet();
-        //            DataTable tblAlertData = new DataTable();
-        //            System.Data.SqlClient.SqlDataReader sqlReader = sqlCmd.ExecuteReader();
-        //            dsAlertData.Tables.Add(tblAlertData);
-        //            dsAlertData.Load(sqlReader, LoadOption.OverwriteChanges, tblAlertData);
-        //            //populate return object
-        //            foreach (System.Data.DataRow row in dsAlertData.Tables[0].Rows)
-        //            {
-        //                aMsgr._emailAddressesTO.Add(Convert.ToString(dsAlertData.Tables[0].Rows[0]["EmailAddress"]));
-        //                aMsgr._from = truckReservationEmail;
-                        
-        //                aMsgr._subject =  Convert.ToString(dsAlertData.Tables[0].Rows[0]["EmailMessageSubject"]);
-        //                aMsgr._body = "Default Message: " + Convert.ToString(dsAlertData.Tables[0].Rows[0]["EmailMessageBody"]);
-        //                aMsgr._body =  (additionalMsg != string.Empty) ? ("Additional Message:" + additionalMsg + aMsgr._body) : aMsgr._body; 
-
-        //                aMsgr.sendAlertMessage();
-                        
-        //            }
-        //    }
-        //    catch (SqlException excep)
-        //    {
-        //        string strErr = " SQLException Error in alertsProcessing createAndSendAlertEmail(). Details: " + excep.ToString();
-        //        ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-        //        System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-        //        ErrorLogging.sendtoErrorPage(2);
-        //        throw excep;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        string strErr = " Exception Error in alertsProcessing createAndSendAlertEmail(). Details: " + ex.ToString();
-        //        ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-        //        System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-        //        ErrorLogging.sendtoErrorPage(1);
-        //        throw ex;
-        //    }
-        //    finally
-        //    {
-                
-        //        if (sqlConn != null && sqlConn.State != ConnectionState.Closed)
-        //        {
-        //            sqlConn.Close();
-        //            sqlConn.Dispose();
-        //        }
-        //    }
-        //}
-        //protected void createAndSendAlertSMS(int alertID, string additionalMsg)
-        //{
-        //    SqlCommand sqlCmd;
-        //    SqlConnection sqlConn = new SqlConnection();
-        //    AlertMessenger aMsgr = new AlertMessenger();
-
-        //    try
-        //    {
-        //        EventAlertsHelper EAHelper = new EventAlertsHelper();
-        //        EAHelper.createAndSendAlertEmail(alertID, additionalMsg);
-
-        //        sqlConn = new SqlConnection(sql_connStr);
-        //        if (sqlConn.State != ConnectionState.Open)
-        //        {
-        //            sqlConn.Open();
-        //        }
-
-        //        SqlParameter paramAlertID = new SqlParameter("@pAlertID", SqlDbType.Int);
-        //        paramAlertID.Value = alertID;
-
-
-        //        sqlCmd = new SqlCommand("sp_truckschedapp_getSMSSubscribersForAlertwAll", sqlConn);
-
-        //        sqlCmd.Parameters.Clear();
-        //        sqlCmd.Parameters.Add(paramAlertID);
-        //        sqlCmd.CommandType = CommandType.StoredProcedure;
-
-        //        DataSet dsAlertData = new DataSet();
-        //        DataTable tblAlertData = new DataTable();
-        //        System.Data.SqlClient.SqlDataReader sqlReader = sqlCmd.ExecuteReader();
-        //        dsAlertData.Tables.Add(tblAlertData);
-        //        dsAlertData.Load(sqlReader, LoadOption.OverwriteChanges, tblAlertData);
-        //        //populate return object
-        //        foreach (System.Data.DataRow row in dsAlertData.Tables[0].Rows)
-        //        {
-        //            aMsgr._emailAddressesTO.Add(Convert.ToString(dsAlertData.Tables[0].Rows[0]["SMSemail"]));
-        //            aMsgr._from = truckReservationEmail;
-
-        //            aMsgr._subject = Convert.ToString(dsAlertData.Tables[0].Rows[0]["SMSMessageSubject"]);
-        //            aMsgr._body = "Default Message: " + Convert.ToString(dsAlertData.Tables[0].Rows[0]["SMSMessageBody"]);
-        //            aMsgr._body = (additionalMsg != string.Empty) ? ("Additional Message:" + additionalMsg + aMsgr._body) : aMsgr._body;
-
-        //            aMsgr.sendAlertMessage();
-
-        //        }
-        //    }
-        //    catch (SqlException excep)
-        //    {
-        //        string strErr = " SQLException Error in alertsProcessing createAndSendAlertSMS(). Details: " + excep.ToString();
-        //        ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-        //        System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-        //        ErrorLogging.sendtoErrorPage(2);
-        //        throw excep;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        string strErr = " Exception Error in alertsProcessing createAndSendAlertSMS(). Details: " + ex.ToString();
-        //        ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-        //        System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-        //        ErrorLogging.sendtoErrorPage(1);
-        //        throw ex;
-        //    }
-        //    finally
-        //    {
-        //        if (sqlConn != null && sqlConn.State != ConnectionState.Closed)
-        //        {
-        //            sqlConn.Close();
-        //            sqlConn.Dispose();
-        //        }
-        //    }
-
-
-        //}
 
 
         protected void sendOneAlert(object sender, EventArgs e)
@@ -655,16 +482,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in alertsProcessing sendOneAlert(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in alertsProcessing sendOneAlert(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -744,6 +567,7 @@ namespace TransportationProject
             string sqlGetAlerts = "SELECT * FROM dbo.vw_Alerts_isNearDemurrageTimeLimit"; 
             DataSet dsDemurrageAlerts ;
             try {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 dsDemurrageAlerts = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlGetAlerts);
             }
             catch  (SqlException excep)
@@ -824,6 +648,7 @@ namespace TransportationProject
             DataSet dsCOFAAlerts;
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 dsCOFAAlerts = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlGetAlerts);
             }
             catch (SqlException excep)
@@ -902,6 +727,7 @@ namespace TransportationProject
             DataSet dsInactiveAlerts;
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 dsInactiveAlerts = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlGetAlerts);
             }
             catch (SqlException excep)
@@ -988,6 +814,7 @@ namespace TransportationProject
             DataSet dsDropTrailerAlerts;
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 dsDropTrailerAlerts = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlGetAlerts);
             }
             catch (SqlException excep)
@@ -1087,6 +914,7 @@ namespace TransportationProject
             DataSet dsTankCapacityAlerts;
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 dsTankCapacityAlerts = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlGetAlerts);
             }
             catch (SqlException excep)
@@ -1163,6 +991,7 @@ namespace TransportationProject
             DataSet dsReleasedButOpenAlerts;
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 dsReleasedButOpenAlerts = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlGetAlerts);
             }
             catch (SqlException excep)
@@ -1208,13 +1037,14 @@ namespace TransportationProject
 
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
                     sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT COUNT (*) FROM dbo.Users WHERE [Password] = @UPASS AND UserName = @UNAME AND isDisabled = 0";
-                    rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@UNAME", userName), new SqlParameter("@UPASS", MD5Hash(password))));
+                    rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@UNAME", userName), new SqlParameter("@UPASS", DataTransformer.PasswordHash(password))));
 
                     if (rowCount > 0)
                     {
@@ -1231,16 +1061,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in alertsProcessing loginForAlertProcessing(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in alertsProcessing loginForAlertProcessing(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -1248,19 +1074,6 @@ namespace TransportationProject
             return isValidUser;
         }
 
-        //password hasher
-        private static string MD5Hash(string INPUT)
-        {
-            MD5 md5Hasher = MD5.Create();
-            byte[] data = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(INPUT));
-            StringBuilder sBuilder = new StringBuilder();
-            for (int i = 0; i < data.Length; i++)
-            {
-                sBuilder.Append(data[i].ToString("x2"));
-            }
-
-            return sBuilder.ToString();
-        }
-
+        
     }
 }

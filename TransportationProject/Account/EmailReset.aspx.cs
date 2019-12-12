@@ -17,7 +17,6 @@ namespace TransportationProject.Account
 {
     public partial class EmailReset : System.Web.UI.Page
     {
-        protected static String sql_connStr;
         void Page_PreInit(Object sender, EventArgs e)
         {
             if (Request.Browser.IsMobileDevice)
@@ -33,13 +32,7 @@ namespace TransportationProject.Account
         {
              try
             {
-                        sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                        if (sql_connStr == String.Empty)
-                        {
-                            throw new Exception("Missing SQLConnectionString in web.config");
-                        }
-                     
-                
+                //add code as needed
             }
             catch (SqlException excep)
             {
@@ -60,7 +53,7 @@ namespace TransportationProject.Account
 
         protected void SubmitForm(object sender, System.EventArgs e)
         {
-            String userEmail = emailAddress.Text;
+            string userEmail = emailAddress.Text;
             int userCount = getCountOfUsersWithEmail(userEmail);
             if (1 < userCount)
             {
@@ -133,6 +126,7 @@ namespace TransportationProject.Account
             try
             {
 
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                 int expirationLimitInMinutes = int.Parse(ConfigurationManager.AppSettings["PassworResetTokenExpiryMinutes"]);
                 token = new PasswordResetToken(UserID, expirationLimitInMinutes);
@@ -166,7 +160,8 @@ namespace TransportationProject.Account
             PasswordResetToken prToken = new PasswordResetToken();
             try
             {
-            
+
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 SqlDataReader reader = SqlHelper.ExecuteReader(sql_connStr, CommandType.StoredProcedure, "sp_truckschedapp_getPasswordToken", new SqlParameter("@pUserID", UserID));
                 while (reader.Read())
                 {
@@ -209,7 +204,8 @@ namespace TransportationProject.Account
             try
             {
 
-                
+
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 count = (int) SqlHelper.ExecuteScalar(sql_connStr, CommandType.StoredProcedure, "sp_truckschedapp_getNumberOfUsersWithEmail", new SqlParameter("@pEmail", email));
 
             }
@@ -233,6 +229,7 @@ namespace TransportationProject.Account
             {
 
 
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 userID = (int)SqlHelper.ExecuteScalar(sql_connStr, CommandType.StoredProcedure, "sp_truckschedapp_getUserIDFromEmail", new SqlParameter("@pEmail", email));
 
             }
@@ -258,13 +255,13 @@ namespace TransportationProject.Account
 
                 TruckScheduleConfigurationKeysHelper tsConfig = new TruckScheduleConfigurationKeysHelper();
 
-                if (String.Empty == tsConfig.truckReservationEmail)
+                if (string.Empty == tsConfig.truckReservationEmail)
                 {
                     throw new Exception("Missing Truck Reservation Email in web.config");
                 }
-                String userEmail = emailAddress.Text;
+                string userEmail = emailAddress.Text;
                 string PassworResetTokenURL = ConfigurationManager.AppSettings["PassworResetTokenURL"];
-                if (String.Empty == PassworResetTokenURL)
+                if (string.Empty == PassworResetTokenURL)
                 {
                     throw new Exception("Missing PassworResetTokenURL in web.config");
                 }
@@ -302,7 +299,9 @@ namespace TransportationProject.Account
         {
             try
             {
-                 SqlHelper.ExecuteNonQuery(sql_connStr, CommandType.StoredProcedure, "sp_truckschedapp_invalidatePasswordResetToken"
+
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                SqlHelper.ExecuteNonQuery(sql_connStr, CommandType.StoredProcedure, "sp_truckschedapp_invalidatePasswordResetToken"
                     ,  new SqlParameter("@pUserID", UserID) );
 
             }

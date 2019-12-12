@@ -16,7 +16,7 @@ namespace TransportationProject
 {
     public partial class trailerOverview : System.Web.UI.Page
     {
-        protected static String sql_connStr;
+       
         protected static String as400_connStr;
 
         void Page_PreInit(Object sender, EventArgs e)
@@ -41,16 +41,7 @@ namespace TransportationProject
                 if (zxpUD._uid != new ZXPUserData()._uid)
                 {
 
-                    if (zxpUD._isAdmin || zxpUD._isDockManager || zxpUD._isGuard || zxpUD._isLabPersonnel || zxpUD._isLoader || zxpUD._isLabAdmin || zxpUD._isAccountManager) //make sure this matches whats in Site.Master and Default
-                    {
-                        sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                        if (sql_connStr == String.Empty)
-                        {
-                            throw new Exception("Missing SQLConnectionString in web.config");
-                        }
-                       
-                    }
-                    else
+                    if (!(zxpUD._isAdmin || zxpUD._isDockManager || zxpUD._isGuard || zxpUD._isLabPersonnel || zxpUD._isLoader || zxpUD._isLabAdmin || zxpUD._isAccountManager)) //make sure this matches whats in Site.Master and Default
                     {
                         Response.BufferOutput = true;
                         Response.Redirect("ErrorPage.aspx?ErrorCode=5", false); //zxp live url
@@ -65,16 +56,13 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in TrailerOverview Page_Load(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
+                
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview Page_Load(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -92,10 +80,8 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview GetPODetailsFromMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
+           
             }
             return poData;
         }
@@ -115,10 +101,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview GetLoadOptions(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return loadData;
         }
@@ -139,10 +122,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview GetUnits(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return vmUnits;
         }
@@ -155,6 +135,7 @@ namespace TransportationProject
             
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 SqlConnection sqlConn = new SqlConnection(sql_connStr);
                 SqlCommand sqlcmd = new SqlCommand("msdb.dbo.sp_start_job", sqlConn);
                 sqlcmd.Parameters.AddWithValue("@job_name", "TS_GetCMSAvailablePOs");
@@ -172,7 +153,7 @@ namespace TransportationProject
             {
                 string strErr = " Exception Error in TrailerOverview UpdateTruckSchedulePOsFromCMS(). Details: " + ex.ToString();
                 ErrorLogging.WriteEvent(strErr, EventLogEntryType.Information);
-                //Log error and continue;
+                //Log error and continue without redirect;
                 
             }
         }
@@ -191,6 +172,7 @@ namespace TransportationProject
 
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                 string sqlCmdText;
 
@@ -252,16 +234,12 @@ namespace TransportationProject
             catch (OdbcException excep)
             {
                 string strErr = " ODBCException Error in trailerOverview GetAvailablePONumber(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 3;
-                ErrorLogging.sendtoErrorPage(3);
+                ErrorLogging.LogErrorAndRedirect(3, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in trailerOverview GetAvailablePONumber(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -284,7 +262,7 @@ namespace TransportationProject
         public static Object GetAvailablePONumber()
         {
             string isDirect = ConfigurationManager.AppSettings["CMSUpdateIsFromDirectlyFromCMS"];
-            if (isDirect == String.Empty || isDirect.Equals("true"))
+            if (isDirect == String.Empty || isDirect.ToLower().Equals("true"))
             {
                 return GetPOsFromCMSDirectly();
             }
@@ -309,10 +287,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview CheckIfPOExistsInMainSchedule(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return rowCount;
         }
@@ -358,9 +333,7 @@ namespace TransportationProject
             catch (OdbcException excep)
             {
                 string strErr = " ODBCException Error in TrailerOverview GetPOData(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 3;
-                ErrorLogging.sendtoErrorPage(3);
+                ErrorLogging.LogErrorAndRedirect(3, strErr);
             }
             finally
             {
@@ -402,9 +375,7 @@ namespace TransportationProject
             catch (OdbcException excep)
             {
                 string strErr = " ODBCException Error in TrailerOverview GetCustomerOptions(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 3;
-                ErrorLogging.sendtoErrorPage(3);
+                ErrorLogging.LogErrorAndRedirect(3, strErr);
             }
             finally
             {
@@ -439,10 +410,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview GetStatusOptions(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return vmddStatuses;
         }
@@ -469,10 +437,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview GetLocationOptions(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return vmLocations;
         }
@@ -488,10 +453,10 @@ namespace TransportationProject
             try
             {
                 
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT FileID, MSF.MSID, MSF.FileTypeID, FileDescription, Filepath, FilenameNew, FilenameOld, PD.ProductID_CMS, PCMS.ProductName_CMS " +
+                sqlCmdText = "SELECT FileID, MSF.MSID, MSF.FileTypeID, FileDescription, Filepath, FilenameNew, FilenameOld, PD.ProductID_CMS, PCMS.ProductName_CMS " +
                                     "FROM dbo.MainScheduleFiles MSF " +
                                     "INNER JOIN dbo.FileTypes FT ON FT.FileTypeID = MSF.FileTypeID " +
                                     "INNER JOIN dbo.PODetails PD ON PD.MSID = MSF.MSID " +
@@ -510,10 +475,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview GetCOFAFileUploadsFromMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -533,10 +495,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview GetCOFAFileUploadsFromMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return vmFiles;
         }
@@ -549,30 +508,7 @@ namespace TransportationProject
             return zxpUD.CanUserCRUDSchedules();
         }
 
-
-        //[System.Web.Services.WebMethod]
-        //public static List<TransportationProjectDataLayer.ViewModels.vm_FileTypes> GetFileTypes()
-        //{
-        //    List<TransportationProjectDataLayer.ViewModels.vm_FileTypes> vmFileTypes = new List<TransportationProjectDataLayer.ViewModels.vm_FileTypes>();
-        //    try
-        //    {
-        //        TransportationProjectDataProvider dProvider = new TransportationProjectDataProvider();
-        //        List<TransportationProjectDataLayer.DomainModels.FileTypes> fTypes = dProvider.GetFileTypes();
-
-        //        vmFileTypes = fTypes.Select<TransportationProjectDataLayer.DomainModels.FileTypes, TransportationProjectDataLayer.ViewModels.vm_FileTypes>(x => x).ToList();
-                  
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        string strErr = " Exception Error in TrailerOverview GetFileTypes(). Details: " + ex.ToString();
-        //        ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-        //        System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-        //        ErrorLogging.sendtoErrorPage(1);
-        //        throw ex;
-        //    }
-        //    return vmFileTypes;
-        //}
-
+        
         //CL: From email discussion with Steve, keep files and db entry on server can clean up later 
         //Just set isHidden = true
         [System.Web.Services.WebMethod]
@@ -584,7 +520,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //1. get MSID
                     sqlCmdText = "SELECT MSID FROM dbo.MainScheduleFiles WHERE FileID = @PFID";
@@ -625,10 +561,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview DeleteFileDBEntry(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -643,7 +576,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //1. find filetypeID
                     sqlCmdText = "SELECT FileTypeID FROM dbo.FileTypes WHERE FileType = @FTYPE";
@@ -702,10 +635,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview AddFileDBEntry(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -724,10 +654,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview GetTruckTypes(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return vm_ttypes;
         }
@@ -758,7 +685,7 @@ namespace TransportationProject
             {
                 
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     if (spotID == null || -999 == spotID)
                     {
@@ -896,10 +823,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview GetTimeslotsData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
 
             List<object> newList = new List<object>();
@@ -922,7 +846,7 @@ namespace TransportationProject
             {
                 
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT -999 AS SpotID, '(None)' AS SpotDescription, NULL AS SpotType UNION " +
                     "(SELECT SpotID, SpotDescription, SpotType FROM dbo.TruckDockSpots WHERE isDisabled = 0) ORDER BY SpotDescription";
@@ -938,10 +862,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview GetSpots(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -957,7 +878,7 @@ namespace TransportationProject
             {
                 
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT -999 AS SpotID, '(None)' AS SpotDescription, NULL AS SpotType UNION " +
                     "(SELECT SpotID, SpotDescription, SpotType FROM dbo.TruckDockSpots WHERE SpotType = @STYPE AND isDisabled = 0 ) " +
@@ -976,10 +897,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview GetSpotsByType(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -992,7 +910,7 @@ namespace TransportationProject
             {
                 
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                     if (spotID != -999) //if spotid is -999 then allow
                     {
                         sqlCmdText = "SELECT COUNT(*) FROM dbo.MainSchedule WHERE LocationStatus <> 'GSO' AND (@SPOT = DockSpotID) AND isHidden = 0"; //
@@ -1004,10 +922,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview CheckIfSpotIsAvailable(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return rc;
         }
@@ -1029,10 +944,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview GetTrailerGridData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return tgData;
         }
@@ -1162,9 +1074,7 @@ namespace TransportationProject
             catch (OdbcException excep)
             {
                 string strErr = " ODBCException Error in TrailerOverview CheckIfBulkAndGetProductFromPO(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 3;
-                ErrorLogging.sendtoErrorPage(3);
+                ErrorLogging.LogErrorAndRedirect(3, strErr);
             }
             finally
             {
@@ -1190,7 +1100,7 @@ namespace TransportationProject
             {
                 
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText =
                         "SELECT TOP 1 ISNULL(TDS.SpotID, -999) FROM dbo.TruckDockSpots TDS " +
@@ -1205,10 +1115,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview GetSpotIDByTypeAndProduct(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
 
             return SpotID;
@@ -1228,6 +1135,7 @@ namespace TransportationProject
             OdbcCommand odbcCmd = odbc_helper.ODBC_Cmd;
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 sqlConn = new SqlConnection(sql_connStr);
                 if (sqlConn.State != ConnectionState.Open)
                 {
@@ -1314,16 +1222,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in TrailerOverview GetSpotsBasedOnProductsUnderPODetails(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview GetSpotsBasedOnProductsUnderPODetails(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -1409,10 +1313,7 @@ namespace TransportationProject
             catch (OdbcException excep)
             {
                 string strErr = " ODBCException Error in TrailerOverview GetOrderDetailsFromCMS(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 3;
-                ErrorLogging.sendtoErrorPage(3);
-                throw excep;
+                ErrorLogging.LogErrorAndRedirect(3, strErr);
             }
             finally
             {
@@ -1450,10 +1351,7 @@ namespace TransportationProject
             catch (OdbcException excep)
             {
                 string strErr = " ODBCException Error in TrailerOverview GetInternalLoadOutOrderNum(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 3;
-                ErrorLogging.sendtoErrorPage(3);
-                throw excep;
+                ErrorLogging.LogErrorAndRedirect(3, strErr);
             }
             finally
             {
@@ -1472,7 +1370,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT COUNT(ProductID_CMS) " +
                                         "FROM ProductsCMS " +
@@ -1509,26 +1407,17 @@ namespace TransportationProject
             catch (OdbcException excep)
             {
                 string strErr = " ODBCException Error in TrailerOverview AddProductToDBIfNonexistent(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 3;
-                ErrorLogging.sendtoErrorPage(3);
-                throw excep;
+                ErrorLogging.LogErrorAndRedirect(3, strErr);
             }
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in TrailerOverview AddProductToDBIfNonexistent(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
-                throw excep;
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview AddProductToDBIfNonexistent(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return returnMessage;
         }
@@ -1566,7 +1455,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //if exists, insert zxp Load PO Number 
                     if (!string.IsNullOrEmpty(ZXPLoadOutPONum))
@@ -1718,16 +1607,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in TrailerOverview InsertNewTruckScheduleData(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview InsertNewTruckScheduleData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -1750,7 +1635,7 @@ namespace TransportationProject
 
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
 
                     //------INSERT NEW REQUEST 
@@ -1838,10 +1723,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview CreateRequest(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1925,16 +1807,12 @@ namespace TransportationProject
             catch (OdbcException excep)
             {
                 string strErr = " ODBCException Error in TrailerOverview GetPOProductsDataForValidation(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 3;
-                ErrorLogging.sendtoErrorPage(3);
+                ErrorLogging.LogErrorAndRedirect(3, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview GetPOProductsDataForValidation(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -1959,7 +1837,7 @@ namespace TransportationProject
             {
                
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT ISNULL(SUM(TankCapacity),0) AS ttlTankCapacity " +
                                             ",ISNULL(SUM(CurrentTankVolume),0) AS ttlCurrentTankVolume " +
@@ -1986,10 +1864,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview GetTankDataByProduct(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return tankData;
         }
@@ -2002,7 +1877,7 @@ namespace TransportationProject
             try
             {
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText =
                                 "SELECT STUFF( " +
@@ -2020,10 +1895,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview GetAffectedFutureOrders(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return POList;
         }
@@ -2036,7 +1908,7 @@ namespace TransportationProject
             {
                
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT ISNULL(SUM(ISNULL(PD.QTY,0)), 0) As prodTotalQty " +
                                     "FROM dbo.MainSchedule MS " +
@@ -2053,10 +1925,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview GetQtyFromTruckScheduleByCMSProductBetween2Dates(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return totalQty;
         }
@@ -2079,16 +1948,12 @@ namespace TransportationProject
             catch (OdbcException excep)
             {
                 string strErr = " ODBCException Error in TrailerOverview GetOnHandDataOfCMSProduct(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 3;
-                ErrorLogging.sendtoErrorPage(3);
+                ErrorLogging.LogErrorAndRedirect(3, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview GetOnHandDataOfCMSProduct(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -2134,23 +1999,17 @@ namespace TransportationProject
             catch (OdbcException excep)
             {
                 string strErr = " ODBCException Error in TrailerOverview GetOnHandDataOfCMSProduct(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 3;
-                ErrorLogging.sendtoErrorPage(3);
+                ErrorLogging.LogErrorAndRedirect(3, strErr);
             }
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in TrailerOverview GetOnHandDataOfCMSProduct(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview GetOnHandDataOfCMSProduct(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -2173,17 +2032,17 @@ namespace TransportationProject
             }
             catch (OdbcException excep)
             {
-                string strErr = " ODBCException Error in TrailerOverview GetQtyOrderedOfCMSProductBetween2Dates(string ProductID_CMS, DateTime StartDate, DateTime EndDate). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 3;
-                ErrorLogging.sendtoErrorPage(3);
+                string strErr = string.Concat(" ODBCException Error in TrailerOverview GetQtyOrderedOfCMSProductBetween2Dates",
+                                                "(string ProductID_CMS, DateTime StartDate, DateTime EndDate). Details: ",
+                                                excep.ToString());
+                ErrorLogging.LogErrorAndRedirect(3, strErr);
             }
             catch (Exception ex)
             {
-                string strErr = " Exception Error in TrailerOverview GetQtyOrderedOfCMSProductBetween2Dates(string ProductID_CMS, DateTime StartDate, DateTime EndDate). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                string strErr = string.Concat(" Exception Error in TrailerOverview GetQtyOrderedOfCMSProductBetween2Dates",
+                                                "(string ProductID_CMS, DateTime StartDate, DateTime EndDate). Details: ",
+                                                ex.ToString());
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -2217,19 +2076,17 @@ namespace TransportationProject
             }
             catch (OdbcException excep)
             {
-                string strErr = " ODBCException Error in TrailerOverview GetQtyOrderedOfCMSProductBetween2Dates(string ProductID_CMS, DateTime StartDate, DateTime EndDate, OdbcConnection odbcConn). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 3;
-                ErrorLogging.sendtoErrorPage(3);
-                throw excep;
+                string strErr = string.Concat(" ODBCException Error in TrailerOverview GetQtyOrderedOfCMSProductBetween2Dates",
+                                                "(string ProductID_CMS, DateTime StartDate, DateTime EndDate, OdbcConnection odbcConn). Details: ",
+                                                excep.ToString());
+                ErrorLogging.LogErrorAndRedirect(3, strErr);
             }
             catch (Exception ex)
             {
-                string strErr = " Exception Error in TrailerOverview GetQtyOrderedOfCMSProductBetween2Dates(string ProductID_CMS, DateTime StartDate, DateTime EndDate, OdbcConnection odbcConn). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                string strErr = string.Concat(" Exception Error in TrailerOverview GetQtyOrderedOfCMSProductBetween2Dates",
+                                                "(string ProductID_CMS, DateTime StartDate, DateTime EndDate, OdbcConnection odbcConn). Details: ",
+                                                ex.ToString());
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -2250,7 +2107,7 @@ namespace TransportationProject
                 {
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     ChangeLog cLog = new ChangeLog(ChangeLog.ChangeLogChangeType.UPDATE, "MainScheduleFiles", "FileDescription", timestamp, zxpUD._uid, ChangeLog.ChangeLogDataType.NVARCHAR, description, null, "FileID", fileID.ToString());
                     cLog.CreateChangeLogEntryIfChanged();
@@ -2264,10 +2121,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview UpdateFileUploadData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -2282,7 +2136,7 @@ namespace TransportationProject
                 {
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     if (!(Convert.ToInt32(rowData[0]) > 0))
                     {
@@ -2331,10 +2185,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview UpdateTruckSheduleData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -2350,7 +2201,7 @@ namespace TransportationProject
                         throw new Exception("Invalid MSID given in updateTruckScheduleData.");
                     }
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                     
                     sqlCmdText = "SELECT UserId FROM dbo.MainScheduleEvents WHERE EventTypeID = 1  AND MSID = @MSID AND isHidden = 0"; //eventtypeID == 1 -> schedule created
                     userID = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", msid)));
@@ -2359,10 +2210,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview GetUserIDOfScheduleCreator(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return userID;
         }
@@ -2390,16 +2238,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in TrailerOverview IsUserAllowedToDeleteSchedule(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview IsUserAllowedToDeleteSchedule(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -2426,7 +2270,7 @@ namespace TransportationProject
 
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     if (!(msid > 0))
                     {
@@ -2453,10 +2297,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview DeleteTruckScheduleData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -2471,9 +2312,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview ProcessFileAndData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return null;
         }
@@ -2484,22 +2323,18 @@ namespace TransportationProject
             List<object[]> data = new List<object[]>();
             try
             {
-                ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 TruckLogHelperFunctions.logByMSIDConnection(sql_connStr, MSID, data);
             }
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in TrailerOverview GetLogDataByMSID(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview GetLogDataByMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -2513,22 +2348,18 @@ namespace TransportationProject
             List<object[]> data = new List<object[]>();
             try
             {
-                ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 TruckLogHelperFunctions.logListConnection(sql_connStr, data);
             }
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in TrailerOverview GetLogList(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview GetLogList(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -2546,7 +2377,7 @@ namespace TransportationProject
             try
             {
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                     sqlCmdText = "SELECT ISNULL(TimeArrived, 1/1/1900) FROM dbo.MainSchedule where MSID = @MSID";
 
                     checkInTime = Convert.ToDateTime(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
@@ -2563,10 +2394,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in TrailerOverview CheckIfCheckedIn(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return hasCheckedIn;
         }

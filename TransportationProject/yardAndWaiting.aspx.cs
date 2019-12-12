@@ -12,9 +12,7 @@ namespace TransportationProject
 {
     public partial class yardAndWaiting : System.Web.UI.Page
     {
-        protected static String sql_connStr;
-    //    public static ZXPUserData zxpUD = new ZXPUserData();
-
+        
         void Page_PreInit(Object sender, EventArgs e)
         {
             if (Request.Browser.IsMobileDevice)
@@ -37,15 +35,7 @@ namespace TransportationProject
                     System.Web.Security.FormsAuthenticationTicket ticket = System.Web.Security.FormsAuthentication.Decrypt(cookie.Value);
                     zxpUD = ZXPUserData.DeserializeZXPUserData(ticket.UserData);
 
-                    if (zxpUD._isAdmin || zxpUD._isDockManager || zxpUD._isInspector || zxpUD._isLabPersonnel || zxpUD._isLoader || zxpUD._isLabAdmin || zxpUD._isGuard || zxpUD._isYardMule) //make sure this matches whats in Site.Master and Default
-                    {
-                        sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                        if (sql_connStr == String.Empty)
-                        {
-                            throw new Exception("Missing SQLConnectionString in web.config");
-                        }
-                    }
-                    else
+                    if (!(zxpUD._isAdmin || zxpUD._isDockManager || zxpUD._isInspector || zxpUD._isLabPersonnel || zxpUD._isLoader || zxpUD._isLabAdmin || zxpUD._isGuard || zxpUD._isYardMule)) //make sure this matches whats in Site.Master and Default
                     {
                         Response.BufferOutput = true;
                         Response.Redirect("/ErrorPage.aspx?ErrorCode=5", false);
@@ -61,16 +51,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in YardAndWait Page_Load(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardAndWaiting Page_Load(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -84,44 +70,46 @@ namespace TransportationProject
             try
             {
                 
-                    string sqlCmdText;
-              
+               //string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT MS.MSID, MS.PONumber, MS.TrailerNumber,  " +
-                        "(SELECT TOP 1 S.StatusText FROM dbo.Status AS S WHERE S.StatusID = MS.StatusID) AS Status, MS.isDropTrailer, " +
-                        "(SELECT TOP 1 MSE.TimeStamp FROM dbo.MainScheduleEvents AS MSE WHERE MSE.EventTypeID = 3070 AND MS.MSID = MSE.MSID AND isHidden = 'false') AS DroppedTime, MS.isEmpty, MS.YardComment,  " +
-                        "(SELECT TOP 1 MSE.TimeStamp FROM dbo.MainScheduleEvents AS MSE WHERE MSE.EventTypeID = 3074 AND MS.MSID = MSE.MSID AND isHidden = 'false') AS EmptyTime, MS.isOpenInCMS, " +
-                        "(SELECT TOP 1 MSE.TimeStamp FROM dbo.MainScheduleEvents AS MSE WHERE MSE.EventTypeID = 3065 AND MS.MSID = MSE.MSID AND isHidden = 'false' order by TimeStamp DESC) AS ArrivedAtYardTime, " +
-                        "(SELECT TOP 1 DATEADD(mi, @HLMINS, (SELECT TOP 1 MSE.TimeStamp FROM dbo.MainScheduleEvents AS MSE WHERE MSE.EventTypeID = 7099 AND MS.MSID = MSE.MSID AND isHidden = 'false') ) ) AS HighlightTimeMax, " +
-                        "(CASE WHEN ((GETDATE() > (SELECT TOP 1 DATEADD(mi, @HLMINS, (SELECT TOP 1 MSE.TimeStamp FROM dbo.MainScheduleEvents AS MSE WHERE MSE.EventTypeID = 7099 AND MS.MSID = MSE.MSID AND isHidden = 'false') ) )) " +
-                        "OR (SELECT TOP 1 MSE.TimeStamp FROM dbo.MainScheduleEvents AS MSE WHERE MSE.EventTypeID = 7099 AND MS.MSID = MSE.MSID AND isHidden = 'false') IS NULL) " +
-                        "THEN  0 " +
-                        "ELSE 1 " +
-                        "END) as HL, " +
-                        "ISNULL(ProdDet.PDCount, 0) AS ProdCount, ProdDet.topProdID, PCMS.ProductName_CMS " +
-                        "FROM dbo.MainSchedule AS MS " +
-                        "LEFT JOIN dbo.TrailersInYard as TiY ON Tiy.MSID = MS.MSID " +
-                        "LEFT JOIN (SELECT MSID, COUNT(PODetailsID) AS PDCount, " +
-                        "(SELECT TOP 1 PD_A.ProductID_CMS " +
-                        "FROM dbo.PODetails PD_A " +
-                        "INNER JOIN dbo.ProductsCMS PCMS_A ON PD_A.ProductID_CMS = PCMS_A.ProductID_CMS " +
-                        "WHERE PD_A.MSID =  PD.MSID " +
-                        ") AS topProdID  " +
-                        "FROM dbo.PODetails PD  " +
-                        "GROUP BY MSID " +
-                        ") ProdDet ON ProdDet.MSID = MS.MSID " +
-                        "LEFT JOIN dbo.ProductsCMS PCMS ON PCMS.ProductID_CMS = ProdDet.topProdID " +
-                        "WHERE (MS.LocationShort = 'YARD' OR (MS.LocationShort = 'NOS' AND TiY.MSID is not NULL)) AND MS.isRejected = 'false' AND MS.isHidden = 'false'" +
-                        "UNION " +
-                        "SELECT -1 AS MSID, -1 AS PONumber, TiY.TrailerNumber, " +
-                        "'Waiting' AS Status, 'false' AS isDropTrailer, " +
-                        "NULL AS DroppedTime, 'true' AS isEmpty, NULL AS YardComment,  " +
-                        "NULL AS EmptyTime, -1 AS isOpenInCMS, " +
-                        "NULL AS ArrivedAtYardTime, NULL AS HighlightTimeMax, 0 AS HL, " +
-                        "0 AS ProdCount, NULL AS topProdID, NULL AS ProductName_CMS " +
-                        "FROM dbo.TrailersInYard as TiY " +
-                        "WHERE tiy.MSID is Null";
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@HLMINS", highlightDiff));
+
+                //sqlCmdText = "SELECT MS.MSID, MS.PONumber, MS.TrailerNumber,  " +
+                //        "(SELECT TOP 1 S.StatusText FROM dbo.Status AS S WHERE S.StatusID = MS.StatusID) AS Status, MS.isDropTrailer, " +
+                //        "(SELECT TOP 1 MSE.TimeStamp FROM dbo.MainScheduleEvents AS MSE WHERE MSE.EventTypeID = 3070 AND MS.MSID = MSE.MSID AND isHidden = 'false') AS DroppedTime, MS.isEmpty, MS.YardComment,  " +
+                //        "(SELECT TOP 1 MSE.TimeStamp FROM dbo.MainScheduleEvents AS MSE WHERE MSE.EventTypeID = 3074 AND MS.MSID = MSE.MSID AND isHidden = 'false') AS EmptyTime, MS.isOpenInCMS, " +
+                //        "(SELECT TOP 1 MSE.TimeStamp FROM dbo.MainScheduleEvents AS MSE WHERE MSE.EventTypeID = 3065 AND MS.MSID = MSE.MSID AND isHidden = 'false' order by TimeStamp DESC) AS ArrivedAtYardTime, " +
+                //        "(SELECT TOP 1 DATEADD(mi, @HLMINS, (SELECT TOP 1 MSE.TimeStamp FROM dbo.MainScheduleEvents AS MSE WHERE MSE.EventTypeID = 7099 AND MS.MSID = MSE.MSID AND isHidden = 'false') ) ) AS HighlightTimeMax, " +
+                //        "(CASE WHEN ((GETDATE() > (SELECT TOP 1 DATEADD(mi, @HLMINS, (SELECT TOP 1 MSE.TimeStamp FROM dbo.MainScheduleEvents AS MSE WHERE MSE.EventTypeID = 7099 AND MS.MSID = MSE.MSID AND isHidden = 'false') ) )) " +
+                //        "OR (SELECT TOP 1 MSE.TimeStamp FROM dbo.MainScheduleEvents AS MSE WHERE MSE.EventTypeID = 7099 AND MS.MSID = MSE.MSID AND isHidden = 'false') IS NULL) " +
+                //        "THEN  0 " +
+                //        "ELSE 1 " +
+                //        "END) as HL, " +
+                //        "ISNULL(ProdDet.PDCount, 0) AS ProdCount, ProdDet.topProdID, PCMS.ProductName_CMS " +
+                //        "FROM dbo.MainSchedule AS MS " +
+                //        "LEFT JOIN dbo.TrailersInYard as TiY ON Tiy.MSID = MS.MSID " +
+                //        "LEFT JOIN (SELECT MSID, COUNT(PODetailsID) AS PDCount, " +
+                //        "(SELECT TOP 1 PD_A.ProductID_CMS " +
+                //        "FROM dbo.PODetails PD_A " +
+                //        "INNER JOIN dbo.ProductsCMS PCMS_A ON PD_A.ProductID_CMS = PCMS_A.ProductID_CMS " +
+                //        "WHERE PD_A.MSID =  PD.MSID " +
+                //        ") AS topProdID  " +
+                //        "FROM dbo.PODetails PD  " +
+                //        "GROUP BY MSID " +
+                //        ") ProdDet ON ProdDet.MSID = MS.MSID " +
+                //        "LEFT JOIN dbo.ProductsCMS PCMS ON PCMS.ProductID_CMS = ProdDet.topProdID " +
+                //        "WHERE (MS.LocationShort = 'YARD' OR (MS.LocationShort = 'NOS' AND TiY.MSID is not NULL)) AND MS.isRejected = 'false' AND MS.isHidden = 'false'" +
+                //        "UNION " +
+                //        "SELECT -1 AS MSID, -1 AS PONumber, TiY.TrailerNumber, " +
+                //        "'Waiting' AS Status, 'false' AS isDropTrailer, " +
+                //        "NULL AS DroppedTime, 'true' AS isEmpty, NULL AS YardComment,  " +
+                //        "NULL AS EmptyTime, -1 AS isOpenInCMS, " +
+                //        "NULL AS ArrivedAtYardTime, NULL AS HighlightTimeMax, 0 AS HL, " +
+                //        "0 AS ProdCount, NULL AS topProdID, NULL AS ProductName_CMS " +
+                //        "FROM dbo.TrailersInYard as TiY " +
+                //        "WHERE tiy.MSID is Null";
+                
+                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.StoredProcedure, "sp_truckschedapp_getYardGridData", new SqlParameter("@OffsetForHighlightingInMinutes", highlightDiff));
 
                     //populate return object
                     foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
@@ -133,10 +121,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardAndWaiting getYardGridData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -151,10 +136,11 @@ namespace TransportationProject
             try
             {
                 
-                    string sqlCmdText;
-                    
+               // string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT MS.MSID, MS.PONumber, MS.TrailerNumber, MS.isDropTrailer," +
+
+               /* sqlCmdText = "SELECT MS.MSID, MS.PONumber, MS.TrailerNumber, MS.isDropTrailer," +
                         "(SELECT TOP 1 S.StatusText FROM dbo.Status AS S WHERE S.StatusID = MS.StatusID) AS Status,  MS.isEmpty, MS.WaitingAreaComment, " +
                         "(SELECT TOP 1 MSE.TimeStamp FROM dbo.MainScheduleEvents AS MSE WHERE MSE.EventTypeID = 3074 AND MS.MSID = MSE.MSID AND isHidden = 'false') AS EmptyTime, MS.isOpenInCMS, " +
                         "(SELECT TOP (1) MSE.TimeStamp FROM dbo.MainScheduleEvents AS MSE WHERE MSE.EventTypeID = 4 AND MS.MSID = MSE.MSID AND isHidden = 'false' order by TimeStamp DESC) AS ArrivedAtWaitTime, " +
@@ -177,8 +163,8 @@ namespace TransportationProject
                         "GROUP BY MSID " +
                         ") ProdDet ON ProdDet.MSID = MS.MSID " +
                         "LEFT JOIN dbo.ProductsCMS PCMS ON PCMS.ProductID_CMS = ProdDet.topProdID " +
-                        "WHERE MS.LocationShort = 'WAIT' AND MS.isRejected = 'false' AND MS.isHidden = 'false'";
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@HLMINS", highlightDiff));
+                        "WHERE MS.LocationShort = 'WAIT' AND MS.isRejected = 'false' AND MS.isHidden = 'false'"; */
+                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.StoredProcedure, "sp_truckschedapp_getWaitGridData", new SqlParameter("@OffsetForHighlightingInMinutes", highlightDiff));
 
                     //populate return object
                     foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
@@ -190,10 +176,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardAndWaiting getWaitGridData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -208,9 +191,10 @@ namespace TransportationProject
             {
                 
                     string sqlCmdText;
-                   
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT MS.MSID, MS.PONumber, MS.TrailerNumber  " +
+
+                sqlCmdText = "SELECT MS.MSID, MS.PONumber, MS.TrailerNumber  " +
                         "FROM dbo.MainSchedule AS MS " +
                         "WHERE (MS.LocationShort != 'NOS') AND (MS.isRejected = 'false' AND MS.isHidden = 'false')";
                     dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
@@ -225,10 +209,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardAndWaiting getPOOptionsInZXP(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -243,9 +224,9 @@ namespace TransportationProject
             {
                 
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT L.LocationShort, L.LocationLong FROM dbo.Locations AS L WHERE L.LocationShort = 'WAIT' OR L.LocationShort = 'YARD'";
+                sqlCmdText = "SELECT L.LocationShort, L.LocationLong FROM dbo.Locations AS L WHERE L.LocationShort = 'WAIT' OR L.LocationShort = 'YARD'";
                     dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
 
                     //populate return object
@@ -258,10 +239,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardAndWaiting getAvailableDockSpots(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -279,7 +257,7 @@ namespace TransportationProject
                 {
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     if (newLoc == "YARD")
                     {
@@ -319,10 +297,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardAndWaiting updateLocation(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -339,7 +314,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "UPDATE dbo.MainSchedule SET TrailerNumber = @TRAIL WHERE (MSID = @MSID)";
                     SqlHelper.ExecuteNonQuery(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@TRAIL", trailerNumber),
@@ -354,10 +329,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardAndWaiting updateTrailerNumber(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -378,7 +350,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //query 1: get trailer
                     sqlCmdText = "SELECT MS.TrailerNumber FROM dbo.MainSchedule AS MS WHERE (MSID = @MSID)";
@@ -423,10 +395,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardAndWaiting getAvailableDockSpots(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             returnObject.Add(didSucceed);
             returnObject.Add(msg);
@@ -445,7 +414,7 @@ namespace TransportationProject
             {
                 
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                     sqlCmdText = "SELECT PODetailsID, ProductID_CMS " +
                                         "FROM dbo.PODetails POD " +
                                         "WHERE MSID = @MSID";
@@ -480,10 +449,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardAndWaiting getProductInfoTrailerDroppedCustomMessage(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return listOfProductDetails;
         }
@@ -642,10 +608,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardAndWaiting createDetailsMessageForEventBasedAlerts(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return customAlertMsg;
         }
@@ -658,7 +621,7 @@ namespace TransportationProject
             {
                 
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                     sqlCmdText = "SELECT TOP 1 MS.PONumber, MS.PONumber_ZXPOutbound, MS.CustomerID, MS.TrailerNumber, U.FirstName, U.LastName, " +
                                         "ISNULL(ProdDet.PDCount, 0) AS ProdCount, ProdDet.topProdID, PCMS.ProductName_CMS " +
                                         "FROM dbo.MainSchedule AS MS " +
@@ -683,10 +646,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardAndWaiting getTruckInfoForEventBasedCustomMessage(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return TruckData;
         }
@@ -704,7 +664,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //query 1 set event;
                     cLog = new ChangeLog(ChangeLog.ChangeLogChangeType.UPDATE, "MainSchedule", "LastUpdated", now, zxpUD._uid, ChangeLog.ChangeLogDataType.NVARCHAR, now.ToString(), null, "MSID", MSID.ToString());
@@ -727,10 +687,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardAndWaiting emptyTheTrailer(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return now.ToString();
         }
@@ -747,7 +704,7 @@ namespace TransportationProject
             {
 
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT TOP (1) " +
                                     "(SELECT L.LocationLong FROM dbo.Locations AS L WHERE L.LocationShort = MS.LocationShort) AS Location, " +
@@ -765,10 +722,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardAndWaiting getCurrentLocationAndStatus(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -787,7 +741,7 @@ namespace TransportationProject
             {
                 
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                     sqlCmdText = "SELECT TOP (1) " +
                                         "(SELECT L.LocationLong FROM dbo.Locations AS L WHERE L.LocationShort = MS.LocationShort) AS Location, " +
                                         "(SELECT S.StatusText FROM dbo.Status AS S WHERE S.StatusID = MS.StatusID) AS Status " +
@@ -928,10 +882,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardAndWaiting verifyMove(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return returnData;
         }
@@ -949,7 +900,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //Query 1 - create new event
                     sqlCmdText = "INSERT INTO dbo.MainScheduleEvents(MSID, UserId, TimeStamp, EventTypeID, isHidden) VALUES (@MSID, @UserId, @TimeStamp, 3076, 'false'); " +
@@ -976,10 +927,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardAndWaiting undoEmptyTheTrailer(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -996,7 +944,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //Query 1 - create new event
                     sqlCmdText = "INSERT INTO dbo.MainScheduleEvents(MSID, UserId, TimeStamp, EventTypeID, isHidden) VALUES (@MSID, @UserId, @TimeStamp, 3073, 'false'); " +
@@ -1035,10 +983,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardAndWaiting undoDropTheTrailer(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1049,22 +994,18 @@ namespace TransportationProject
             List<object[]> data = new List<object[]>();
             try
             {
-                //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 TruckLogHelperFunctions.logByMSIDConnection(sql_connStr, MSID, data);
             }
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in YardAndWaiting GetLogDataByMSID(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardAndWaiting GetLogDataByMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -1075,22 +1016,18 @@ namespace TransportationProject
             List<object[]> data = new List<object[]>();
             try
             {
-                //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 TruckLogHelperFunctions.logListConnection(sql_connStr, data);
             }
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in YardAndWaiting GetLogList(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardAndWaiting GetLogList(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -1108,7 +1045,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "INSERT INTO dbo.MainScheduleEvents (MSID, EventTypeID,Timestamp, UserId, isHidden) " +
                                     "VALUES (@MSID, 2035, @TIME, @USER, 'false'); " +
@@ -1141,10 +1078,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardAndWaiting setComment(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1161,7 +1095,7 @@ namespace TransportationProject
             {
                 
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT ISNULL(COUNT(*),0) FROM dbo.MainScheduleInspections where MSID = @MSID AND isHidden = 'false' AND InspectionEndEventID IS NULL";
                     numberOfOpenInspections = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
@@ -1185,10 +1119,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardAndWaiting verifyIfInspectionIsDoneBeforeUnload(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return returnString;
         }
@@ -1213,7 +1144,7 @@ namespace TransportationProject
             {
                 
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT PD.PODetailsID, PD.ProductID_CMS, PD.QTY, PD.LotNumber, PD.UnitOfMeasure, PCMS.ProductName_CMS " +
                                     "FROM dbo.PODetails PD " +
@@ -1232,10 +1163,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardAndWaiting GetPODetailsFromMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -1251,7 +1179,7 @@ namespace TransportationProject
             try
             {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT COUNT(MS.TrailerNumber) " +
                                     "FROM dbo.MainSchedule MS " +
@@ -1265,10 +1193,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardAndWaiting checkIfCanUpdateTrailerNumber(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return canUpdate;
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Diagnostics;
 using System.Threading;
+using System.Configuration;
 
 namespace TransportationProject
 {
@@ -13,7 +14,7 @@ namespace TransportationProject
         public static bool WriteEvent(string MessageText,
                             EventLogEntryType eventType = EventLogEntryType.Information, 
                             string SourceApp = "zxptransportationproject",
-                            string logName = "Application")
+                            string logName = "Application", bool fromServerSide = true)
         {
             EventLog EventLog1 = new EventLog();
 
@@ -25,8 +26,15 @@ namespace TransportationProject
                 }
                 EventLog1.Source = SourceApp;
                 EventLog1.WriteEntry(MessageText, eventType);
-                if (eventType == EventLogEntryType.Error) {
-                    sendEmailWithErrorDetails(MessageText, eventType);
+
+
+                string isEnabled = ConfigurationManager.AppSettings["IsErrorEmailEnabled"];
+                if (!String.IsNullOrEmpty(isEnabled))
+                {
+                    if (eventType == EventLogEntryType.Error && isEnabled.ToLower().Equals("true") && fromServerSide)
+                    {
+                        sendEmailWithErrorDetails(MessageText, eventType);
+                    }
                 }
                 EventLog1.Close();
                 return true;
@@ -34,8 +42,6 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 ex.ToString();
-                //throw ex;
-                //Could not write to log; but shouldn't error out application
             }
             return false;
         }
@@ -84,6 +90,14 @@ namespace TransportationProject
             
                
             }
+        }
+        
+        public static void LogErrorAndRedirect(int ErrorCode, string ErrorMessage)
+        {
+            WriteEvent(ErrorMessage, EventLogEntryType.Error);
+            System.Web.HttpContext.Current.Session["ErrorNum"] = ErrorCode;
+            sendtoErrorPage(ErrorCode);
+
         }
     }
 

@@ -17,7 +17,7 @@ namespace TransportationProject.Account
 {
     public partial class Login : Page
     {
-        protected static String sql_connStr;
+       // protected static String sql_connStr;
         void Page_PreInit(Object sender, EventArgs e)
         {
             if (Request.Browser.IsMobileDevice)
@@ -33,11 +33,7 @@ namespace TransportationProject.Account
         {
             try
             {
-                sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                if (sql_connStr == String.Empty)
-                {
-                    throw new Exception("Missing SQLConnectionString in web.config");
-                }
+                
                 string errorText = Request.QueryString["ErrorText"];
                 if (!string.IsNullOrEmpty(errorText))
                 {
@@ -102,9 +98,13 @@ namespace TransportationProject.Account
                     {
                         Session.Abandon();
                         System.Web.Security.FormsAuthentication.SignOut();
-                        //Response.Redirect("~/Account/Login.aspx");
                     }
                 }
+            }
+            catch (System.Threading.ThreadAbortException ex)
+            {
+                ex.ToString();
+                //do nothing - caused by response.redirect
             }
             catch (SqlException excep)
             {
@@ -134,7 +134,8 @@ namespace TransportationProject.Account
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     string hashedPassword = MD5Hash(LoginControl.Password);
 

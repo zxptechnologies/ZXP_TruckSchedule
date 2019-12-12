@@ -13,9 +13,7 @@ namespace TransportationProject
 {
     public partial class rejectTruck : System.Web.UI.Page
     {
-        protected static String sql_connStr;
-        //public static ZXPUserData zxpUD = new ZXPUserData();
-
+       
         void Page_PreInit(Object sender, EventArgs e)
         {
             if (Request.Browser.IsMobileDevice)
@@ -36,15 +34,7 @@ namespace TransportationProject
                 {
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
 
-                    if (zxpUD._isLabAdmin || zxpUD._isLabPersonnel || zxpUD._isGuard || zxpUD._isAdmin) //make sure this matches whats in Site.Master and Default
-                    {
-                        sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                        if (sql_connStr == String.Empty)
-                        {
-                            throw new Exception("Missing SQLConnectionString in web.config");
-                        }
-                    }
-                    else
+                    if (!(zxpUD._isLabAdmin || zxpUD._isLabPersonnel || zxpUD._isGuard || zxpUD._isAdmin)) //make sure this matches whats in Site.Master and Default
                     {
                         Response.BufferOutput = true;
                         Response.Redirect("/ErrorPage.aspx?ErrorCode=5", false);
@@ -60,16 +50,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in RejectTruck Page_Load(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in RejectTruck Page_Load(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -82,10 +68,10 @@ namespace TransportationProject
             {
               
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    //gets MSID and other data needed 
-                    sqlCmdText = "SELECT MS.MSID, MS.PONumber, MS.TrailerNumber, LS.LocationLong, " +
+                //gets MSID and other data needed 
+                sqlCmdText = "SELECT MS.MSID, MS.PONumber, MS.TrailerNumber, LS.LocationLong, " +
                                             "(SELECT TOP 1 TimeStamp FROM dbo.MainScheduleEvents MSE WHERE (MSE.MSID = MS.MSID) AND (MS.isRejected = 'true') AND (isHidden = 'false') ORDER BY Timestamp DESC) AS TimeRejected, " +
                                             "MS.RejectionComment, MS.isOpenInCMS, " +
                                             "ISNULL(ProdDet.PDCount, 0) AS ProdCount, ProdDet.topProdID, PCMS.ProductName_CMS " +
@@ -116,10 +102,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in RejectTruck GetGridData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -136,7 +119,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     ChangeLog cl = new ChangeLog(ChangeLog.ChangeLogChangeType.UPDATE, "MainSchedule", "isRejected", now, zxpUD._uid, ChangeLog.ChangeLogDataType.BIT, "1", null, "MSID", MSID.ToString());
                     cl.CreateChangeLogEntryIfChanged();
@@ -158,10 +141,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in RejectTruck GetGridData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             nowFormatted = now.ToString("ddd MMM dd yyyy HH:mm:ss K");
             return now.ToString();
@@ -174,35 +154,32 @@ namespace TransportationProject
             try
             {
                 
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    sqlCmdText = "SELECT MS.PONumber, MS.PONumber_ZXPOutbound, MS.CustomerID, MS.TrailerNumber, MS.RejectionComment, U.FirstName, U.LastName, " +
-                                        "ISNULL(ProdDet.PDCount, 0) AS ProdCount, ProdDet.topProdID, PCMS.ProductName_CMS " +
-                                        "FROM dbo.MainSchedule AS MS " +
-                                        "INNER JOIN dbo.MainScheduleEvents MSE ON MS.MSID = MSE.MSID " +
-                                        "INNER JOIN dbo.Users U ON U.UserID = MSE.UserId " +
-                                        "LEFT JOIN (SELECT MSID, COUNT(PODetailsID) AS PDCount, " +
-                                        "(SELECT TOP 1 PD_A.ProductID_CMS " +
-                                        "FROM dbo.PODetails PD_A " +
-                                        "INNER JOIN dbo.ProductsCMS PCMS_A ON PD_A.ProductID_CMS = PCMS_A.ProductID_CMS " +
-                                        "WHERE PD_A.MSID =  PD.MSID " +
-                                        ") AS topProdID  " +
-                                        "FROM dbo.PODetails PD  " +
-                                        "GROUP BY MSID " +
-                                        ") ProdDet ON ProdDet.MSID = MS.MSID " +
-                                        "LEFT JOIN dbo.ProductsCMS PCMS ON PCMS.ProductID_CMS = ProdDet.topProdID " +
-                                        "WHERE MS.MSID = @MSID AND MSE.EventTypeID = 2037";
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                sqlCmdText = "SELECT MS.PONumber, MS.PONumber_ZXPOutbound, MS.CustomerID, MS.TrailerNumber, MS.RejectionComment, U.FirstName, U.LastName, " +
+                                    "ISNULL(ProdDet.PDCount, 0) AS ProdCount, ProdDet.topProdID, PCMS.ProductName_CMS " +
+                                    "FROM dbo.MainSchedule AS MS " +
+                                    "INNER JOIN dbo.MainScheduleEvents MSE ON MS.MSID = MSE.MSID " +
+                                    "INNER JOIN dbo.Users U ON U.UserID = MSE.UserId " +
+                                    "LEFT JOIN (SELECT MSID, COUNT(PODetailsID) AS PDCount, " +
+                                    "(SELECT TOP 1 PD_A.ProductID_CMS " +
+                                    "FROM dbo.PODetails PD_A " +
+                                    "INNER JOIN dbo.ProductsCMS PCMS_A ON PD_A.ProductID_CMS = PCMS_A.ProductID_CMS " +
+                                    "WHERE PD_A.MSID =  PD.MSID " +
+                                    ") AS topProdID  " +
+                                    "FROM dbo.PODetails PD  " +
+                                    "GROUP BY MSID " +
+                                    ") ProdDet ON ProdDet.MSID = MS.MSID " +
+                                    "LEFT JOIN dbo.ProductsCMS PCMS ON PCMS.ProductID_CMS = ProdDet.topProdID " +
+                                    "WHERE MS.MSID = @MSID AND MSE.EventTypeID = 2037";
 
-                    TruckData = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID));
+                TruckData = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID));
                    
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in RejectTruck GetTruckInfoForRejectCustomMessage(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
 
             return TruckData;
@@ -219,46 +196,43 @@ namespace TransportationProject
             try
             {
                 
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    sqlCmdText = "SELECT PODetailsID, ProductID_CMS " +
-                                        "FROM dbo.PODetails POD " +
-                                        "WHERE MSID = @MSID";
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                sqlCmdText = "SELECT PODetailsID, ProductID_CMS " +
+                                    "FROM dbo.PODetails POD " +
+                                    "WHERE MSID = @MSID";
 
-                    productInfo = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID));
-                    foreach (System.Data.DataRow row in productInfo.Tables[0].Rows)
+                productInfo = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID));
+                foreach (System.Data.DataRow row in productInfo.Tables[0].Rows)
+                {
+                    if (productInfo.Tables[0].Rows[0]["ProductID_CMS"].Equals(DBNull.Value))
                     {
-                        if (productInfo.Tables[0].Rows[0]["ProductID_CMS"].Equals(DBNull.Value))
-                        {
-                            productName = "";
-                        }
-                        else
-                        {
-                            productName = Convert.ToString(productInfo.Tables[0].Rows[0]["ProductID_CMS"]);
-                        }
-
-                        if (productInfo.Tables[0].Rows[0]["PODetailsID"].Equals(DBNull.Value))
-                        {
-                            partNum = "";
-                        }
-                        else
-                        {
-                            partNum = Convert.ToString(productInfo.Tables[0].Rows[0]["PODetailsID"]);
-                        }
-
-
-                        listOfProductDetails.Add(Tuple.Create(partNum, productName));
+                        productName = "";
                     }
+                    else
+                    {
+                        productName = Convert.ToString(productInfo.Tables[0].Rows[0]["ProductID_CMS"]);
+                    }
+
+                    if (productInfo.Tables[0].Rows[0]["PODetailsID"].Equals(DBNull.Value))
+                    {
+                        partNum = "";
+                    }
+                    else
+                    {
+                        partNum = Convert.ToString(productInfo.Tables[0].Rows[0]["PODetailsID"]);
+                    }
+
+
+                    listOfProductDetails.Add(Tuple.Create(partNum, productName));
+                }
 
                    
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in RejectTruck GetProductInfoRejectCustomMessage(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
 
             return listOfProductDetails;
@@ -418,10 +392,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in RejectTruck CreateCustomRejectTruckMessage(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return customAlertMsg;
         }
@@ -438,7 +409,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //Create an entry in Event Log
                     sqlCmdText = "INSERT INTO dbo.MainScheduleEvents (MSID, EventTypeID,Timestamp, UserId, isHidden) " +
@@ -466,10 +437,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in RejectTruck UndoARejectedTruck(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -486,39 +454,36 @@ namespace TransportationProject
             try
             {
                
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT TOP (1) MS.LocationShort, (SELECT S.StatusText FROM dbo.Status AS S WHERE S.StatusID = MS.StatusID) AS Status, MS.isRejected, " +
-                                            "(SELECT TOP (1) MSE.TimeStamp FROM dbo.MainScheduleEvents AS MSE WHERE (MSE.MSID = MS.MSID) AND (MSE.isHidden = 'false') AND (MSE.EventTypeID = 2037)) AS RejectTime " +
-                                            "FROM dbo.MainSchedule AS MS WHERE MSID = @MSID";
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID));
+                sqlCmdText = "SELECT TOP (1) MS.LocationShort, (SELECT S.StatusText FROM dbo.Status AS S WHERE S.StatusID = MS.StatusID) AS Status, MS.isRejected, " +
+                                        "(SELECT TOP (1) MSE.TimeStamp FROM dbo.MainScheduleEvents AS MSE WHERE (MSE.MSID = MS.MSID) AND (MSE.isHidden = 'false') AND (MSE.EventTypeID = 2037)) AS RejectTime " +
+                                        "FROM dbo.MainSchedule AS MS WHERE MSID = @MSID";
+                dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID));
 
-                    loc = Convert.ToString(dataSet.Tables[0].Rows[0]["LocationShort"]);
-                    stat = Convert.ToString(dataSet.Tables[0].Rows[0]["Status"]);
-                    isRejected = Convert.ToBoolean(dataSet.Tables[0].Rows[0]["isRejected"]);
+                loc = Convert.ToString(dataSet.Tables[0].Rows[0]["LocationShort"]);
+                stat = Convert.ToString(dataSet.Tables[0].Rows[0]["Status"]);
+                isRejected = Convert.ToBoolean(dataSet.Tables[0].Rows[0]["isRejected"]);
 
-                    if (dataSet.Tables[0].Rows[0]["RejectTime"].Equals(DBNull.Value))
-                    {
-                        rejTime = "0";
-                    }
-                    else
-                    {
-                        rejTime = dataSet.Tables[0].Rows[0]["RejectTime"].ToString();
-                    }
-                    data.Add(loc);
-                    data.Add(stat.ToString());
-                    data.Add(isRejected.ToString());
-                    data.Add(rejTime.ToString());
+                if (dataSet.Tables[0].Rows[0]["RejectTime"].Equals(DBNull.Value))
+                {
+                    rejTime = "0";
+                }
+                else
+                {
+                    rejTime = dataSet.Tables[0].Rows[0]["RejectTime"].ToString();
+                }
+                data.Add(loc);
+                data.Add(stat.ToString());
+                data.Add(isRejected.ToString());
+                data.Add(rejTime.ToString());
 
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in RejectTruck CheckCurrentStatus(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
 
@@ -534,7 +499,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     ChangeLog cl = new ChangeLog(ChangeLog.ChangeLogChangeType.UPDATE, "MainSchedule", "RejectionComment", now, zxpUD._uid, ChangeLog.ChangeLogDataType.NVARCHAR, TransportHelperFunctions.convertStringEmptyToDBNULL(COMMENT).ToString(), null, "MSID", MSID.ToString());
                     cl.CreateChangeLogEntryIfChanged();
@@ -549,10 +514,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in RejectTruck SetRejectionComment(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -562,22 +524,18 @@ namespace TransportationProject
             List<object[]> data = new List<object[]>();
             try
             {
-                //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 TruckLogHelperFunctions.logByMSIDConnection(sql_connStr, MSID, data);
             }
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in RejectTruck GetLogDataByMSID(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in RejectTruck GetLogDataByMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -591,22 +549,18 @@ namespace TransportationProject
             List<object[]> data = new List<object[]>();
             try
             {
-                //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 TruckLogHelperFunctions.logListConnection(sql_connStr, data);
             }
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in RejectTruck GetLogList(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in RejectTruck GetLogList(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -621,30 +575,27 @@ namespace TransportationProject
             DataSet dataSet = new DataSet();
             try
             {
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT PD.PODetailsID, PD.ProductID_CMS, PD.QTY, PD.LotNumber, PD.UnitOfMeasure, PCMS.ProductName_CMS " +
-                                        "FROM dbo.PODetails PD " +
-                                        "LEFT JOIN dbo.ProductsCMS PCMS ON PCMS.ProductID_CMS = PD.ProductID_CMS " +
-                                        "WHERE PD.MSID = @MSID ORDER BY PD.ProductID_CMS ";
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID));
+                sqlCmdText = "SELECT PD.PODetailsID, PD.ProductID_CMS, PD.QTY, PD.LotNumber, PD.UnitOfMeasure, PCMS.ProductName_CMS " +
+                                    "FROM dbo.PODetails PD " +
+                                    "LEFT JOIN dbo.ProductsCMS PCMS ON PCMS.ProductID_CMS = PD.ProductID_CMS " +
+                                    "WHERE PD.MSID = @MSID ORDER BY PD.ProductID_CMS ";
+                dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID));
 
-                    //populate return object
-                    foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
-                    {
-                        data.Add(row.ItemArray);
-                    }
+                //populate return object
+                foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
+                {
+                    data.Add(row.ItemArray);
+                }
 
                    
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in dockManager getYardMules(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }

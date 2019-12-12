@@ -13,7 +13,6 @@ namespace TransportationProject.Account
 {
     public partial class PasswordReset : System.Web.UI.Page
     {
-        protected static String sql_connStr;
         protected void Page_Load(object sender, EventArgs e)
         {
             try
@@ -24,12 +23,7 @@ namespace TransportationProject.Account
                     token.Value = tokenFromEmail;
                 }
 
-                sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                if (sql_connStr == String.Empty)
-                {
-                    throw new Exception("Missing SQLConnectionString in web.config");
-                }
-
+              
 
             }
             catch (SqlException excep)
@@ -64,6 +58,7 @@ namespace TransportationProject.Account
                     uMessage.Text = "Cannot reset password. Please check information before submitting. If problems persist, please contact the IT Department.";
                 }
 
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 SqlHelper.ExecuteNonQuery(sql_connStr, CommandType.StoredProcedure, "sp_truckschedapp_ResetPasswordUsingToken"
                         , new SqlParameter("@pUserKey", hashedEmailToken)
                         , new SqlParameter("@pPassword", hashedPassword));

@@ -14,8 +14,7 @@ namespace TransportationProject
 {
     public partial class loaderMobile : System.Web.UI.Page
     {
-        protected static String sql_connStr;
-        //public static ZXPUserData zxpUD = new ZXPUserData();
+       
         void Page_PreInit(Object sender, EventArgs e)
         {
             if (Request.Browser.IsMobileDevice)
@@ -41,18 +40,9 @@ namespace TransportationProject
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                     zxpUD = ZXPUserData.DeserializeZXPUserData(ticket.UserData);
 
-                    if (zxpUD._isAdmin || zxpUD._isDockManager || zxpUD._isLoader || zxpUD._isYardMule) //make sure this matches whats in Site.Master and Default
-                    {
-                        sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                        if (sql_connStr == String.Empty)
-                        {
-                            throw new Exception("Missing SQLConnectionString in web.config");
-                        }
-                    }
-                    else
+                    if (!(zxpUD._isAdmin || zxpUD._isDockManager || zxpUD._isLoader || zxpUD._isYardMule)) //make sure this matches whats in Site.Master and Default
                     {
                         Response.BufferOutput = true;
-                        //Response.Redirect("/ErrorPage.aspx?ErrorCode=5", false); mi4 url
                         Response.Redirect("ErrorPage.aspx?ErrorCode=5", false); //zxp live url
                     }
 
@@ -60,7 +50,6 @@ namespace TransportationProject
                 else
                 {
                     Response.BufferOutput = true;
-                    //Response.Redirect("/Account/Login.aspx?ReturnURL=/dockManager.aspx", false); mi4 url
                     Response.Redirect("Account/Login.aspx?ReturnURL=~/loaderMobile.aspx", false);//zxp live url
                 }
 
@@ -68,30 +57,25 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in loaderMobile Page_Load(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in loaderMobile Page_Load(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }//page_load()
 
         [System.Web.Services.WebMethod]
         public static Sample getSampleInformationForMSID(int MSID)
         {
-            // DataSet dataSet = new DataSet();
             Sample sampleInfo = new Sample();
 
             try
             {
 
                 string sqlCmdText;
-
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 sqlCmdText = string.Concat("SELECT  MSID ,PODetailsID ,PONumber ,ProductID_CMS ,FileID ,Filepath ,FilenameOld ,SampleID, LotusID ,TimeSampleTaken ,TimeSampleSent ",
                         ",TimeSampleReceived ,didLabNotReceived ,Comments ,FilenameNew ,TestApproved ,TrailerNumber ,FirstName ,LastName ,bypassCOFAComment ,SpecificGravity ",
                         ",isOpenInCMS ,isRejected ,ProductName_CMS ",
@@ -134,10 +118,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in loaderMobile getSampleGridData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return sampleInfo;
         }
@@ -150,6 +131,7 @@ namespace TransportationProject
 
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                 string sqlCmdText = string.Concat( "SELECT MSID, StatusID, StatusText, TrailerNumber, SpotID, SpotDescription, " ,
                     "ProdID, ProdName, PODetailsID, PONumber, PONumber_ZXPOutbound, ETA FROM dbo.vw_LoaderMobileGridData");
@@ -179,16 +161,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in loaderMobile getLoaderMobileGrid(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in loaderMobile getLoaderMobileGrid(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return gridData;
 
@@ -199,8 +177,8 @@ namespace TransportationProject
         {
             List<vw_LoadAndUnloadRequests> requestsData = new List<vw_LoadAndUnloadRequests>();
             try
-            { 
-
+            {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 string sqlCmdText = "SELECT RequestID, RequestTypeID, TimeRequestStart, TimeRequestEnd FROM dbo.vw_LoadAndUnloadRequests WHERE MSID = @msid";
                 SqlDataReader reader = SqlHelper.ExecuteReader(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID));
                 while (reader.Read())
@@ -221,16 +199,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in loaderMobile getLoadAndUnloadRequests(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in loaderMobile getLoadAndUnloadRequests(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return requestsData;
         }
@@ -242,11 +216,11 @@ namespace TransportationProject
 
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText = string.Empty;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     if (requestTypeID == 1) //Load
                     {
@@ -295,17 +269,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in loaderMobile startRequest(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in loaderMobile startRequest(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return timeStamp;
         }
@@ -321,7 +290,7 @@ namespace TransportationProject
 
                 ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                 sqlConn = new SqlConnection();
-                //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 string sqlQuery = string.Empty;
                 int eventID = 0;
                 MainScheduleEventLogger msEventLog = new MainScheduleEventLogger();
@@ -374,16 +343,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in loaderMobile completeRequest(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in loaderMobile completeRequest(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -403,14 +368,13 @@ namespace TransportationProject
             bool ValidationSetting = false;
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 ValidationSetting = InspectionsHelperFunctions.CheckInspectionValidationSetting(sql_connStr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in loaderMobile CheckInspectionValidationSetting(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return ValidationSetting;
             
@@ -423,15 +387,14 @@ namespace TransportationProject
             List<object> returnObj = new List<object>();
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                 returnObj = InspectionsHelperFunctions.canInspectionBeEdited(prodDetailID, MSInspectionListID, MSInspectionID, sql_connStr, zxpUD);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in loaderMobile canInspectionBeStarted(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return returnObj;
         }
@@ -439,25 +402,18 @@ namespace TransportationProject
         [System.Web.Services.WebMethod]
         public static List<object> setInspectionResult(int MSInspectionID, int testID, int result, int prodDetailID)
         {
-            //DateTime timestamp = DateTime.Now; //Initialize the timestamp here
-            //String returnMsg = String.Empty;
-            //bool isDealBreaker = false;
-            //bool isLastQuestion = false;  
-            //int verInspID = 0;
-            //bool hasEnded = false;
+           
             List<object> returnData = new List<object>();
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                 returnData = InspectionsHelperFunctions.setInspectionResult(MSInspectionID, testID, result, prodDetailID, sql_connStr, zxpUD);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in loaderMobile setInspectionResult(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             
             //returnData.Add(timestamp);
@@ -479,7 +435,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT TOP 1 ISNULL(Task, ''), ISNULL(Comment, ''), RT.RequestType , U.FirstName, U.LastName, ISNULL(MS.TrailerNumber, '') " +
                                           "FROM dbo.Requests R " +
@@ -501,10 +457,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in loaderMobile getRequestInformationForAlert(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -539,16 +492,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in loaderMobile createCustomMessageForCompletedTask(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in loaderMobile createCustomMessageForCompletedTask(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -565,15 +514,13 @@ namespace TransportationProject
 
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 dsPODetails = InspectionsHelperFunctions.GetPOdetailsData(prodDetailID, sql_connStr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in loaderMobile GetPOdetailsData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
 
 
@@ -591,6 +538,7 @@ namespace TransportationProject
             List<object[]> data = new List<object[]>();
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 int prodDetailID = InspectionsHelperFunctions.getPOdetailsIDForMSIDandProduct(MSID, ProductID_CMS, sql_connStr);
                 if (0 != prodDetailID)
                 {
@@ -600,10 +548,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in loaderMobile getInspectionList(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
           
             return data;
@@ -617,6 +562,7 @@ namespace TransportationProject
             InspectionList inspList = new InspectionList();
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 int prodDetailID = InspectionsHelperFunctions.getPOdetailsIDForMSIDandProduct(MSID, ProductID_CMS, sql_connStr);
                 if (0 != prodDetailID)
                 {
@@ -628,17 +574,11 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in loaderMobile getMSInspectionListAndData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return inspList;
 
         }
-
-
-
-
+        
     }
 }

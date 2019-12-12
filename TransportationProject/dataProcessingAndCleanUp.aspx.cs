@@ -16,7 +16,7 @@ namespace TransportationProject
 {
     public partial class dataProcessingAndCleanUp : System.Web.UI.Page
     {
-        protected static String sql_connStr;
+        
         protected static String as400_connStr;
         public static ZXPUserData zxpUD = new ZXPUserData();
         public enum processingActions
@@ -41,7 +41,7 @@ namespace TransportationProject
             int exceptionErrorCode = 0;
             try
             {
-                //sql_connStr = ConfigurationManager.AppSettings["SQLConnectionString"];
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 if (sql_connStr == String.Empty)
                 {
@@ -149,7 +149,7 @@ namespace TransportationProject
                     string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT COUNT (*) FROM dbo.Users WHERE [Password] = @UPASS AND UserName = @UNAME AND isDisabled = 0";
-                    rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@UPASS", MD5Hash(password)),
+                    rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@UPASS", DataTransformer.PasswordHash(password)),
                                                                                                 new SqlParameter("@UNAME", userName)));
                     if (rowCount > 0)
                     {
@@ -185,8 +185,7 @@ namespace TransportationProject
         [System.Web.Services.WebMethod]
         public static List<object[]> getProductsAndVolumeDataFromCMS()
         {
-            // OdbcConnection odbcConn = new TruckScheduleConfigurationKeysHelper_ODBC().ODBC_Conn;
-            //OdbcCommand odbcCmd = new TruckScheduleConfigurationKeysHelper_ODBC().ODBC_Cmd;
+           
             TruckScheduleConfigurationKeysHelper_ODBC odbc_helper = new TruckScheduleConfigurationKeysHelper_ODBC();
             
 
@@ -433,8 +432,6 @@ namespace TransportationProject
         [System.Web.Services.WebMethod]
         public static bool isPONumOpenInCMSDB(int POnum)
         {
-            //OdbcConnection odbcConn = new TruckScheduleConfigurationKeysHelper_ODBC().ODBC_Conn;
-            //OdbcCommand odbcCmd = new TruckScheduleConfigurationKeysHelper_ODBC().ODBC_Cmd;
 
             TruckScheduleConfigurationKeysHelper_ODBC odbc_helper = new TruckScheduleConfigurationKeysHelper_ODBC();
             try
@@ -776,21 +773,6 @@ namespace TransportationProject
             returnObj.Add(specialTanksConfigurationCount);
             returnObj.Add(prodWithMismatchedUnit);
             return returnObj;
-        }
-
-
-        //password hasher
-        private static string MD5Hash(string INPUT)
-        {
-            MD5 md5Hasher = MD5.Create();
-            byte[] data = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(INPUT));
-            StringBuilder sBuilder = new StringBuilder();
-            for (int i = 0; i < data.Length; i++)
-            {
-                sBuilder.Append(data[i].ToString("x2"));
-            }
-
-            return sBuilder.ToString();
-        }
+        } 
     }
 }

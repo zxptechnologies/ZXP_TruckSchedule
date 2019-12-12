@@ -15,8 +15,7 @@ namespace TransportationProject.Scripts
 {
     public partial class guardStation : System.Web.UI.Page
     {
-        protected static String sql_connStr;
-        //public static ZXPUserData zxpUD = new ZXPUserData();
+      
 
         void Page_PreInit(Object sender, EventArgs e)
         {
@@ -40,19 +39,11 @@ namespace TransportationProject.Scripts
                     System.Web.Security.FormsAuthenticationTicket ticket = System.Web.Security.FormsAuthentication.Decrypt(cookie.Value);
                     zxpUD = ZXPUserData.DeserializeZXPUserData(ticket.UserData);
 
-                    if (zxpUD._isAdmin || zxpUD._isDockManager || zxpUD._isGuard || zxpUD._isAccountManager) //make sure this matches whats in Site.Master and Default
+                    if (!(zxpUD._isAdmin || zxpUD._isDockManager || zxpUD._isGuard || zxpUD._isAccountManager)) //make sure this matches whats in Site.Master and Default
                     {
-                        sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                        if (sql_connStr == String.Empty)
-                        {
-                            throw new Exception("Missing SQLConnectionString in web.config");
-                        }
-                    }
-                    else 
-                    { 
+                       
                         Response.BufferOutput = true;
-                        //Response.Redirect("/ErrorPage.aspx?ErrorCode=5", false); mi4 url
-                        Response.Redirect("ErrorPage.aspx?ErrorCode=5", false); //zxp live url
+                        Response.Redirect("ErrorPage.aspx?ErrorCode=5", false); 
                     }
                     
 
@@ -60,24 +51,19 @@ namespace TransportationProject.Scripts
                 else
                 {
                     Response.BufferOutput = true;
-                    //Response.Redirect("/Account/Login.aspx?ReturnURL=/guardStation.aspx", false); mi4 url
-                    Response.Redirect("Account/Login.aspx?ReturnURL=~/guardStation.aspx", false);//zxp live url
+                    Response.Redirect("Account/Login.aspx?ReturnURL=~/guardStation.aspx", false);
                 }
 
             }
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in guardStation Page_Load(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in guardStation Page_Load(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
 
         }
@@ -99,10 +85,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation GetLocationOptions(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return vmLocations;
         }
@@ -123,10 +106,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation GetStatusOptions(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return vmddStatuses;
         }
@@ -141,7 +121,7 @@ namespace TransportationProject.Scripts
             //todo add isPostBack check, cant currently 
             try
             {
-                
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 string sqlCmdText;
 
                 sqlCmdText = string.Concat(" SELECT  PONumber, MSID, GuardStationComment,ETA,DocumentVerificationTS,TimeArrived ",
@@ -163,10 +143,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation getGuardStationGridData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -181,21 +158,18 @@ namespace TransportationProject.Scripts
 
             try
             {
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    //gets data specific data from table and save into readable format
-                    sqlCmdText = "SELECT isDropTrailer FROM MainSchedule WHERE MSID = @MSID";
-                    isDropTrailer = Convert.ToBoolean(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
+                //gets data specific data from table and save into readable format
+                sqlCmdText = "SELECT isDropTrailer FROM MainSchedule WHERE MSID = @MSID";
+                isDropTrailer = Convert.ToBoolean(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
                 
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation checksIfIsDropTrailerBeforeLaunchingApp(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return isDropTrailer;
         }
@@ -226,11 +200,9 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in guardStation launchAppAndUpdateWeight(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                ErrorLogging.sendtoErrorPage(1);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
+            return string.Empty;
         }
 
         [System.Web.Services.WebMethod]
@@ -253,7 +225,7 @@ namespace TransportationProject.Scripts
                 {
                     string sqlCmdText;
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //get ETA 
                     sqlCmdText = "SELECT MS.ETA, MS.TimeArrived, isDropTrailer, ISNULL(MS.isUrgent, 'false') AS isUrgent, PONumber FROM dbo.MainSchedule AS MS WHERE MS.MSID = @MSID";
@@ -411,10 +383,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation checkIn(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -427,40 +396,28 @@ namespace TransportationProject.Scripts
             try
             {
                
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT TruckType FROM dbo.MainSchedule WHERE MSID = @MSID";
-                    TruckType = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
+                sqlCmdText = "SELECT TruckType FROM dbo.MainSchedule WHERE MSID = @MSID";
+                TruckType = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
+                
+                sqlCmdText = string.Concat("SELECT ISNULL(COUNT(MSInspectionID), 0) FROM dbo.vw_InspectionsResultsForAllTrucks ",
+                    "WHERE (InspectionEndEventID IS NULL OR isFailed = 1 OR Result = -999) AND MSID = @MSID");
 
-                    //Result == -999 indicates question has not been answered
-                    sqlCmdText = "SELECT ISNULL(COUNT(MSI.MSInspectionID), 0) " +
-                                    "FROM dbo.MainScheduleInspections MSI " +
-                                    "INNER JOIN dbo.MainScheduleInspectionResults MSIR ON MSIR.MSInspectionID = MSI.MSInspectionID " +
-                                    "INNER JOIN dbo.InspectionResultType IRT ON IRT.ResultValue = MSIR.Result " +
-                                    "INNER JOIN dbo.MainSchedule MS ON MS.MSID = MSI.MSID " +
-                                    "INNER JOIN dbo.MainScheduleInspectionListsDetails MSILD ON MSILD.MSInspectionListDetailID = MSI.MSInspectionListDetailID " +
-                                    "INNER JOIN dbo.MainScheduleInspectionLists MSIL ON MSIL.MSID = MSIL.MSID AND MSILD.MSInspectionListID = MSIL.MSInspectionListID " +
-                                    "WHERE (MSI.InspectionEndEventID IS NULL OR isFailed = 1 OR MSIR.Result = -999) " +
-                                    "AND MSI.isHidden = 0 " +
-                                    "AND MSIL.isHidden = 0 " +
-                                    "AND MS.isHidden = 0 " +
-                                    "AND MS.MSID = @MSID";
-                    int numOpenInspection = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
-                    if (numOpenInspection > 0 && TruckType.ToLower() != "van")
-                    {
-                        hasIncompleteTests = true;
-                    }
+
+                int numOpenInspection = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
+                if (numOpenInspection > 0 && TruckType.ToLower() != "van")
+                {
+                    hasIncompleteTests = true;
+                }
 
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation doesTruckHaveIncompleteOrFailedInspections(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return hasIncompleteTests;
         }
@@ -472,43 +429,28 @@ namespace TransportationProject.Scripts
             string TruckType;
             try
             {
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                sqlCmdText = "SELECT TruckType FROM dbo.MainSchedule WHERE MSID = @MSID";
+                TruckType = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
 
-                    sqlCmdText = "SELECT TruckType FROM dbo.MainSchedule WHERE MSID = @MSID";
-                    TruckType = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
+                sqlCmdText = "SELECT ISNULL(COUNT(MSInspectionID), 0) FROM dbo.vw_InspectionsResultsForAllTrucks WHERE MS.MSID = @MSID";
+                int numInspection = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
+                if (numInspection > 0 && TruckType.ToLower() != "van")
+                {
+                    hasExistingInspections = true;
+                }
+                else if (TruckType.ToLower() == "van")
+                {
+                    hasExistingInspections = true;
 
-                    //Result == -999 indicates question has not been answered
-                    sqlCmdText = "SELECT ISNULL(COUNT(MSI.MSInspectionID), 0) " +
-                                    "FROM dbo.MainScheduleInspections MSI " +
-                                    "INNER JOIN dbo.MainScheduleInspectionResults MSIR ON MSIR.MSInspectionID = MSI.MSInspectionID " +
-                                    "INNER JOIN dbo.InspectionResultType IRT ON IRT.ResultValue = MSIR.Result " +
-                                    "INNER JOIN dbo.MainSchedule MS ON MS.MSID = MSI.MSID " +
-                                    "INNER JOIN dbo.MainScheduleInspectionListsDetails MSILD ON MSILD.MSInspectionListDetailID = MSI.MSInspectionListDetailID " +
-                                    "INNER JOIN dbo.MainScheduleInspectionLists MSIL ON MSIL.MSID = MSIL.MSID AND MSILD.MSInspectionListID = MSIL.MSInspectionListID " +
-                                    "WHERE MSI.isHidden = 0 " +
-                                    "AND MSIL.isHidden = 0 " +
-                                    "AND MS.isHidden = 0 " +
-                                    "AND MS.MSID = @MSID";
-                    int numInspection = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
-                    if (numInspection > 0 && TruckType.ToLower() != "van")
-                    {
-                        hasExistingInspections = true;
-                    }
-                    else if (TruckType.ToLower() == "van")
-                    {
-                        hasExistingInspections = true;
-
-                    }
+                }
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation doesTruckHaveExistingInspections(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return hasExistingInspections;
         }
@@ -520,33 +462,30 @@ namespace TransportationProject.Scripts
             try
             {
                 
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT " +
-                                    "(	SELECT COUNT(R.RequestID) FROM dbo.Requests R " +
-                                                "WHERE R.MSID = @MSID AND R.isVisible = 1 " +
-                                            ") - " +
-                                            "(	SELECT COUNT(R.RequestID) FROM dbo.MainScheduleRequestEvents MSRE " +
-                                                "INNER JOIN dbo.MainScheduleEvents MSE ON MSRE.EventID = MSE.EventID " +
-                                                "INNER JOIN dbo.Requests R ON MSRE.RequestID = R.RequestID " +
-                                                "WHERE R.isVisible = 1 AND MSE.isHidden = 0 AND MSE.EventTypeID IN (18, 2031, 14, 16) " +
-                                                "AND R.MSID = @MSID " +
-                                            ") AS OpenRequestCount";
-                    int numOpenRequest = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
-                    if (numOpenRequest > 0)
-                    {
-                        hasIncompleteRequests = true;
-                    }
+                sqlCmdText = "SELECT " +
+                                "(	SELECT COUNT(R.RequestID) FROM dbo.Requests R " +
+                                            "WHERE R.MSID = @MSID AND R.isVisible = 1 " +
+                                        ") - " +
+                                        "(	SELECT COUNT(R.RequestID) FROM dbo.MainScheduleRequestEvents MSRE " +
+                                            "INNER JOIN dbo.MainScheduleEvents MSE ON MSRE.EventID = MSE.EventID " +
+                                            "INNER JOIN dbo.Requests R ON MSRE.RequestID = R.RequestID " +
+                                            "WHERE R.isVisible = 1 AND MSE.isHidden = 0 AND MSE.EventTypeID IN (18, 2031, 14, 16) " +
+                                            "AND R.MSID = @MSID " +
+                                        ") AS OpenRequestCount";
+                int numOpenRequest = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
+                if (numOpenRequest > 0)
+                {
+                    hasIncompleteRequests = true;
+                }
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation doesTruckHaveOpenRequests(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return hasIncompleteRequests;
         }
@@ -559,32 +498,29 @@ namespace TransportationProject.Scripts
 
             try
             {
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT ISNULL(COUNT(S.SampleID),0) AS OpenSamplesCount FROM dbo.Samples S " +
-                                        "INNER JOIN dbo.PODetails PD ON S.PODetailsID = PD.PODetailsID " +
-                                        "INNER JOIN dbo.MainSchedule MS ON MS.MSID = PD.MSID  " +
-                                        "WHERE MS.isHidden = 0 AND S.isHidden = 0 " +
-                                        "AND ((S.TestApproved IS NULL  AND bypassApproverUserID IS NULL)  " +
-                                                "OR  SampleTakenEventID IS NULL OR SampleSentEventID IS NULL  " +
-                                                "OR SampleLabReceivedEventID IS NULL OR SampleCreatedEventID IS NULL OR (SpecificGravity IS NULL OR SpecificGravity <= 0) ) " +
-                                        "AND MS.MSID = @MSID";
-                    int numOpenSamples = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
-                    if (numOpenSamples > 0)
-                    {
-                        hasOpenSamples = true;
-                    }
+                sqlCmdText = "SELECT ISNULL(COUNT(S.SampleID),0) AS OpenSamplesCount FROM dbo.Samples S " +
+                                    "INNER JOIN dbo.PODetails PD ON S.PODetailsID = PD.PODetailsID " +
+                                    "INNER JOIN dbo.MainSchedule MS ON MS.MSID = PD.MSID  " +
+                                    "WHERE MS.isHidden = 0 AND S.isHidden = 0 " +
+                                    "AND ((S.TestApproved IS NULL  AND bypassApproverUserID IS NULL)  " +
+                                            "OR  SampleTakenEventID IS NULL OR SampleSentEventID IS NULL  " +
+                                            "OR SampleLabReceivedEventID IS NULL OR SampleCreatedEventID IS NULL OR (SpecificGravity IS NULL OR SpecificGravity <= 0) ) " +
+                                    "AND MS.MSID = @MSID";
+                int numOpenSamples = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
+                if (numOpenSamples > 0)
+                {
+                    hasOpenSamples = true;
+                }
 
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation doesTruckHaveSamplesPending(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return hasOpenSamples;
         }
@@ -596,28 +532,25 @@ namespace TransportationProject.Scripts
 
             try
             {
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT ISNULL(COUNT(S.SampleID),0) AS SamplesCount FROM dbo.Samples S " +
-                                        "INNER JOIN dbo.PODetails PD ON S.PODetailsID = PD.PODetailsID " +
-                                        "INNER JOIN dbo.MainSchedule MS ON MS.MSID = PD.MSID  " +
-                                        "WHERE MS.isHidden = 0 AND S.isHidden = 0 " +
-                                        "AND MS.MSID = @MSID";
-                    int numSamples = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
-                    if (numSamples > 0)
-                    {
-                        samplesExist = true;
-                    }
+                sqlCmdText = "SELECT ISNULL(COUNT(S.SampleID),0) AS SamplesCount FROM dbo.Samples S " +
+                                    "INNER JOIN dbo.PODetails PD ON S.PODetailsID = PD.PODetailsID " +
+                                    "INNER JOIN dbo.MainSchedule MS ON MS.MSID = PD.MSID  " +
+                                    "WHERE MS.isHidden = 0 AND S.isHidden = 0 " +
+                                    "AND MS.MSID = @MSID";
+                int numSamples = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
+                if (numSamples > 0)
+                {
+                    samplesExist = true;
+                }
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation doesTruckHaveExistingSamples(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return samplesExist;
         }
@@ -628,21 +561,18 @@ namespace TransportationProject.Scripts
             bool isBulk = false;
             try
             {
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT TruckType FROM dbo.MainSchedule WHERE MSID = @MSID";
-                    truckType = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
-                    isBulk = truckType.Contains("BULK");
+                sqlCmdText = "SELECT TruckType FROM dbo.MainSchedule WHERE MSID = @MSID";
+                truckType = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
+                isBulk = truckType.Contains("BULK");
                 
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation checkIfBulk(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return isBulk;
         }
@@ -655,20 +585,17 @@ namespace TransportationProject.Scripts
             try
             {
                 
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT isRejected FROM dbo.MainSchedule WHERE MSID = @MSID";
-                    isRejected = Convert.ToBoolean(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
+                sqlCmdText = "SELECT isRejected FROM dbo.MainSchedule WHERE MSID = @MSID";
+                isRejected = Convert.ToBoolean(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
                 
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation isTruckRejected(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return isRejected;
         }
@@ -679,19 +606,16 @@ namespace TransportationProject.Scripts
             bool isComplete = false;
             try
             {
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT ISNULL(NetProductWeight, -999) FROM dbo.MainSchedule WHERE MSID = @MSID";
-                    isComplete = !(-999 == Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID))));
+                sqlCmdText = "SELECT ISNULL(NetProductWeight, -999) FROM dbo.MainSchedule WHERE MSID = @MSID";
+                isComplete = !(-999 == Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID))));
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation isWeightInfoComplete(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return isComplete;
         }
@@ -747,7 +671,7 @@ namespace TransportationProject.Scripts
                 {
                     string sqlCmdText;
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "DELETE FROM dbo.TrailersInYard WHERE MSID = @MSID";
                     SqlHelper.ExecuteNonQuery(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID));
@@ -808,10 +732,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation checkOut(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -825,7 +746,7 @@ namespace TransportationProject.Scripts
                 {
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                     //gets data specific data from table and save into readable format
                     sqlCmdText = "INSERT INTO dbo.MainScheduleEvents(MSID, UserId, TimeStamp, EventTypeID, isHidden) VALUES (@MSID, @UserId, @TimeStamp, 23, 'false')";
                     SqlHelper.ExecuteNonQuery(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID),
@@ -837,10 +758,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation setVerify(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -855,7 +773,7 @@ namespace TransportationProject.Scripts
                 {
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                     //EventTypeID = 2035= Truck Schedule Edited
                     sqlCmdText = "INSERT INTO dbo.MainScheduleEvents (MSID, EventTypeID,Timestamp, UserId, isHidden) " +
                                 "VALUES (@MSID, 2035, @TIME, @USER, 'false'); " +
@@ -907,10 +825,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation updateRowData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return returnString;
         }
@@ -928,7 +843,7 @@ namespace TransportationProject.Scripts
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT (DATEDIFF(MINUTE, MS.TimeArrived, GETDATE()) ) " +
                                             "FROM dbo.MainSchedule as MS " +
@@ -951,11 +866,7 @@ namespace TransportationProject.Scripts
                                                                                                                          new SqlParameter("@UserId", zxpUD._uid),
                                                                                                                          new SqlParameter("@TimeStamp", timestamp)));
 
-                        //ChangeLog cLog = new ChangeLog(ChangeLog.ChangeLogChangeType.UPDATE, "MainSchedule", "StatusID", timestamp, zxpUD._uid, ChangeLog.ChangeLogDataType.INT, "1", eventID, "MSID", MSID.ToString());
-                        //cLog.CreateChangeLogEntryIfChanged(sqlConn, true, true);
-                        //cLog = new ChangeLog(ChangeLog.ChangeLogChangeType.UPDATE, "MainSchedule", "LocationShort", timestamp, zxpUD._uid, ChangeLog.ChangeLogDataType.NVARCHAR, "NOS", eventID, "MSID", MSID.ToString());
-                        //cLog.CreateChangeLogEntryIfChanged(sqlConn);
-
+ 
                         //Query 3 roll status back
                         sqlCmdText = "UPDATE dbo.MainScheduleEvents SET isHidden = 'true' WHERE isHidden = 'false' AND MSID = @MSID AND (EventTypeID = 2);" +
                             "UPDATE dbo.MainSchedule SET StatusID = 1, LocationShort = 'NOS', LastUpdated = @TimeStamp WHERE MSID = @MSID";
@@ -1031,10 +942,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation undoCheckIn(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return returnMessageList;
         }
@@ -1055,7 +963,7 @@ namespace TransportationProject.Scripts
                 {
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT (DATEDIFF(MINUTE, MS.TimeDeparted, GETDATE()) ) " +
                                             "FROM dbo.MainSchedule as MS " +
@@ -1096,10 +1004,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation undoCheckOut(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return returnMessageList;
         }
@@ -1115,7 +1020,7 @@ namespace TransportationProject.Scripts
                 {
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "INSERT INTO dbo.MainScheduleEvents(MSID, UserId, TimeStamp, EventTypeID, isHidden) VALUES (@MSID, @UserId, @TimeStamp, 3062, 'false') " +
                         "UPDATE dbo.MainScheduleEvents SET isHidden = 'true' WHERE MSID = @MSID AND EventTypeID = 23 ";
@@ -1128,10 +1033,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation undoVerify(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1142,29 +1044,26 @@ namespace TransportationProject.Scripts
             
             try
             {
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    if (isWeighIn == true)
-                    {
-                        sqlCmdText = "SELECT COUNT (*) FROM dbo.MainSchedule WHERE (MSID = @MSID AND WeightIn IS NOT NULL)";
-                        rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID))); 
+                if (isWeighIn == true)
+                {
+                    sqlCmdText = "SELECT COUNT (*) FROM dbo.MainSchedule WHERE (MSID = @MSID AND WeightIn IS NOT NULL)";
+                    rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID))); 
 
-                    }
-                    else
-                    {
-                        sqlCmdText = "SELECT COUNT (*) FROM dbo.MainSchedule WHERE (MSID = @MSID AND WeightOut IS NOT NULL)";
-                        rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID))); 
-                    }
+                }
+                else
+                {
+                    sqlCmdText = "SELECT COUNT (*) FROM dbo.MainSchedule WHERE (MSID = @MSID AND WeightOut IS NOT NULL)";
+                    rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID))); 
+                }
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation checkIfWeightTaken(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return rowCount;
         }
@@ -1192,112 +1091,109 @@ namespace TransportationProject.Scripts
             try
             {
                 
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT TOP (1) MS.GrossWeight, MS.Cab1Weight, MS.Cab2Weight, MS.Cab2WithTrailerWeight, MS.TrailerWeight, MS.NetProductWeight, MS.GrossWeightObtainedMethodID, MS.Cab1WeightObtainedMethodID, " +
-                                 "MS.Cab2WeightObtainedMethodID, MS.Cab2WithTrailerWeightObtainedMethodID, MS.TrailerWeightObtainedMethodID, MS.Cab1WithTrailerWeight, MS.Cab1WithTrailerWeightObtainedMethodID " +
-                                 "FROM dbo.MainSchedule as MS WHERE (MS.MSID = @MSID) ";
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID));
+                sqlCmdText = "SELECT TOP (1) MS.GrossWeight, MS.Cab1Weight, MS.Cab2Weight, MS.Cab2WithTrailerWeight, MS.TrailerWeight, MS.NetProductWeight, MS.GrossWeightObtainedMethodID, MS.Cab1WeightObtainedMethodID, " +
+                                "MS.Cab2WeightObtainedMethodID, MS.Cab2WithTrailerWeightObtainedMethodID, MS.TrailerWeightObtainedMethodID, MS.Cab1WithTrailerWeight, MS.Cab1WithTrailerWeightObtainedMethodID " +
+                                "FROM dbo.MainSchedule as MS WHERE (MS.MSID = @MSID) ";
+                dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID));
 
-                    //set gross val
-                    if (dataSet.Tables[0].Rows[0]["GrossWeight"].Equals(DBNull.Value))
-                    {
-                        gross = 0;
-                    }
-                    else
-                    {
-                        gross = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["GrossWeight"]);
-                        grossObtainMethod = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["GrossWeightObtainedMethodID"]);
-                    }
-                    //set cab1Solo val
-                    if (dataSet.Tables[0].Rows[0]["Cab1Weight"].Equals(DBNull.Value))
-                    {
-                        cab1Solo = 0;
-                    }
-                    else
-                    {
-                        cab1Solo = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["Cab1Weight"]);
-                        cab1ObtainMethod = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["Cab1WeightObtainedMethodID"]);
-                    }
-                    //set cab2Solo val
-                    if (dataSet.Tables[0].Rows[0]["Cab2Weight"].Equals(DBNull.Value))
-                    {
-                        cab2Solo = 0;
-                    }
-                    else
-                    {
-                        cab2Solo = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["Cab2Weight"]);
-                        cab2ObtainMethod = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["Cab2WeightObtainedMethodID"]);
-                    }
-                    //set cab2WithTrailer val
-                    if (dataSet.Tables[0].Rows[0]["Cab2WithTrailerWeight"].Equals(DBNull.Value))
-                    {
-                        cab2WithTrailer = 0;
-                    }
-                    else
-                    {
-                        cab2WithTrailer = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["Cab2WithTrailerWeight"]);
-                        cab2WithTrailerObtainMethod = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["Cab2WithTrailerWeightObtainedMethodID"]);
-                    }
+                //set gross val
+                if (dataSet.Tables[0].Rows[0]["GrossWeight"].Equals(DBNull.Value))
+                {
+                    gross = 0;
+                }
+                else
+                {
+                    gross = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["GrossWeight"]);
+                    grossObtainMethod = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["GrossWeightObtainedMethodID"]);
+                }
+                //set cab1Solo val
+                if (dataSet.Tables[0].Rows[0]["Cab1Weight"].Equals(DBNull.Value))
+                {
+                    cab1Solo = 0;
+                }
+                else
+                {
+                    cab1Solo = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["Cab1Weight"]);
+                    cab1ObtainMethod = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["Cab1WeightObtainedMethodID"]);
+                }
+                //set cab2Solo val
+                if (dataSet.Tables[0].Rows[0]["Cab2Weight"].Equals(DBNull.Value))
+                {
+                    cab2Solo = 0;
+                }
+                else
+                {
+                    cab2Solo = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["Cab2Weight"]);
+                    cab2ObtainMethod = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["Cab2WeightObtainedMethodID"]);
+                }
+                //set cab2WithTrailer val
+                if (dataSet.Tables[0].Rows[0]["Cab2WithTrailerWeight"].Equals(DBNull.Value))
+                {
+                    cab2WithTrailer = 0;
+                }
+                else
+                {
+                    cab2WithTrailer = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["Cab2WithTrailerWeight"]);
+                    cab2WithTrailerObtainMethod = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["Cab2WithTrailerWeightObtainedMethodID"]);
+                }
 
-                    //set cab1WithTrailer val
-                    if (dataSet.Tables[0].Rows[0]["Cab1WithTrailerWeight"].Equals(DBNull.Value))
-                    {
-                        cab1WithTrailer = 0;
-                    }
-                    else
-                    {
-                        cab1WithTrailer = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["Cab1WithTrailerWeight"]);
-                        cab1WithTrailerObtainMethod = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["Cab1WithTrailerWeightObtainedMethodID"]);
-                    }
+                //set cab1WithTrailer val
+                if (dataSet.Tables[0].Rows[0]["Cab1WithTrailerWeight"].Equals(DBNull.Value))
+                {
+                    cab1WithTrailer = 0;
+                }
+                else
+                {
+                    cab1WithTrailer = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["Cab1WithTrailerWeight"]);
+                    cab1WithTrailerObtainMethod = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["Cab1WithTrailerWeightObtainedMethodID"]);
+                }
 
-                    //set trailer val
-                    if (dataSet.Tables[0].Rows[0]["TrailerWeight"].Equals(DBNull.Value))
-                    {
-                        trailer = 0;
-                    }
-                    else
-                    {
-                        trailer = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["TrailerWeight"]);
-                        trailerObtainMethod = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["TrailerWeightObtainedMethodID"]);
-                    }
-                    //set netWeight val
-                    if (dataSet.Tables[0].Rows[0]["NetProductWeight"].Equals(DBNull.Value))
-                    {
-                        netWeight = 0;
-                    }
-                    else
-                    {
-                        netWeight = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["NetProductWeight"]);
-                    }
-
-
-                    listOfWeights.Add(gross);
-                    listOfWeights.Add(cab1Solo);
-                    listOfWeights.Add(cab2Solo);
-                    listOfWeights.Add(cab2WithTrailer);
-                    listOfWeights.Add(trailer);
-                    listOfWeights.Add(netWeight);
-
-                    listOfWeights.Add(grossObtainMethod);
-                    listOfWeights.Add(cab1ObtainMethod);
-                    listOfWeights.Add(cab2ObtainMethod);
-                    listOfWeights.Add(cab2WithTrailerObtainMethod);
-                    listOfWeights.Add(trailerObtainMethod);
+                //set trailer val
+                if (dataSet.Tables[0].Rows[0]["TrailerWeight"].Equals(DBNull.Value))
+                {
+                    trailer = 0;
+                }
+                else
+                {
+                    trailer = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["TrailerWeight"]);
+                    trailerObtainMethod = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["TrailerWeightObtainedMethodID"]);
+                }
+                //set netWeight val
+                if (dataSet.Tables[0].Rows[0]["NetProductWeight"].Equals(DBNull.Value))
+                {
+                    netWeight = 0;
+                }
+                else
+                {
+                    netWeight = Convert.ToDecimal(dataSet.Tables[0].Rows[0]["NetProductWeight"]);
+                }
 
 
-                    listOfWeights.Add(cab1WithTrailer);
-                    listOfWeights.Add(cab1WithTrailerObtainMethod);
+                listOfWeights.Add(gross);
+                listOfWeights.Add(cab1Solo);
+                listOfWeights.Add(cab2Solo);
+                listOfWeights.Add(cab2WithTrailer);
+                listOfWeights.Add(trailer);
+                listOfWeights.Add(netWeight);
+
+                listOfWeights.Add(grossObtainMethod);
+                listOfWeights.Add(cab1ObtainMethod);
+                listOfWeights.Add(cab2ObtainMethod);
+                listOfWeights.Add(cab2WithTrailerObtainMethod);
+                listOfWeights.Add(trailerObtainMethod);
+
+
+                listOfWeights.Add(cab1WithTrailer);
+                listOfWeights.Add(cab1WithTrailerObtainMethod);
                 
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation getCurrentWeights(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return listOfWeights;
         }
@@ -1309,27 +1205,24 @@ namespace TransportationProject.Scripts
             
             try
             {
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = 
-                        "SELECT TOP (1) ISNULL(S.SpecificGravity, 0.0) " +
-                        "FROM dbo.MainSchedule AS MS " +
-                        "INNER JOIN dbo.PODetails AS POD ON MS.MSID = POD.MSID " +
-                        "INNER JOIN dbo.Samples AS S ON S.PODetailsID = POD.PODetailsID " +
-                        "INNER JOIN dbo.MainScheduleEvents AS MSE ON MSE.MSID = MS.MSID " +
-                        "WHERE MS.MSID = @MSID AND MSE.EventTypeID = 3052 and S.SpecificGravity IS NOT NULL ORDER BY MSE.TimeStamp DESC ";
+                sqlCmdText = 
+                    "SELECT TOP (1) ISNULL(S.SpecificGravity, 0.0) " +
+                    "FROM dbo.MainSchedule AS MS " +
+                    "INNER JOIN dbo.PODetails AS POD ON MS.MSID = POD.MSID " +
+                    "INNER JOIN dbo.Samples AS S ON S.PODetailsID = POD.PODetailsID " +
+                    "INNER JOIN dbo.MainScheduleEvents AS MSE ON MSE.MSID = MS.MSID " +
+                    "WHERE MS.MSID = @MSID AND MSE.EventTypeID = 3052 and S.SpecificGravity IS NOT NULL ORDER BY MSE.TimeStamp DESC ";
 
-                    specificGrav = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
+                specificGrav = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation getNetWeightAndSpecificGravity(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return specificGrav;
         }
@@ -1374,21 +1267,18 @@ namespace TransportationProject.Scripts
             List<object[]> data = new List<object[]>();
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 TruckLogHelperFunctions.logByMSIDConnection(sql_connStr, MSID, data);
             }
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in GuardStation GetLogDataByMSID(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation GetLogDataByMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -1402,21 +1292,18 @@ namespace TransportationProject.Scripts
             List<object[]> data = new List<object[]>();
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 TruckLogHelperFunctions.logListConnection(sql_connStr, data);
             }
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in GuardStation GetLogList(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation GetLogList(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -1432,20 +1319,17 @@ namespace TransportationProject.Scripts
             try
             {
                 
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT LocationShort FROM dbo.MainSchedule WHERE MSID = @MSID ";
-                    currentStatus = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
+                sqlCmdText = "SELECT LocationShort FROM dbo.MainSchedule WHERE MSID = @MSID ";
+                currentStatus = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation CheckCurrentStatus(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return currentStatus;
         }
@@ -1458,21 +1342,18 @@ namespace TransportationProject.Scripts
 
             try
             {
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    //check if manual weighing is enabled
-                    sqlCmdText = "SELECT TOP 1 isEnabled FROM dbo.ManualWeights ";
-                    isManualEntryEnabled = Convert.ToBoolean(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText));
+                //check if manual weighing is enabled
+                sqlCmdText = "SELECT TOP 1 isEnabled FROM dbo.ManualWeights ";
+                isManualEntryEnabled = Convert.ToBoolean(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText));
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation checkIfManualEntryIsEnabled(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return isManualEntryEnabled;
         }
@@ -1493,7 +1374,7 @@ namespace TransportationProject.Scripts
                 {
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //check if manual weighing is enabled
                     sqlCmdText = "SELECT TOP 1 isEnabled FROM dbo.ManualWeights ";
@@ -1624,10 +1505,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation updateWeightManually(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             listOfWeights = getCurrentWeights(MSID);
 
@@ -1645,7 +1523,7 @@ namespace TransportationProject.Scripts
                 {
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     ChangeLog cLog = new ChangeLog(ChangeLog.ChangeLogChangeType.UPDATE, "MainSchedule", "DriverName", timestamp, zxpUD._uid, ChangeLog.ChangeLogDataType.NVARCHAR, driverName, null, "MSID", MSID.ToString());
                     cLog.CreateChangeLogEntryIfChanged();
@@ -1670,10 +1548,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation updateDriverInfo(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1688,7 +1563,7 @@ namespace TransportationProject.Scripts
                 {
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     ChangeLog cLog = new ChangeLog(ChangeLog.ChangeLogChangeType.UPDATE, "MainSchedule", "GuardStationComment", timestamp, zxpUD._uid, ChangeLog.ChangeLogDataType.NVARCHAR, GSComment, null, "MSID", MSID.ToString());
                     cLog.CreateChangeLogEntryIfChanged();
@@ -1708,10 +1583,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation updateGSCommentAndCabNumbers(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
         [System.Web.Services.WebMethod]
@@ -1726,7 +1598,7 @@ namespace TransportationProject.Scripts
                 {
                     string sqlCmdText;
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     ChangeLog cLog = new ChangeLog(ChangeLog.ChangeLogChangeType.UPDATE, "MainSchedule", "GrossWeight", timestamp, zxpUD._uid, ChangeLog.ChangeLogDataType.DECIMAL, null, null, "MSID", MSID.ToString());
                     cLog.CreateChangeLogEntryIfChanged();
@@ -1759,10 +1631,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation undoGrossWeight(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1779,7 +1648,7 @@ namespace TransportationProject.Scripts
                 {
                     string sqlCmdText;
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     SqlParameter paramMSID = new SqlParameter("@MSID", SqlDbType.Int);
                     SqlParameter paramUserID = new SqlParameter("@USER", SqlDbType.Int);
@@ -1839,10 +1708,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation undoCab1Weight(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1859,7 +1725,7 @@ namespace TransportationProject.Scripts
                 {
                     string sqlCmdText;
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     ChangeLog cLog = new ChangeLog(ChangeLog.ChangeLogChangeType.UPDATE, "MainSchedule", "Cab2Weight", timestamp, zxpUD._uid, ChangeLog.ChangeLogDataType.DECIMAL, null, null, "MSID", MSID.ToString());
                     cLog.CreateChangeLogEntryIfChanged();
@@ -1913,10 +1779,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation undoCab2Weight(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1932,7 +1795,7 @@ namespace TransportationProject.Scripts
                 {
                     string sqlCmdText;
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     SqlParameter paramMSID = new SqlParameter("@MSID", SqlDbType.Int);
                     SqlParameter paramUserID = new SqlParameter("@USER", SqlDbType.Int);
@@ -1977,10 +1840,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation undoCab2wTrailerWeight(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1999,7 +1859,7 @@ namespace TransportationProject.Scripts
 
                     string sqlCmdText;
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     ChangeLog cLog = new ChangeLog(ChangeLog.ChangeLogChangeType.UPDATE, "MainSchedule", "Cab1WithTrailerWeight", timestamp, zxpUD._uid, ChangeLog.ChangeLogDataType.DECIMAL, null, null, "MSID", MSID.ToString());
                     cLog.CreateChangeLogEntryIfChanged();
@@ -2036,10 +1896,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation undoCab1wTrailerWeight(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -2058,7 +1915,7 @@ namespace TransportationProject.Scripts
                 {
                     string sqlCmdText;
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     ChangeLog cLog = new ChangeLog(ChangeLog.ChangeLogChangeType.UPDATE, "MainSchedule", "TrailerWeight", timestamp, zxpUD._uid, ChangeLog.ChangeLogDataType.DECIMAL, null, null, "MSID", MSID.ToString());
                     cLog.CreateChangeLogEntryIfChanged();
@@ -2093,10 +1950,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation undoTrailerWeight(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -2111,7 +1965,7 @@ namespace TransportationProject.Scripts
                 {
                     string sqlCmdText;
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //gets data specific data from table and save into readable format
                     sqlCmdText = "UPDATE dbo.MainSchedule SET NetProductWeight = NULL WHERE MSID = @MSID";
@@ -2126,10 +1980,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation undoNetWeight(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -2145,10 +1996,10 @@ namespace TransportationProject.Scripts
             try
             {
                 
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT TOP (1) " +
+                sqlCmdText = "SELECT TOP (1) " +
                                     "(SELECT L.LocationLong FROM dbo.Locations AS L WHERE L.LocationShort = MS.LocationShort) AS Location, " +
                                     "(SELECT S.StatusText FROM dbo.Status AS S WHERE S.StatusID = MS.StatusID) AS Status " +
                                     "FROM dbo.MainSchedule AS MS WHERE MSID = @MSID";
@@ -2175,10 +2026,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation getCurrentLocationAndStatusB4Undo(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -2194,7 +2042,7 @@ namespace TransportationProject.Scripts
                 {
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //1. insert event to Main Schedule Events
                     switch (fileType)
@@ -2232,10 +2080,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation DeleteFileDBEntry(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -2250,7 +2095,7 @@ namespace TransportationProject.Scripts
                 {
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
 
                     //1. find filetypeID
@@ -2331,10 +2176,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation AddFileDBEntry(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -2347,10 +2189,10 @@ namespace TransportationProject.Scripts
             try
             {
                 
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT FileID, MSID, MSF.FileTypeID, FileDescription, Filepath, FilenameNew, FilenameOld FROM dbo.MainScheduleFiles MSF " +
+                sqlCmdText = "SELECT FileID, MSID, MSF.FileTypeID, FileDescription, Filepath, FilenameNew, FilenameOld FROM dbo.MainScheduleFiles MSF " +
                                     "INNER JOIN dbo.FileTypes FT ON FT.FileTypeID = MSF.FileTypeID " +
                                     "WHERE isHidden = 0 AND MSID = @PMSID";
                     dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@PMSID", MSID));
@@ -2365,10 +2207,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation GetFileUploadsFromMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -2384,7 +2223,7 @@ namespace TransportationProject.Scripts
                 {
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     ChangeLog cLog = new ChangeLog(ChangeLog.ChangeLogChangeType.UPDATE, "MainScheduleFiles", "FileDescription", timestamp, zxpUD._uid, ChangeLog.ChangeLogDataType.NVARCHAR, description, null, "FileID", fileID.ToString());
                     cLog.CreateChangeLogEntryIfChanged();
@@ -2398,10 +2237,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation UpdateFileUploadData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -2416,9 +2252,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation ProcessFileAndData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
 
             return null;
@@ -2449,7 +2283,7 @@ namespace TransportationProject.Scripts
                 {
                     string sqlCmdText;
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     gross = listOfWeights[0];
                     cab1Solo = listOfWeights[1];
@@ -2749,10 +2583,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation calculateWeight(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             listOfWeights = getCurrentWeights(MSID);
             returnData.Add(errorMsg);
@@ -2776,7 +2607,7 @@ namespace TransportationProject.Scripts
                 {
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT TOP (1) " +
                                     "(SELECT L.LocationLong FROM dbo.Locations AS L WHERE L.LocationShort = MS.LocationShort) AS Location, " +
@@ -2847,10 +2678,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation verifyAndMove(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return returnText;
         }
@@ -2865,20 +2693,20 @@ namespace TransportationProject.Scripts
             try
             {
                 
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT MS.TruckType FROM dbo.MainSchedule AS MS WHERE MS.MSID = @MSID";
-                    truckType = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
+                sqlCmdText = "SELECT MS.TruckType FROM dbo.MainSchedule AS MS WHERE MS.MSID = @MSID";
+                truckType = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
 
-                    if (truckType == "Van")
-                    {
-                        sqlCmdText = "SELECT SpotID, SpotDescription FROM TruckDockSpots Where SpotType = 'Van' AND isDisabled = 0 ORDER BY SpotDescription";
-                    }
-                    else
-                    {
-                        sqlCmdText = "SELECT SpotID, SpotDescription FROM TruckDockSpots Where SpotType = 'Bulk' AND isDisabled = 0 ORDER BY SpotDescription";
-                    }
+                if (truckType == "Van")
+                {
+                    sqlCmdText = "SELECT SpotID, SpotDescription FROM TruckDockSpots Where SpotType = 'Van' AND isDisabled = 0 ORDER BY SpotDescription";
+                }
+                else
+                {
+                    sqlCmdText = "SELECT SpotID, SpotDescription FROM TruckDockSpots Where SpotType = 'Bulk' AND isDisabled = 0 ORDER BY SpotDescription";
+                }
 
                 dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
 
@@ -2891,10 +2719,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation getAvailableDockSpots(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -2910,58 +2735,55 @@ namespace TransportationProject.Scripts
             try
             {
                 
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT TOP (1) MS.LocationShort, L.LocationLong, " +
+                sqlCmdText = "SELECT TOP (1) MS.LocationShort, L.LocationLong, " +
                                      "(SELECT S.StatusText FROM dbo.Status AS S WHERE S.StatusID = MS.StatusID) AS currentStatus " +
                                      "FROM dbo.MainSchedule as MS " +
                                      "INNER JOIN dbo.Locations L ON MS.LocationShort = L.LocationShort WHERE MSID = @MSID";
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID));
-                    data.Add(dataSet.Tables[0].Rows[0].ItemArray);
+                dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID));
+                data.Add(dataSet.Tables[0].Rows[0].ItemArray);
 
-                    //get truck type
-                    sqlCmdText = "SELECT MS.TruckType FROM dbo.MainSchedule AS MS WHERE MSID = @MSID";
-                    string truckType = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
+                //get truck type
+                sqlCmdText = "SELECT MS.TruckType FROM dbo.MainSchedule AS MS WHERE MSID = @MSID";
+                string truckType = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
 
-                    if (truckType.ToLower() == "van")
-                    {
-                        //get location based on van type
-                        sqlCmdText  = "SELECT L.LocationShort, LocationLong " +
-                                                "FROM dbo.LocationStatusRelation LSR " +
-                                                "INNER JOIN dbo.Locations L ON LSR.LocationShort = L.LocationShort " +
-                                                "INNER JOIN dbo.Status S ON S.StatusID = LSR.StatusID " +
-                                                "WHERE S.StatusID = 7 AND L.LocationShort != 'DOCKBULK'" + // status 7 = sampling
-                                                "ORDER BY LocationShort, SortOrder ";
-                    }
-                    else
-                    {
-                        //get location based on bulk type
-                        sqlCmdText = "SELECT L.LocationShort, LocationLong " +
-                                                "FROM dbo.LocationStatusRelation LSR " +
-                                                "INNER JOIN dbo.Locations L ON LSR.LocationShort = L.LocationShort " +
-                                                "INNER JOIN dbo.Status S ON S.StatusID = LSR.StatusID " +
-                                                "WHERE S.StatusID = 7 AND L.LocationShort != 'DOCKVAN'" + // status 7 = sampling
-                                                "ORDER BY LocationShort, SortOrder ";
-                    }
-                    dataSet = new DataSet();
+                if (truckType.ToLower() == "van")
+                {
+                    //get location based on van type
+                    sqlCmdText  = "SELECT L.LocationShort, LocationLong " +
+                                            "FROM dbo.LocationStatusRelation LSR " +
+                                            "INNER JOIN dbo.Locations L ON LSR.LocationShort = L.LocationShort " +
+                                            "INNER JOIN dbo.Status S ON S.StatusID = LSR.StatusID " +
+                                            "WHERE S.StatusID = 7 AND L.LocationShort != 'DOCKBULK'" + // status 7 = sampling
+                                            "ORDER BY LocationShort, SortOrder ";
+                }
+                else
+                {
+                    //get location based on bulk type
+                    sqlCmdText = "SELECT L.LocationShort, LocationLong " +
+                                            "FROM dbo.LocationStatusRelation LSR " +
+                                            "INNER JOIN dbo.Locations L ON LSR.LocationShort = L.LocationShort " +
+                                            "INNER JOIN dbo.Status S ON S.StatusID = LSR.StatusID " +
+                                            "WHERE S.StatusID = 7 AND L.LocationShort != 'DOCKVAN'" + // status 7 = sampling
+                                            "ORDER BY LocationShort, SortOrder ";
+                }
+                dataSet = new DataSet();
 
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
+                dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
 
-                //populate return object
-                foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
-                    {
-                        data.Add(row.ItemArray);
-                    }
+            //populate return object
+            foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
+                {
+                    data.Add(row.ItemArray);
+                }
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation getUndoLocationOptions(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -2977,7 +2799,7 @@ namespace TransportationProject.Scripts
                 {
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "INSERT INTO dbo.MainScheduleEvents(MSID, UserId, TimeStamp, EventTypeID, isHidden) VALUES (@MSID, @UserId, @TimeStamp, 3059, 'false'); " +
                         "UPDATE dbo.MainScheduleEvents SET isHidden = 'true' WHERE EventTypeID = 19 AND MSID = @MSID AND isHidden = 'false'" +
@@ -3040,10 +2862,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation updateLocationAndUndoCheckOut(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -3054,13 +2873,13 @@ namespace TransportationProject.Scripts
             try
             {
                 
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    //check request type 
-                    sqlCmdText = "SELECT count(*) from dbo.MainSchedule as MS " +
+                //check request type 
+                sqlCmdText = "SELECT count(*) from dbo.MainSchedule as MS " +
                                         "WHERE MS.currentDockSpotID = @SpotID AND MSID != @MSID";
-                    rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@SpotID", spotID),
+                rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@SpotID", spotID),
                                                                                                                   new SqlParameter("@MSID", MSID)));
                     
                     
@@ -3068,10 +2887,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation verifySpotIsCurrentlyAvailable(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return rowCount;
         }
@@ -3086,8 +2902,8 @@ namespace TransportationProject.Scripts
             try
             {
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    DayofWeekID = TransportationProject.trailerOverview.GetDayOfWeekID(DateTime.Today);
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                DayofWeekID = TransportationProject.trailerOverview.GetDayOfWeekID(DateTime.Today);
 
                     //check request type 
                     sqlCmdText = "DECLARE @undoTime DATETIME, @timeBlockDuration DECIMAL, @endTimeProcessed DATETIME, @MinMSID INT, @MaxID INT " +
@@ -3097,51 +2913,32 @@ namespace TransportationProject.Scripts
                                             "WHERE TDS.SpotID = @SpotID AND TDST.DayOfWeekID = @DayofWeekID AND TDST.isOpen = 'true') " +
                                             "WHILE (@MinMSID IS NOT NULL AND @MinMSID <= @MaxID) " +
                                             "BEGIN " +
-                                            "IF(@SpotID != (SELECT DockSpotID FROM MainSchedule WHERE MSID = @MinMSID)) " +
-                                            "BEGIN " +
-                                            "SET @MinMSID = @MinMSID + 1 " +
-                                            "END " +
-                                            "ELSE " +
-                                            "BEGIN " +
-                                            "IF ((SELECT COUNT (*) FROM MainSchedule WHERE MSID = @MinMSID) = 0) " +
-                                            "SET @MinMSID = @MinMSID + 1 " +
-                                            "ELSE " +
-                                            "BEGIN " +
-                                            "SET @endTimeProcessed = (SELECT ETA FROM MainSchedule WHERE MSID = @MinMSID) " +
-                                            "SET @endTimeProcessed = DATEADD(second, ((@timeBlockDuration) * 60 * 60), @endTimeProcessed)  " +
-                                            "IF( @undoTime <= @endTimeProcessed AND @undoTime >= (SELECT ETA FROM MainSchedule WHERE MSID = @MinMSID)) " +
-                                            "BEGIN " +
-                                            "SELECT MS.PONumber, MS.TrailerNumber, MS.ETA, @endTimeProcessed, " +
-                                            "(SELECT LocationLong FROM dbo.Locations WHERE LocationShort = MS.LocationShort), (SELECT StatusText FROM dbo.Status WHERE StatusID = MS.StatusID) " + 
-                                            "FROM dbo.MainSchedule AS MS WHERE MSID = @MinMSID " +
-                                            "SET @MinMSID = @MinMSID + 1 " +
-                                            "END " +
-                                            "ELSE " +
-                                            "SET @MinMSID = @MinMSID + 1 " +
-                                            "END " +
-                                            "END " +
-                                            "END ";
+                                                "IF(@SpotID != (SELECT DockSpotID FROM MainSchedule WHERE MSID = @MinMSID)) " +
+                                                    "BEGIN " +
+                                                    "SET @MinMSID = @MinMSID + 1 " +
+                                                    "END " +
+                                                "ELSE " +
+                                                    "BEGIN " +
+                                                        "IF ((SELECT COUNT (*) FROM MainSchedule WHERE MSID = @MinMSID) = 0) " +
+                                                        "   SET @MinMSID = @MinMSID + 1 " +
+                                                        "ELSE " +
+                                                            "BEGIN " +
+                                                                "SET @endTimeProcessed = (SELECT ETA FROM MainSchedule WHERE MSID = @MinMSID) " +
+                                                                 "SET @endTimeProcessed = DATEADD(second, ((@timeBlockDuration) * 60 * 60), @endTimeProcessed)  " +
+                                                                "IF( @undoTime <= @endTimeProcessed AND @undoTime >= (SELECT ETA FROM MainSchedule WHERE MSID = @MinMSID)) " +
+                                                                    "BEGIN " +
+                                                                        "SELECT MS.PONumber, MS.TrailerNumber, MS.ETA, @endTimeProcessed, " +
+                                                                        "(SELECT LocationLong FROM dbo.Locations WHERE LocationShort = MS.LocationShort), (SELECT StatusText FROM dbo.Status WHERE StatusID = MS.StatusID) " + 
+                                                                        "FROM dbo.MainSchedule AS MS WHERE MSID = @MinMSID " +
+                                                                        "SET @MinMSID = @MinMSID + 1 " +
+                                                                    "END " +
+                                                                "ELSE " +
+                                                                    "SET @MinMSID = @MinMSID + 1 " +
+                                                            "END " +
+                                                    "END " +
+                                                "END ";
 
-                        //sqlCmd.CommandText = "DECLARE @currentTimeProcessed datetime " +
-                        //                     "DECLARE @undoTime datetime " +
-                        //                     "DECLARE @timeBlockDuration decimal " +
-                        //                     "DECLARE @lastTimeProcessed datetime " +
-                        //                     "SET @undoTime = GETDATE() " +
-                        //                     "SET @timeBlockDuration = (SELECT TDS.HoursInTimeBlock FROM dbo.TruckDockSpots as TDS INNER JOIN dbo.TruckDockSpotTimeslots AS TDST ON TDST.SpotID = TDS.SpotID " +
-                        //                     "WHERE TDS.SpotID = @SpotID AND TDST.DayOfWeekID = @DayofWeekID AND TDST.isOpen = 'true') " +
-                        //                     "SET @currentTimeProcessed = DATEADD(second, ((SELECT TDS.HoursInTimeBlock FROM dbo.TruckDockSpots as TDS INNER JOIN dbo.TruckDockSpotTimeslots AS TDST ON TDST.SpotID = TDS.SpotID " +
-                        //                     "WHERE TDS.SpotID = @SpotID AND TDST.DayOfWeekID = @DayofWeekID AND TDST.isOpen = 'true') * 60 * 60), DATEADD(Day, 0, DATEDIFF(Day, 0, GetDate())) ); " +
-                        //                     "WHILE (@currentTimeProcessed <= @undoTime) " +
-                        //                     "BEGIN " +
-                        //                     "SET @currentTimeProcessed = DATEADD(second, ((SELECT TDS.HoursInTimeBlock FROM dbo.TruckDockSpots as TDS INNER JOIN dbo.TruckDockSpotTimeslots AS TDST ON TDST.SpotID = TDS.SpotID " +
-                        //                     "WHERE TDS.SpotID = @SpotID AND TDST.DayOfWeekID = @DayofWeekID AND TDST.isOpen = 'true') * 60 * 60), @currentTimeProcessed ); " +
-                        //                     "IF (@currentTimeProcessed <= @undoTime) " +
-                        //                     "SET @lastTimeProcessed = @currentTimeProcessed " +
-                        //                     "ELSE " +
-                        //                     "SELECT TOP(1) MS.PONumber, MS.ETA, @timeBlockDuration FROM dbo.MainSchedule AS MS WHERE (ETA >= @lastTimeProcessed AND ETA <= @undoTime) AND MS.DockSpotID = @SpotID " +
-                        //                     "END";
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID),
-                                                                                                  new SqlParameter("@SpotID", spotID),
+                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@SpotID", spotID),
                                                                                                   new SqlParameter("@DayofWeekID", DayofWeekID));
 
                     //populate return object
@@ -3153,10 +2950,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation verifySpotIsAvailableInSchedule(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -3169,9 +2963,8 @@ namespace TransportationProject.Scripts
             {
                 
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-
-                    sqlCmdText = "SELECT PD.PODetailsID, PD.ProductID_CMS, PD.QTY, PD.LotNumber, PD.UnitOfMeasure, PCMS.ProductName_CMS " +
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                sqlCmdText = "SELECT PD.PODetailsID, PD.ProductID_CMS, PD.QTY, PD.LotNumber, PD.UnitOfMeasure, PCMS.ProductName_CMS " +
                                     "FROM dbo.PODetails PD " +
                                     "LEFT JOIN dbo.ProductsCMS PCMS ON PCMS.ProductID_CMS = PD.ProductID_CMS " +
                                     "WHERE PD.MSID = @MSID ORDER BY PD.ProductID_CMS ";
@@ -3187,10 +2980,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation GetPODetailsFromMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -3203,17 +2993,17 @@ namespace TransportationProject.Scripts
 
             try
             {
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT count(*) FROM dbo.MainScheduleEvents " +
-                                    "WHERE MSID = @MSID AND EVENTTYPEID = 3070 and isHidden = 'false'";
-                    int rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
+                sqlCmdText = "SELECT count(*) FROM dbo.MainScheduleEvents " +
+                                "WHERE MSID = @MSID AND EVENTTYPEID = 3070 and isHidden = 'false'";
+                int rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
 
-                    if (rowCount != 0)
-                    {
-                        returnValue = true;
-                    }
+                if (rowCount != 0)
+                {
+                    returnValue = true;
+                }
             }
             catch (Exception ex)
             {
@@ -3234,25 +3024,24 @@ namespace TransportationProject.Scripts
 
             try
             {
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT COUNT(MS.TrailerNumber) " +
-                                        "FROM dbo.MainSchedule MS " +
-                                        "WHERE MS.TrailerNumber = @TrailerNum AND MS.LocationShort != 'NOS' AND MS.MSID != @MSID AND MS.ISHIDDEN != 'true'";
-                    rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@TrailerNum", TrailerNum), new SqlParameter("@MSID", MSID)));
+                sqlCmdText = "SELECT COUNT(MS.TrailerNumber) " +
+                                    "FROM dbo.MainSchedule MS " +
+                                    "WHERE MS.TrailerNumber = @TrailerNum AND MS.LocationShort != 'NOS' AND MS.MSID != @MSID AND MS.ISHIDDEN != 'true'";
+                rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@TrailerNum", TrailerNum), new SqlParameter("@MSID", MSID)));
 
-                    if (rowCount == 0)
-                    { canUpdate = true; }
+                if (rowCount == 0)
+                {
+                    canUpdate = true;
+                }
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation checkIfCanUpdateTrailerNumber(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return canUpdate;
         }
@@ -3386,10 +3175,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation createCustomUrgentTruckMessage(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
 
             return customAlertMsg;
@@ -3402,9 +3188,9 @@ namespace TransportationProject.Scripts
             try
             {
                
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    sqlCmdText = "SELECT MS.PONumber, MS.PONumber_ZXPOutbound, MS.CustomerID, MS.TrailerNumber, " +
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                sqlCmdText = "SELECT MS.PONumber, MS.PONumber_ZXPOutbound, MS.CustomerID, MS.TrailerNumber, " +
                                         "ISNULL(ProdDet.PDCount, 0) AS ProdCount, ProdDet.topProdID, PCMS.ProductName_CMS " +
                                         "FROM dbo.MainSchedule AS MS " +
                                         "LEFT JOIN (SELECT MSID, COUNT(PODetailsID) AS PDCount, " +
@@ -3425,10 +3211,7 @@ namespace TransportationProject.Scripts
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation getTruckInfoForUrgentCustomMessage(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
 
             return TruckData;
@@ -3445,44 +3228,41 @@ namespace TransportationProject.Scripts
             try
             {
                 
-                    string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    sqlCmdText = "SELECT PODetailsID, ProductID_CMS " +
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                sqlCmdText = "SELECT PODetailsID, ProductID_CMS " +
                                         "FROM dbo.PODetails POD " +
                                         "WHERE MSID = @MSID";
 
-                    productInfo = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID));
-                    foreach (System.Data.DataRow row in productInfo.Tables[0].Rows)
+                productInfo = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID));
+                foreach (System.Data.DataRow row in productInfo.Tables[0].Rows)
+                {
+                    if (productInfo.Tables[0].Rows[0]["ProductID_CMS"].Equals(DBNull.Value))
                     {
-                        if (productInfo.Tables[0].Rows[0]["ProductID_CMS"].Equals(DBNull.Value))
-                        {
-                            productName = "";
-                        }
-                        else
-                        {
-                            productName = Convert.ToString(productInfo.Tables[0].Rows[0]["ProductID_CMS"]);
-                        }
-
-                        if (productInfo.Tables[0].Rows[0]["PODetailsID"].Equals(DBNull.Value))
-                        {
-                            partNum = "";
-                        }
-                        else
-                        {
-                            partNum = Convert.ToString(productInfo.Tables[0].Rows[0]["PODetailsID"]);
-                        }
-
-                        listOfProductDetails.Add(Tuple.Create(partNum, productName));
+                        productName = "";
                     }
+                    else
+                    {
+                        productName = Convert.ToString(productInfo.Tables[0].Rows[0]["ProductID_CMS"]);
+                    }
+
+                    if (productInfo.Tables[0].Rows[0]["PODetailsID"].Equals(DBNull.Value))
+                    {
+                        partNum = "";
+                    }
+                    else
+                    {
+                        partNum = Convert.ToString(productInfo.Tables[0].Rows[0]["PODetailsID"]);
+                    }
+
+                    listOfProductDetails.Add(Tuple.Create(partNum, productName));
+                }
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in GuardStation getProductInfoUrgentCustomMessage(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
 
             return listOfProductDetails;

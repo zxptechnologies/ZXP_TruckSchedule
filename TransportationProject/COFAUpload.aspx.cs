@@ -13,9 +13,7 @@ namespace TransportationProject
 {
     public partial class COFAUpload : System.Web.UI.Page
     {
-        protected static String sql_connStr;
-        //public static ZXPUserData zxpUD = new ZXPUserData();
-
+        
         void Page_PreInit(Object sender, EventArgs e)
         {
             if (Request.Browser.IsMobileDevice)
@@ -32,6 +30,7 @@ namespace TransportationProject
         {
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 HttpCookie cookie = Request.Cookies[System.Web.Security.FormsAuthentication.FormsCookieName];
                 if (null != cookie && !string.IsNullOrEmpty(cookie.Value))
                 {
@@ -39,15 +38,7 @@ namespace TransportationProject
                     System.Web.Security.FormsAuthenticationTicket ticket = System.Web.Security.FormsAuthentication.Decrypt(cookie.Value);
                     zxpUD = ZXPUserData.DeserializeZXPUserData(ticket.UserData);
 
-                    if (zxpUD._isGuard || zxpUD._isLabAdmin || zxpUD._isLabPersonnel || zxpUD._isAccountManager || zxpUD._isAdmin) //make sure this matches whats in Site.Master and Default
-                    {
-                        sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                        if (sql_connStr == String.Empty)
-                        {
-                            throw new Exception("Missing SQLConnectionString in web.config");
-                        }
-                    }
-                    else
+                    if (!(zxpUD._isGuard || zxpUD._isLabAdmin || zxpUD._isLabPersonnel || zxpUD._isAccountManager || zxpUD._isAdmin)) //make sure this matches whats in Site.Master and Default
                     {
                         Response.BufferOutput = true;
                         Response.Redirect("/ErrorPage.aspx?ErrorCode=5", false);
@@ -84,21 +75,11 @@ namespace TransportationProject
 
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-
-                    //sqlCmdText = "SELECT PD.PODetailsID, S.SampleID, MS.MSID, MS.PONumber, MS.TrailerNumber, PD.ProductID_CMS, " +
-                    //                    "MSF.FileID, MSF.Filepath, MSF.FilenameOld, MSF.FilenameNew, " +
-                    //                    "S.COFAComment, MS.isOpenInCMS, MS.isRejected, PCMS.ProductName_CMS " +
-                    //                    "FROM dbo.MainSchedule MS " +
-                    //                    "INNER JOIN dbo.PODetails PD ON MS.MSID = PD.MSID " +
-                    //                    "INNER JOIN dbo.Samples S ON S.PODetailsID = PD.PODetailsID " +
-                    //                    "LEFT JOIN dbo.MainScheduleFiles MSF ON MSF.MSID = MS.MSID AND S.FileID_COFA = MSF.FileID " +
-                    //                    "INNER JOIN dbo.ProductsCMS AS PCMS ON PD.ProductID_CMS = PCMS.ProductID_CMS " +
-                    //                    "WHERE S.isHidden = 0 AND MS.isHidden = 0 AND MS.isOpenInCMS = 'true' AND S.TestApproved IS NULL AND S.bypassApproverUserID IS NULL " +
-                    //                    "ORDER BY S.FileID_COFA, S.bypassApproverUserID, MS.PONumber, S.SampleID";
+                  
                     sqlCmdText = string.Concat("SELECT PODetailsID, SampleID, MSID, PONumber, TrailerNumber, ProductID_CMS ",
                         ", FileID, Filepath, FilenameOld, FilenameNew, COFAComment ",
                         ", isOpenInCMS, isRejected, ProductName_CMS ",
@@ -136,7 +117,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "INSERT INTO dbo.MainScheduleEvents (MSID, EventTypeID, TimeStamp, UserID, isHidden) VALUES (@MSID, 4098, @TSTAMP, @UserID, 'false'); " +
                                             "SELECT SCOPE_IDENTITY()";
@@ -191,7 +172,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //First find filetypeID
                     sqlCmdText = "SELECT FileTypeID FROM dbo.FileTypes WHERE FileType = @FTYPE";
@@ -262,7 +243,7 @@ namespace TransportationProject
             List<object[]> data = new List<object[]>();
             try
             {
-                //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 TruckLogHelperFunctions.logByMSIDConnection(sql_connStr, MSID, data);
             }
             catch (SqlException excep)
@@ -291,7 +272,7 @@ namespace TransportationProject
             List<object[]> data = new List<object[]>();
             try
             {
-                //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 TruckLogHelperFunctions.logListConnection(sql_connStr, data);
             }
             catch (SqlException excep)
@@ -324,7 +305,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     ChangeLog cl = new ChangeLog(ChangeLog.ChangeLogChangeType.UPDATE, "Samples", "COFAComment", now, zxpUD._uid, ChangeLog.ChangeLogDataType.NVARCHAR, COMMENT, null, "SampleID", SAMPLEID.ToString());
                     cl.CreateChangeLogEntryIfChanged();
@@ -362,7 +343,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT S.isHidden, ISNULL(FileID_COFA, 0) AS FileID_COFA, \"testStatus\" = " +
                                                 "CASE S.TestApproved " +

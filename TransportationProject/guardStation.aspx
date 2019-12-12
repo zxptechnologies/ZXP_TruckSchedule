@@ -330,10 +330,7 @@
              hideProgress();
              var MSID = $("#grid").data("data-MSID");
              var StatusID = $("#grid").data("data-StatusID");
-             //onclick_OpenMoreDetails(StatusID, MSID, true);
-
              PageMethods.getGuardStationGridData(onSuccess_getGuardStationGridDataRebind, onFail_getGuardStationGridData);
-             //PageMethods.GetLogList(onSuccess_GetLogList, onFail_GetLogList);
          }
          function onFail_checkOut(value, ctx, methodName) {
              sendtoErrorPage("Error in guardStation.aspx, onFail_checkOut");
@@ -3132,14 +3129,14 @@
           <div id="DriverDetails"  class ="detailBox">
             <h2>Enter Driver and Truck Info</h2>
         <table class="tblDriverInfo">
-            <tr><td><label id="lblDriverNameMoreDetailsDialog">Driver Name: </label></td>
+            <tr><td><label id="lblDriverNameMoreDetailsDialog" maxlength="50">Driver Name: </label></td>
                 <td><input type="text" id="txtMoreDriverName" /></td>
-                <td><label id="lblDriverPhoneMoreDetailsDialog">Phone: </label></td>
+                <td><label id="lblDriverPhoneMoreDetailsDialog"  maxlength="10" >Phone: </label></td>
                 <td><input type="text" id="txtMoreDriverPhone" /></td>
             </tr>
-            <tr><td><label id="lblTruckNumberMoreDetailsDialog">Cab/Truck Number: </label></td>
+            <tr><td><label id="lblTruckNumberMoreDetailsDialog"  maxlength="15">Cab/Truck Number: </label></td>
                 <td><input type="text" id="txtMoreTruckNumber" /></td>
-                <td><label id="lblTrailerNumberDetailsDialog">Trailer Number: </label></td>
+                <td><label id="lblTrailerNumberDetailsDialog"  maxlength="15">Trailer Number: </label></td>
                 <td><input type="text" id="txtMoreTrailerNumber" /></td>
 
             </tr>

@@ -12,9 +12,6 @@ namespace TransportationProject
 {
     public partial class loaderTimeTracking : System.Web.UI.Page
     {
-        protected static String sql_connStr;
-        //public static ZXPUserData zxpUD = new ZXPUserData();
-
         void Page_PreInit(Object sender, EventArgs e)
         {
             if (Request.Browser.IsMobileDevice)
@@ -37,16 +34,9 @@ namespace TransportationProject
                     System.Web.Security.FormsAuthenticationTicket ticket = System.Web.Security.FormsAuthentication.Decrypt(cookie.Value);
                     zxpUD = ZXPUserData.DeserializeZXPUserData(ticket.UserData);
 
-                    if (zxpUD._isAdmin || zxpUD._isDockManager || zxpUD._isLoader) //make sure this matches whats in Site.Master and Default
+                    if (!(zxpUD._isAdmin || zxpUD._isDockManager || zxpUD._isLoader)) //make sure this matches whats in Site.Master and Default
                     {
-                        sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                        if (sql_connStr == String.Empty)
-                        {
-                            throw new Exception("Missing SQLConnectionString in web.config");
-                        }
-                    }
-                    else
-                    {
+                       
                         Response.BufferOutput = true;
                         Response.Redirect("ErrorPage.aspx?ErrorCode=5", false);//zxp live url
                     }
@@ -61,16 +51,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in loaderTimeTracking Page_Load(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in loaderTimeTracking Page_Load(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
 
         }
@@ -97,40 +83,7 @@ namespace TransportationProject
                     {
                         assigneeID = zxpUD._uid;
                     }
-
-                    //gets data specific data from table and save into readable format
-                    //sqlCmdText = "SELECT * FROM ( " +
-                    //                "SELECT R.MSID, MS.PONumber, R.RequestID, R.Task, R.Assignee, R.Requester, R.Comment, R.RequestPersonTypeID, R.RequestTypeID, MS.DockSpotID, TD.SpotDescription, U.FirstName AS LoaderFirstName, U.LastName AS LoaderLastName, " +
-                    //                "U2.FirstName AS RequesterFirstName, U2.LastName AS RequesterLastName,  " +
-                    //                "(SELECT TOP (1) Timestamp FROM MainScheduleEvents MSE1 INNER JOIN MainScheduleRequestEvents MSRE ON MSRE.EventID = MSE1.EventID WHERE (isHidden = 'false') AND (MSE1.MSID = R.MSID) AND (MSRE.RequestID = R.RequestID) AND (EventTypeID = 2027 ) ORDER BY TimeStamp DESC ) TimeRequestSent, " +
-                    //                "(SELECT TOP (1) Timestamp FROM MainScheduleEvents MSE1 INNER JOIN MainScheduleRequestEvents MSRE ON MSRE.EventID = MSE1.EventID WHERE (isHidden = 'false') AND (MSE1.MSID = R.MSID) AND (MSRE.RequestID = R.RequestID) AND (EventTypeID = 2030 OR EventTypeID = 13 OR EventTypeID = 15) ORDER BY TimeStamp DESC ) TimeRequestStart, " +
-                    //                "(SELECT TOP (1) Timestamp FROM MainScheduleEvents MSE1 INNER JOIN MainScheduleRequestEvents MSRE ON MSRE.EventID = MSE1.EventID WHERE (isHidden = 'false') AND (MSE1.MSID = R.MSID) AND (MSRE.RequestID = R.RequestID) AND (EventTypeID = 2031 OR EventTypeID = 14 OR EventTypeID = 16) ORDER BY TimeStamp DESC ) TimeRequestEnd, " +
-                    //                "RT.RequestType, RequestDueDateTime, MS.isRejected, MS.TrailerNumber, MS.isOpenInCMS, " +
-                    //                "MS.currentDockSpotID, (SELECT TDS3.SpotDescription FROM dbo.TruckDockSpots AS TDS3 WHERE MS.currentDockSpotID = TDS3.SpotID) AS CurrentSpot, " +
-                    //                "ISNULL(ProdDet.PDCount, 0) AS ProdCount, ProdDet.topProdID, PCMS.ProductName_CMS, MS.ETA " +
-                    //                "FROM Requests R " +
-                    //                "LEFT JOIN MainSchedule MS ON MS.MSID = R.MSID " +
-                    //                "LEFT JOIN Users U ON U.UserID = R.Assignee " +
-                    //                "INNER JOIN Users U2 ON U2.UserID = R.Requester " +
-                    //                "INNER JOIN RequestTypes RT on RT.RequestTypeID = R.RequestTypeID " +
-                    //                "LEFT JOIN TruckDockSpots TD ON TD.SpotID = MS.DockSpotID " +
-                    //                "LEFT JOIN (SELECT MSID, COUNT(PODetailsID) AS PDCount, " +
-                    //                "(SELECT TOP 1 PD_A.ProductID_CMS " +
-                    //                "FROM dbo.PODetails PD_A " +
-                    //                "INNER JOIN dbo.ProductsCMS PCMS_A ON PD_A.ProductID_CMS = PCMS_A.ProductID_CMS " +
-                    //                "WHERE PD_A.MSID =  PD.MSID " +
-                    //                ") AS topProdID  " +
-                    //                "FROM dbo.PODetails PD  " +
-                    //                "GROUP BY MSID " +
-                    //                ") ProdDet ON ProdDet.MSID = MS.MSID " +
-                    //                "LEFT JOIN dbo.ProductsCMS PCMS ON PCMS.ProductID_CMS = ProdDet.topProdID " +
-                    //                "WHERE RequestPersonTypeID = 1 AND isVisible = 1 AND (MS.isHidden = 0 OR MS.isHidden IS NULL) " +  //RequestPersonTypeID = 1 to get loader related requests
-                    //    //"AND (R.Assignee = @ASSIGNUID OR @ASSIGNUID = 0) " +
-                    //                ") AllData " +
-                    //                "WHERE (TimeRequestEnd > DATEADD(HOUR, -1, CURRENT_TIMESTAMP) OR TimeRequestEnd IS NULL) OR " +
-                    //                "((SELECT DATEADD(dd, DATEDIFF(dd, 0, ETA), 0)) = (SELECT CAST (GETDATE() as DATE)) OR " +
-                    //                "(SELECT DATEADD(dd, DATEDIFF(dd, 0, ETA), 0)) = (SELECT DATEADD(day, DATEDIFF(day, 0, GETDATE()), 1))) " +
-                    //                "ORDER BY RequestDueDateTime, TimeRequestSent";
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                     sqlCmdText = string.Concat("SELECT MSID, PONumber, RequestID, Task, Assignee, Requester, Comment, RequestPersonTypeID, RequestTypeID, ",
                         "DockSpotID, SpotDescription, LoaderFirstName, LoaderLastName, RequesterFirstName, RequesterLastName, ",
                         "TimeRequestSent, TimeRequestStart, TimeRequestEnd, RequestType, RequestDueDateTime, isRejected, TrailerNumber ",
@@ -150,10 +103,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in LoaderTimeTracking getloaderTimeTrackingGridData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -165,6 +115,7 @@ namespace TransportationProject
             {
 
                 DateTime timeStamp = DateTime.Now;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                 using (var scope = new TransactionScope())
                 {
@@ -213,10 +164,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in LoaderTimeTracking setTankStrapping(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
 
             
@@ -233,7 +181,7 @@ namespace TransportationProject
             {
 
                 string sqlCmdText;
-                //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                 sqlCmdText = string.Concat("SELECT MSID, isStartStrap, TankNum, isNull(Temp, 0) Temp, isNull(Feet,0) Feet , isNull(Inches,0) Inches ",
                             ",isNull(FractionNumerator,0) FractionNumerator, isNull(FractionDenominator,0) FractionDenominator ",
@@ -269,10 +217,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in LoaderTimeTracking getTankStrapping(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return tStrap;
         }
@@ -290,7 +235,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT -999 AS SpotID, '(None)' AS SpotDescription, NULL AS SpotType UNION " +
                                     "(SELECT SpotID, SpotDescription, SpotType FROM dbo.TruckDockSpots WHERE isDisabled = 0) ORDER BY SpotDescription";
@@ -308,10 +253,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in LoaderTimeTracking GetSpots(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -327,7 +269,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText = string.Empty;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     if (requestTypeID == 1) //Load
                     {
@@ -376,10 +318,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in LoaderTimeTracking startRequest(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return timeStamp;
         }
@@ -395,7 +334,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT TOP 1 ISNULL(Task, ''), ISNULL(Comment, ''), RT.RequestType , U.FirstName, U.LastName, ISNULL(MS.TrailerNumber, '') " +
                                           "FROM dbo.Requests R " +
@@ -417,10 +356,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in LoaderTimeTracking getRequestInformationForAlert(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -455,16 +391,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in loaderTimeTracking createCustomMessageForCompletedTask(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in loaderTimeTracking createCustomMessageForCompletedTask(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -484,7 +416,8 @@ namespace TransportationProject
 
                 ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                 sqlConn = new SqlConnection();
-                //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+
                 string sqlQuery = string.Empty;
                 int eventID = 0;
                 MainScheduleEventLogger msEventLog = new MainScheduleEventLogger();
@@ -537,16 +470,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in loaderTimeTracking completeRequest(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in loaderTimeTracking completeRequest(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -571,7 +500,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     // 1) Find request type
                     sqlCmdText = "SELECT ISNULL(Assignee, 0) FROM dbo.Requests WHERE RequestID = @RID";
@@ -624,10 +553,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in LoaderTimeTracking updateRequest(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
           
@@ -645,7 +571,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     switch (requestType)
                     {
@@ -683,10 +609,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in LoaderTimeTracking undoCompleteRequest(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -704,7 +627,7 @@ namespace TransportationProject
                 {
                     ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     switch (requestType)
                     {
@@ -748,10 +671,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in LoaderTimeTracking undoStartRequest(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
         [System.Web.Services.WebMethod]
@@ -760,22 +680,18 @@ namespace TransportationProject
             List<object[]> data = new List<object[]>();
             try
             {
-                //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 TruckLogHelperFunctions.logByMSIDConnection(sql_connStr, MSID, data);
             }
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in loaderTimeTracking GetLogDataByMSID(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in loaderTimeTracking GetLogDataByMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -789,22 +705,18 @@ namespace TransportationProject
             List<object[]> data = new List<object[]>();
             try
             {
-                //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 TruckLogHelperFunctions.logListConnection(sql_connStr, data);
             }
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in loaderTimeTracking GetLogList(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in loaderTimeTracking GetLogList(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -824,7 +736,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //TODO: Modify query to show only active requests + recently finished requests (maybe recently finished today) 
                     sqlCmdText = "SELECT * FROM ( " +
@@ -860,10 +772,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in LoaderTimeTracking getCompletedRequestData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -879,7 +788,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //First find filetypeID
                     sqlCmdText = "SELECT FileTypeID FROM dbo.FileTypes WHERE FileType = @FTYPE";
@@ -940,16 +849,12 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in LoaderTimeTracking AddFileDBEntry(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
         [System.Web.Services.WebMethod]
         public static string[] ProcessFileAndData(string filename, string strUploadType)
-        //public static string[] ProcessFileAndData(int MSID, string filename, string strUploadType)
         {
 
             try
@@ -960,9 +865,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in LoaderTimeTracking ProcessFileAndData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
 
             return null;
@@ -981,7 +884,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT ISNULL(COUNT(*),0) FROM dbo.MainScheduleInspections WHERE MSID = @MSID AND isHidden = 'false' AND InspectionEndEventID IS NULL";
                     numberOfOpenInspections = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
@@ -1006,10 +909,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in LoaderTimeTracking verifyIfInspectionIsDoneBeforeUnload(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return returnString;
         }
@@ -1026,7 +926,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT PD.PODetailsID, PD.ProductID_CMS, PD.QTY, PD.LotNumber, PD.UnitOfMeasure, PCMS.ProductName_CMS " +
                                     "FROM dbo.PODetails PD " +
@@ -1045,10 +945,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in LoaderTimeTracking GetPODetailsFromMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -1069,7 +966,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT TOP(1) MSRE.RequestID, MSE.EventTypeID, MSE.TimeStamp, Users.UserID, UserName from dbo.MainScheduleRequestEvents as MSRE " +
                                         "INNER JOIN dbo.MainScheduleEvents as MSE ON MSRE.EventID = MSE.EventID " +
@@ -1123,10 +1020,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in LoaderTimeTracking checkStatusOfRequest(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return returnData;
         }
@@ -1141,7 +1035,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT FileID, MSID, MSF.FileTypeID, FileDescription, Filepath, FilenameNew, FilenameOld FROM dbo.MainScheduleFiles MSF " +
                                     "INNER JOIN dbo.FileTypes FT ON FT.FileTypeID = MSF.FileTypeID " +
@@ -1159,10 +1053,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in LoaderTimeTracking GetFileUploadsFromMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -1179,7 +1070,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     ChangeLog cLog = new ChangeLog(ChangeLog.ChangeLogChangeType.UPDATE, "MainScheduleFiles", "FileDescription", timestamp, zxpUD._uid, ChangeLog.ChangeLogDataType.NVARCHAR, description, null, "FileID", fileID.ToString());
                     cLog.CreateChangeLogEntryIfChanged();
@@ -1193,10 +1084,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in LoaderTimeTracking UpdateFileUploadData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1211,7 +1099,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     switch (fileType)
                     {
@@ -1247,10 +1135,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in LoaderTimeTracking DeleteFileDBEntry(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1265,7 +1150,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT LocationShort FROM dbo.MainSchedule WHERE MSID = @MSID";
                     location = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
@@ -1281,10 +1166,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in LoaderTimeTracking checkIfTruckIsOnSite(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return isOnSite;
         }

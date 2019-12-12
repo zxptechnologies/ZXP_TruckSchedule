@@ -12,7 +12,7 @@ namespace TransportationProject.AdminSubPages
 {
     public partial class Admin_Alerts : System.Web.UI.Page
     {
-        protected static String sql_connStr;
+     
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -22,19 +22,9 @@ namespace TransportationProject.AdminSubPages
                 ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
 
                 if (zxpUD._uid != new ZXPUserData()._uid)
-               // if (null != cookie && !string.IsNullOrEmpty(cookie.Value))
                 {
                     
-                    
-                    if (zxpUD._isAdmin) //make sure this matches whats in Site.Master and Default
-                    {
-                        sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                        if (sql_connStr == String.Empty)
-                        {
-                            throw new Exception("Missing SQLConnectionString in web.config");
-                        }
-                    }
-                    else
+                    if (!zxpUD._isAdmin) //make sure this matches whats in Site.Master and Default
                     {
                         Response.BufferOutput = true;
                         Response.Redirect("ErrorPage.aspx?ErrorCode=5", false); //zxp live url
@@ -73,7 +63,7 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT TOP (50) ProductID_CMS, ProductName_CMS FROM dbo.ProductsCMS ORDER BY ProductName_CMS";
                     dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
@@ -108,7 +98,7 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT TankID, TankName FROM dbo.Tanks ORDER BY TankName";
 
@@ -144,7 +134,7 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT IH.InspectionHeaderID, IH.InspectionHeaderName FROM dbo.InspectionHeader AS IH WHERE IH.isDisabled = 'false'";
                     dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
@@ -180,7 +170,7 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT DISTINCT pCMS.ProductID_CMS, pCMS.ProductName_CMS " +
                                         "FROM ProductsCMS as pCMS " +
@@ -219,7 +209,7 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //will be updated to all events during maintenance
                     sqlCmdText = "SELECT EventTypeID, EventTypeDescription FROM dbo.EventTypes WHERE EventTypeID = 14 OR EventTypeID = 16 OR EventTypeID = 3052 OR " +
@@ -256,7 +246,7 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //gets data specific data from table and save into readable format
                     sqlCmdText = "SELECT A.AlertID, A.Name, A.TriggerAfterXMinutes, A.isEmailAlert, A.isSMSAlert, A.EmailMessageSubject, A.EmailMessageBody, A.SMSMessageSubject, A.SMSMessageBody  " +
@@ -294,7 +284,7 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT A.AlertID, A.Name, A.TankID, A.Percentage, A.isEmailAlert, A.isSMSAlert, A.EmailMessageSubject, A.EmailMessageBody, A.SMSMessageSubject, A.SMSMessageBody " +
                                                     "FROM dbo.Alerts AS A " +
@@ -331,7 +321,7 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT A.AlertID, A.Name, A.TriggerAfterXMinutes, A.isEmailAlert, A.isSMSAlert, A.EmailMessageSubject, A.EmailMessageBody, A.SMSMessageSubject, A.SMSMessageBody " +
                                             "FROM dbo.Alerts AS A " +
@@ -368,7 +358,7 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT A.AlertID, A.Name, A.InspectionHeaderID, A.isEmailAlert, A.isSMSAlert, A.EmailMessageSubject, A.EmailMessageBody, A.SMSMessageSubject, A.SMSMessageBody  " +
                                             "FROM dbo.Alerts AS A  " +
@@ -405,7 +395,7 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT A.AlertID, A.Name, A.ProductID_CMS, A.TriggerAfterXMinutes, A.isEmailAlert, A.isSMSAlert, PROD.ProductName_CMS, A.EmailMessageSubject, A.EmailMessageBody, A.SMSMessageSubject, A.SMSMessageBody  " +
                                             "FROM dbo.Alerts AS A " +
@@ -443,7 +433,7 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT A.AlertID, A.Name, A.TriggerAfterXMinutes, A.isEmailAlert, A.isSMSAlert, A.EmailMessageSubject, A.EmailMessageBody, A.SMSMessageSubject, A.SMSMessageBody " +
                                             "FROM dbo.Alerts AS A " +
@@ -480,7 +470,7 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT A.AlertID, A.Name, A.ProductID_CMS, A.isEmailAlert, A.isSMSAlert, EA.EventTypeID, PROD.ProductName_CMS, A.EmailMessageSubject, A.EmailMessageBody, A.SMSMessageBody, A.SMSMessageSubject " +
                                             "FROM dbo.Alerts AS A " +
@@ -520,24 +510,10 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    if (EmailMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Email Subject is too long");
-                    }
-                    if (EmailMessageBody.Length > 500)
-                    {
-                        throw new Exception("Email Body is too long");
-                    }
-                    if (SMSMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
-                    if (SMSMessageBody.Length > 160)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
+
+                    CheckAlertMessageLengths(EmailMessageSubject, EmailMessageBody, SMSMessageSubject, SMSMessageBody);
 
                     sqlCmdText = "SELECT COUNT (*) FROM dbo.Alerts WHERE (Name = @Name AND isDisabled = 'false' AND AlertTypeID = 1)";
                     rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@Name", NAME)));
@@ -582,27 +558,13 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     if (PERCENTAGE > 1 || PERCENTAGE <= 0)
                     { throw new Exception("Invalid capacity entered"); }
 
-                    if (EmailMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Email Subject is too long");
-                    }
-                    if (EmailMessageBody.Length > 500)
-                    {
-                        throw new Exception("Email Body is too long");
-                    }
-                    if (SMSMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
-                    if (SMSMessageBody.Length > 160)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
+
+                    CheckAlertMessageLengths(EmailMessageSubject, EmailMessageBody, SMSMessageSubject, SMSMessageBody);
 
                     sqlCmdText = "SELECT COUNT (*) FROM dbo.Alerts WHERE (Name = @Name AND isDisabled = 'false' AND AlertTypeID = 2)";
                     rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@Name", NAME)));
@@ -648,44 +610,18 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
 
-                    if (EmailMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Email Subject is too long");
-                    }
-                    if (EmailMessageBody.Length > 500)
-                    {
-                        throw new Exception("Email Body is too long");
-                    }
-                    if (SMSMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
-                    if (SMSMessageBody.Length > 160)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
+
+                    CheckAlertMessageLengths(EmailMessageSubject, EmailMessageBody, SMSMessageSubject, SMSMessageBody);
+
                     sqlCmdText = "SELECT COUNT (*) FROM dbo.Alerts WHERE (Name = @Name AND isDisabled = 'false' AND AlertTypeID = 3)";
                     rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@Name", NAME)));
 
                     if (rowCount == 0)
                     {
-                        //SqlParameter paramAlertTime = new SqlParameter("@AlertTime", SqlDbType.NVarChar);
-                        //SqlParameter paramEmail = new SqlParameter("@isEmailAlert", SqlDbType.Bit);
-                        //SqlParameter paramSMS = new SqlParameter("@isSMSAlert", SqlDbType.Bit);
-                        //SqlParameter paramEmailMessageSubject = new SqlParameter("@EmailMessageSubject", SqlDbType.NVarChar);
-                        //SqlParameter paramEmailMessageBody = new SqlParameter("@EmailMessageBody", SqlDbType.NVarChar);
-                        //SqlParameter paramSMSMessageSubject = new SqlParameter("@SMSMessageSubject", SqlDbType.NVarChar);
-                        //SqlParameter paramSMSMessageBody = new SqlParameter("@SMSMessageBody", SqlDbType.NVarChar);
-                        //paramEmailMessageSubject.Value = TransportHelperFunctions.convertStringEmptyToDBNULL(EmailMessageSubject);
-                        //paramEmailMessageBody.Value = TransportHelperFunctions.convertStringEmptyToDBNULL(EmailMessageBody);
-                        //paramSMSMessageSubject.Value = TransportHelperFunctions.convertStringEmptyToDBNULL(SMSMessageSubject);
-                        //paramSMSMessageBody.Value = TransportHelperFunctions.convertStringEmptyToDBNULL(SMSMessageBody);
-                        //paramAlertTime.Value = ALERTTIME;
-                        //paramEmail.Value = isEmailAlert;
-                        //paramSMS.Value = isSMSAlert;
+
 
                         sqlCmdText = "INSERT INTO dbo.Alerts (Name, TriggerAfterXMinutes, isEmailAlert, isSMSAlert, isDisabled, AlertTypeID, isScheduledAlert, isEventDrivenAlert, EmailMessageSubject, EmailMessageBody, SMSMessageSubject, SMSMessageBody) " +
                                                 "VALUES (@Name, @AlertTime, @isEmailAlert, @isSMSAlert, 'false', 3, 'true', 'false', @EmailMessageSubject, @EmailMessageBody, @SMSMessageSubject, @SMSMessageBody); " +
@@ -725,24 +661,10 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    if (EmailMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Email Subject is too long");
-                    }
-                    if (EmailMessageBody.Length > 500)
-                    {
-                        throw new Exception("Email Body is too long");
-                    }
-                    if (SMSMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
-                    if (SMSMessageBody.Length > 160)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
+
+                    CheckAlertMessageLengths(EmailMessageSubject, EmailMessageBody, SMSMessageSubject, SMSMessageBody);
                     sqlCmdText = "SELECT COUNT (*) FROM dbo.Alerts WHERE (Name = @Name AND isDisabled = 'false' AND AlertTypeID = 4)";
                     rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@Name", NAME)));
 
@@ -791,24 +713,10 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    if (EmailMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Email Subject is too long");
-                    }
-                    if (EmailMessageBody.Length > 500)
-                    {
-                        throw new Exception("Email Body is too long");
-                    }
-                    if (SMSMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
-                    if (SMSMessageBody.Length > 160)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
+
+                    CheckAlertMessageLengths(EmailMessageSubject, EmailMessageBody, SMSMessageSubject, SMSMessageBody);
 
                     sqlCmdText = "SELECT COUNT (*) FROM dbo.Alerts WHERE (Name = @Name AND isDisabled = 'false' AND AlertTypeID = 5)";
                     rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@Name", NAME)));
@@ -858,24 +766,10 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    if (EmailMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Email Subject is too long");
-                    }
-                    if (EmailMessageBody.Length > 500)
-                    {
-                        throw new Exception("Email Body is too long");
-                    }
-                    if (SMSMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
-                    if (SMSMessageBody.Length > 160)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
+
+                    CheckAlertMessageLengths(EmailMessageSubject, EmailMessageBody, SMSMessageSubject, SMSMessageBody);
 
                     sqlCmdText = "SELECT COUNT (*) FROM dbo.Alerts WHERE (Name = @Name AND isDisabled = 'false' AND AlertTypeID = 6)";
                     rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@Name", NAME)));
@@ -925,43 +819,15 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    if (EmailMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Email Subject is too long");
-                    }
-                    if (EmailMessageBody.Length > 500)
-                    {
-                        throw new Exception("Email Body is too long");
-                    }
-                    if (SMSMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
-                    if (SMSMessageBody.Length > 160)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
+
+                    CheckAlertMessageLengths(EmailMessageSubject, EmailMessageBody, SMSMessageSubject, SMSMessageBody);
                     sqlCmdText = "SELECT COUNT (*) FROM dbo.Alerts WHERE (Name = @Name AND isDisabled = 'false' AND AlertTypeID = 1007)";
                     rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@Name", NAME)));
 
                     if (rowCount == 0)
                     {
-                        //SqlParameter paramProductID_CMS = new SqlParameter("@ProductID_CMS", SqlDbType.NVarChar);
-                        //SqlParameter paramEmail = new SqlParameter("@isEmailAlert", SqlDbType.Bit);
-                        //SqlParameter paramSMS = new SqlParameter("@isSMSAlert", SqlDbType.Bit);
-                        //SqlParameter paramEmailMessageSubject = new SqlParameter("@EmailMessageSubject", SqlDbType.NVarChar);
-                        //SqlParameter paramEmailMessageBody = new SqlParameter("@EmailMessageBody", SqlDbType.NVarChar);
-                        //SqlParameter paramSMSMessageSubject = new SqlParameter("@SMSMessageSubject", SqlDbType.NVarChar);
-                        //SqlParameter paramSMSMessageBody = new SqlParameter("@SMSMessageBody", SqlDbType.NVarChar);
-                        //paramEmailMessageSubject.Value = TransportHelperFunctions.convertStringEmptyToDBNULL(EmailMessageSubject);
-                        //paramEmailMessageBody.Value = TransportHelperFunctions.convertStringEmptyToDBNULL(EmailMessageBody);
-                        //paramSMSMessageSubject.Value = TransportHelperFunctions.convertStringEmptyToDBNULL(SMSMessageSubject);
-                        //paramSMSMessageBody.Value = TransportHelperFunctions.convertStringEmptyToDBNULL(SMSMessageBody);
-                        //paramProductID_CMS.Value = TransportHelperFunctions.convertStringEmptyToDBNULL(ProductID_CMS);
-                        //paramEmail.Value = isEmailAlert;
-                        //paramSMS.Value = isSMSAlert;
 
                         sqlCmdText = "INSERT INTO dbo.Alerts (Name, ProductID_CMS, isEmailAlert, isSMSAlert, isDisabled, AlertTypeID, isScheduledAlert, isEventDrivenAlert, EmailMessageSubject, EmailMessageBody, SMSMessageSubject, SMSMessageBody) " +
                                                 "VALUES (@Name, @ProductID_CMS, @isEmailAlert, @isSMSAlert, 'false', 1007, 'false', 'true', @EmailMessageSubject, @EmailMessageBody, @SMSMessageSubject, @SMSMessageBody); " +
@@ -1008,24 +874,10 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    if (EmailMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Email Subject is too long");
-                    }
-                    if (EmailMessageBody.Length > 500)
-                    {
-                        throw new Exception("Email Body is too long");
-                    }
-                    if (SMSMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
-                    if (SMSMessageBody.Length > 160)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
+
+                    CheckAlertMessageLengths(EmailMessageSubject, EmailMessageBody, SMSMessageSubject, SMSMessageBody);
 
                     sqlCmdText = "SELECT COUNT (*) FROM dbo.Alerts WHERE (Name = @Name AND AlertID != @AlertID AND isDisabled = 'false' AND AlertTypeID = 1)";
                     rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@Name", NAME), new SqlParameter("@AlertID", ALERTID)));
@@ -1072,27 +924,14 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     if (PERCENTAGE > 1 || PERCENTAGE <= 0)
                     { throw new Exception("Invalid capacity entered"); }
 
-                    if (EmailMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Email Subject is too long");
-                    }
-                    if (EmailMessageBody.Length > 500)
-                    {
-                        throw new Exception("Email Body is too long");
-                    }
-                    if (SMSMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
-                    if (SMSMessageBody.Length > 160)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
+
+                    CheckAlertMessageLengths(EmailMessageSubject, EmailMessageBody, SMSMessageSubject, SMSMessageBody);
+
                     sqlCmdText = "SELECT COUNT (*) FROM dbo.Alerts WHERE (Name = @Name AND AlertID != @AlertID AND isDisabled = 'false' AND AlertTypeID = 2)";
                     rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@Name", NAME), new SqlParameter("@AlertID", ALERTID)));
 
@@ -1140,24 +979,10 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    if (EmailMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Email Subject is too long");
-                    }
-                    if (EmailMessageBody.Length > 500)
-                    {
-                        throw new Exception("Email Body is too long");
-                    }
-                    if (SMSMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
-                    if (SMSMessageBody.Length > 160)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
+
+                    CheckAlertMessageLengths(EmailMessageSubject, EmailMessageBody, SMSMessageSubject, SMSMessageBody);
 
                     sqlCmdText = "SELECT COUNT (*) FROM dbo.Alerts WHERE (Name = @Name AND AlertID != @AlertID AND isDisabled = 'false' AND AlertTypeID = 3)";
                     rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@Name", NAME), new SqlParameter("@AlertID", ALERTID)));
@@ -1204,24 +1029,10 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    if (EmailMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Email Subject is too long");
-                    }
-                    if (EmailMessageBody.Length > 500)
-                    {
-                        throw new Exception("Email Body is too long");
-                    }
-                    if (SMSMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
-                    if (SMSMessageBody.Length > 160)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
+
+                    CheckAlertMessageLengths(EmailMessageSubject, EmailMessageBody, SMSMessageSubject, SMSMessageBody);
 
                     sqlCmdText = "SELECT COUNT (*) FROM dbo.Alerts WHERE (Name = @Name AND AlertID != @AlertID AND isDisabled = 'false' AND AlertTypeID = 4)";
                     rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@Name", NAME), new SqlParameter("@AlertID", ALERTID)));
@@ -1269,24 +1080,10 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    if (EmailMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Email Subject is too long");
-                    }
-                    if (EmailMessageBody.Length > 500)
-                    {
-                        throw new Exception("Email Body is too long");
-                    }
-                    if (SMSMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
-                    if (SMSMessageBody.Length > 160)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
+
+                    CheckAlertMessageLengths(EmailMessageSubject, EmailMessageBody, SMSMessageSubject, SMSMessageBody);
                     sqlCmdText = "SELECT COUNT (*) FROM dbo.Alerts WHERE (Name = @Name AND AlertID != @AlertID AND isDisabled = 'false' AND AlertTypeID = 5)";
                     rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@Name", NAME), new SqlParameter("@AlertID", ALERTID)));
 
@@ -1333,24 +1130,10 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    if (EmailMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Email Subject is too long");
-                    }
-                    if (EmailMessageBody.Length > 500)
-                    {
-                        throw new Exception("Email Body is too long");
-                    }
-                    if (SMSMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
-                    if (SMSMessageBody.Length > 160)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
+
+                    CheckAlertMessageLengths(EmailMessageSubject, EmailMessageBody, SMSMessageSubject, SMSMessageBody);
                     sqlCmdText = "SELECT COUNT (*) FROM dbo.Alerts WHERE (Name = @Name AND AlertID != @AlertID AND isDisabled = 'false' AND AlertTypeID = 6)";
                     rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@Name", NAME), new SqlParameter("@AlertID", ALERTID)));
 
@@ -1399,24 +1182,9 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    if (EmailMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Email Subject is too long");
-                    }
-                    if (EmailMessageBody.Length > 500)
-                    {
-                        throw new Exception("Email Body is too long");
-                    }
-                    if (SMSMessageSubject.Length > 50)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
-                    if (SMSMessageBody.Length > 160)
-                    {
-                        throw new Exception("Text Message Subject is too long");
-                    }
+                    CheckAlertMessageLengths(EmailMessageSubject, EmailMessageBody, SMSMessageSubject, SMSMessageBody);
                     sqlCmdText = "SELECT COUNT (*) FROM dbo.Alerts WHERE (Name = @Name AND AlertID != @AlertID AND isDisabled = 'false' AND AlertTypeID = 1007)";
                     rowCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@Name", NAME), new SqlParameter("@AlertID", ALERTID)));
 
@@ -1454,6 +1222,25 @@ namespace TransportationProject.AdminSubPages
             }
         }
 
+        private static void CheckAlertMessageLengths(string EmailMessageSubject, string EmailMessageBody, string SMSMessageSubject, string SMSMessageBody)
+        {
+            if (EmailMessageSubject.Length > 50)
+            {
+                throw new Exception("Email Subject is too long");
+            }
+            if (EmailMessageBody.Length > 500)
+            {
+                throw new Exception("Email Body is too long");
+            }
+            if (SMSMessageSubject.Length > 50)
+            {
+                throw new Exception("Text Message Subject is too long");
+            }
+            if (SMSMessageBody.Length > 160)
+            {
+                throw new Exception("Text Message Subject is too long");
+            }
+        }
 
         [System.Web.Services.WebMethod]
         public static void disableAlert(int ALERTID, int ALERTTYPEID)
@@ -1465,7 +1252,7 @@ namespace TransportationProject.AdminSubPages
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "UPDATE dbo.Alerts SET isDisabled = 'true' WHERE AlertID = @AlertID AND AlertTypeID = @AlertTypeID";
                     SqlHelper.ExecuteNonQuery(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@AlertID", ALERTID), new SqlParameter("@AlertTypeID", ALERTTYPEID));

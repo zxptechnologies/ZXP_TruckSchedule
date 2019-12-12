@@ -5,7 +5,7 @@ using System.Web;
 
 namespace TransportationProject
 {
-    public class VW_DockManagerYardMuleRequestGridEntry
+    public class vw_DockManagerYardMuleRequestGridData
     {
         
         public int MSID { get; set; }

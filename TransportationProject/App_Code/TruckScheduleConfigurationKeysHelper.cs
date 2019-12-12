@@ -8,8 +8,8 @@ namespace TransportationProject
 {
     public class TruckScheduleConfigurationKeysHelper
     {
-        public String sql_connStr { get; private set; }
-        public String truckReservationEmail { get; private set; }
+        public string sql_connStr { get; private set; }
+        public string truckReservationEmail { get; private set; }
         public string ErrorAlertEmailAddress { get; private set; }
 
         public TruckScheduleConfigurationKeysHelper()
@@ -39,7 +39,7 @@ namespace TransportationProject
                 string strErr = " Exception Error in ConfigurationKeysHelper setConnectionStringFromConfig(). Details: " + ex.ToString();
                 ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
                 ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                throw;
             }
         }
 
@@ -58,7 +58,7 @@ namespace TransportationProject
                 string strErr = " Exception Error in ConfigurationKeysHelper setErrorAlertEmailAddress(). Details: " + ex.ToString();
                 ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
                 ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                throw;
             }
         }
 
@@ -77,7 +77,7 @@ namespace TransportationProject
                 string strErr = " Exception Error in ConfigurationKeysHelper setTruckReservationEmail(). Details: " + ex.ToString();
                 ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
                 ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                throw;
             }
         }
     }
@@ -122,7 +122,7 @@ namespace TransportationProject
                 string strErr = " Exception Error in ConfigurationKeysHelper setODBCConnectionFromConfig(). Details: " + ex.ToString();
                 ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
                 ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                throw;
             }
         }
         private void setODBCCommandSettings()

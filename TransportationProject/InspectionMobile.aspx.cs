@@ -12,9 +12,6 @@ namespace TransportationProject
 {
     public partial class InspectionMobile : System.Web.UI.Page
     {
-        protected static string sql_connStr;
-        //protected static ZXPUserData zxpUD = new ZXPUserData();
-
         void Page_PreInit(Object sender, EventArgs e)
         {
             if (Request.Browser.IsMobileDevice)
@@ -39,15 +36,7 @@ namespace TransportationProject
                     System.Web.Security.FormsAuthenticationTicket ticket = System.Web.Security.FormsAuthentication.Decrypt(cookie.Value);
                     zxpUD = ZXPUserData.DeserializeZXPUserData(ticket.UserData);
 
-                    if (zxpUD._isAdmin || zxpUD._isDockManager || zxpUD._isInspector || zxpUD._isLoader) //make sure this matches whats in Site.Master and Default
-                    {
-                        sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                        if (sql_connStr == String.Empty)
-                        {
-                            throw new Exception("Missing SQLConnectionString in web.config");
-                        }
-                    }
-                    else
+                    if (!(zxpUD._isAdmin || zxpUD._isDockManager || zxpUD._isInspector || zxpUD._isLoader)) //make sure this matches whats in Site.Master and Default
                     {
                         Response.BufferOutput = true;
                         Response.Redirect("ErrorPage.aspx?ErrorCode=5", false); // zxp live url
@@ -63,16 +52,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in InspectionMobile Page_Load(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile Page_Load(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
 
         }
@@ -89,9 +74,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile ProcessFileAndData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return null;
         }
@@ -104,9 +87,9 @@ namespace TransportationProject
             int currentOrAssignedSpot = 0;
             try
             {
-                
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    string sqlQuery = "SELECT ISNULL(MS.currentDockSpotID, 0) " +
+
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlQuery = "SELECT ISNULL(MS.currentDockSpotID, 0) " +
                                         "FROM dbo.MainSchedule AS MS " +
                                         "INNER JOIN dbo.PODetails AS POD ON POD.MSID = MS.MSID " +
                                         "WHERE POD.PODetailsID = @prodDetailsID";
@@ -124,10 +107,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile getDefaultDockSpot(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return currentOrAssignedSpot;
         }
@@ -139,27 +119,24 @@ namespace TransportationProject
             List<inspectableTrucks> truckData = new List<inspectableTrucks>();
             try
             {
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    string sqlQuery = "SELECT MSID, TrailerNumber, PODetailsID, ProductID_CMS, TruckType, TruckProdLabel FROM  dbo.GetAvailableTruckswDataForInspection ORDER BY TruckProdLabel";
-                    dsInspectableTrucks = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlQuery);
-                    foreach (System.Data.DataRow row in dsInspectableTrucks.Tables[0].Rows)
-                    {
-                        inspectableTrucks insTrucks = new inspectableTrucks(Convert.ToInt32(row["MSID"]),
-                                                                                row["TrailerNumber"].ToString(),
-                                                                                Convert.ToInt32(row["PODetailsID"]),
-                                                                                row["ProductID_CMS"].ToString(),
-                                                                                row["TruckType"].ToString(),
-                                                                                row["TruckProdLabel"].ToString());
-                        truckData.Add(insTrucks);
-                    }
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlQuery = "SELECT MSID, TrailerNumber, PODetailsID, ProductID_CMS, TruckType, TruckProdLabel FROM  dbo.GetAvailableTruckswDataForInspection ORDER BY TruckProdLabel";
+                dsInspectableTrucks = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlQuery);
+                foreach (System.Data.DataRow row in dsInspectableTrucks.Tables[0].Rows)
+                {
+                    inspectableTrucks insTrucks = new inspectableTrucks(Convert.ToInt32(row["MSID"]),
+                                                                            row["TrailerNumber"].ToString(),
+                                                                            Convert.ToInt32(row["PODetailsID"]),
+                                                                            row["ProductID_CMS"].ToString(),
+                                                                            row["TruckType"].ToString(),
+                                                                            row["TruckProdLabel"].ToString());
+                    truckData.Add(insTrucks);
+                }
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile getTruckAndProductList(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return truckData;
         }
@@ -171,86 +148,43 @@ namespace TransportationProject
             try
             {
                 
-                    DataSet dsPODetailData = GetPOdetailsData(prodDetailID);
+                DataSet dsPODetailData = GetPOdetailsData(prodDetailID);
+                
+                if (0 == dsPODetailData.Tables[0].Rows.Count)
+                {
+                    throw new Exception("GetPOdetailsData() Failed");
+                }
 
-                    //ErrorLogging.WriteEvent("1-" + dsGridData.Tables.Count.ToString(), EventLogEntryType.Information);
-                    if (0 == dsPODetailData.Tables[0].Rows.Count)
-                    {
-                        throw new Exception("GetPOdetailsData() Failed");
-                    }
+                int MSID = Convert.ToInt32(dsPODetailData.Tables[0].Rows[0]["MSID"]);
 
-                    int MSID = Convert.ToInt32(dsPODetailData.Tables[0].Rows[0]["MSID"]);
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlQuery =
+                
+                    "SELECT TOP 1 MSID, ETA, CustomerID, TruckType, PONumber, LoadType, TrailerNumber, isDropTrailer, Cab1Number, Cab2Number, Carrier, Shipper, " +
+                    "LoadTypeLong, isRejected, RejectionComment, LocationLong, MS.LocationShort, " +
+                    "MS.StatusID, S.StatusText, " +
+                    "(SELECT TOP 1 TimeStamp FROM dbo.MainScheduleEvents MSE WHERE MSE.MSID = MS.MSID AND (EventTypeID = 2037) ORDER BY Timestamp DESC) AS TimeRejected, " +
+                    "(SELECT TDS.SpotDescription FROM dbo.TruckDockSpots TDS WHERE MS.currentDockSpotID = TDS.SpotID AND (MS.LocationShort = 'DOCKBULK' OR MS.LocationShort = 'DOCKVAN')) AS currentSpot, " +
+                    "MS.currentDockSpotID, isOpenInCMS " +
+                    "FROM dbo.MainSchedule MS " +
+                    "INNER JOIN dbo.Locations LS ON LS.LocationShort = MS.LocationShort " +
+                    "INNER JOIN dbo.LoadTypes LT ON LT.LoadTypeShort = MS.LoadType " +
+                    "INNER JOIN dbo.Status S ON S.StatusID = MS.StatusID " +
+                    "WHERE MSID = @MSID";
 
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    string sqlQuery =
-                        //"SELECT TOP 1 MSID, ETA, CustomerID, TruckType, PONumber, LoadType, TrailerNumber, isDropTrailer, Cab1Number, Cab2Number, Carrier, Shipper, " +
-                        //"LoadTypeLong, isRejected, RejectionComment, LocationLong, MS.LocationShort, " +
-                        //"(SELECT TOP 1 TimeStamp FROM dbo.MainScheduleEvents MSE WHERE MSE.MSID = MS.MSID AND (EventTypeID = 2037) ORDER BY Timestamp DESC) AS TimeRejected, " +
-                        //"(SELECT TOP 1 TimeStamp FROM dbo.MainScheduleEvents MSE WHERE MSE.MSID = MS.MSID AND (EventTypeID = 3037) ORDER BY Timestamp DESC) AS TimeUndoRejected, " +
-                        //"MS.StatusID, S.StatusText, " +
-                        //"(SELECT TDS.SpotDescription FROM dbo.TruckDockSpots TDS WHERE MS.currentDockSpotID = TDS.SpotID AND (MS.LocationShort = 'DOCKBULK' OR MS.LocationShort = 'DOCKVAN')) AS currentSpot, " +
-                        //"isOpenInCMS " +
-                        "SELECT TOP 1 MSID, ETA, CustomerID, TruckType, PONumber, LoadType, TrailerNumber, isDropTrailer, Cab1Number, Cab2Number, Carrier, Shipper, " +
-                        "LoadTypeLong, isRejected, RejectionComment, LocationLong, MS.LocationShort, " +
-                        "MS.StatusID, S.StatusText, " +
-                        "(SELECT TOP 1 TimeStamp FROM dbo.MainScheduleEvents MSE WHERE MSE.MSID = MS.MSID AND (EventTypeID = 2037) ORDER BY Timestamp DESC) AS TimeRejected, " +
-                        "(SELECT TDS.SpotDescription FROM dbo.TruckDockSpots TDS WHERE MS.currentDockSpotID = TDS.SpotID AND (MS.LocationShort = 'DOCKBULK' OR MS.LocationShort = 'DOCKVAN')) AS currentSpot, " +
-                        "MS.currentDockSpotID, isOpenInCMS " +
-                        "FROM dbo.MainSchedule MS " +
-                        "INNER JOIN dbo.Locations LS ON LS.LocationShort = MS.LocationShort " +
-                        "INNER JOIN dbo.LoadTypes LT ON LT.LoadTypeShort = MS.LoadType " +
-                        "INNER JOIN dbo.Status S ON S.StatusID = MS.StatusID " +
-                        "WHERE MSID = @MSID";
-
-                    DataSet dsGridData = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlQuery, new SqlParameter("@MSID", MSID));
-                    data = dsGridData.Tables[0].Rows[0].ItemArray;
+                DataSet dsGridData = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlQuery, new SqlParameter("@MSID", MSID));
+                data = dsGridData.Tables[0].Rows[0].ItemArray;
                 
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile getTruckAndDataAvailableForInspections(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
 
-        //public static Object getInspectionListsForSelectedTruckAndProduct(int MSID, string productCMS)
-        //{
-
-        //    try
-        //    {
-        //       //TODO
-        //        //1) GET DATA FROM Database
-
-        //        //2) Make Objects
-        //        // getInspectionList
-        //        List<InspectionList> InspLists = new List<InspectionList>();
-        //       // InspLists.Add(new InspectionList(MSInspectionListID, MSID, InspectionListID, InspectionListName, ProductID_CMS, RunNumber, isHidden)
-
-
-        //    }
-        //    catch (SqlException excep)
-        //    {
-        //        string strErr = " SQLException Error in InspectionMobile getInspectionListsForSelectedTruckAndProduct(). Details: " + excep.ToString();
-        //        ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-        //        throw excep;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        string strErr = " Exception Error in InspectionMobile getInspectionListsForSelectedTruckAndProduct(). Details: " + ex.ToString();
-        //        ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-        //        System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-        //        ErrorLogging.sendtoErrorPage(1);
-        //    }
-
-
-        //    return 0;
-        //}
-
-
+        
 
 
         [System.Web.Services.WebMethod]
@@ -259,37 +193,15 @@ namespace TransportationProject
             List<object[]> data = new List<object[]>();
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 data = InspectionsHelperFunctions.getInspectionList( prodDetailID,  sql_connStr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile getInspectionList(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
-            //try
-            //{
-
-            //        DataSet dsGridData = GetPOdetailsData(prodDetailID);
-            //        if (0 == dsGridData.Tables[0].Rows.Count)
-            //        {
-            //            throw new Exception("GetPOdetailsData() Failed");
-            //        }
-            //        string CMSProdID = dsGridData.Tables[0].Rows[0]["ProductID_CMS"].ToString();
-            //        int MSID = Convert.ToInt32(dsGridData.Tables[0].Rows[0]["MSID"]);
-            //        data = getInspectionListUsingProductIDAndMSID(CMSProdID, MSID);
-
-            //}
-            //catch (Exception ex)
-            //{
-            //    string strErr = " Exception Error in InspectionMobile getInspectionList(). Details: " + ex.ToString();
-            //    ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-            //    System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-            //    ErrorLogging.sendtoErrorPage(1);
-            //    throw ex;
-            //}
+            
             return data;
         }
 
@@ -300,33 +212,14 @@ namespace TransportationProject
             DataSet dsPODetails = new DataSet();
 
             try {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 dsPODetails = InspectionsHelperFunctions.GetPOdetailsData( prodDetailID, sql_connStr);
             }
             catch (Exception ex) {
                 string strErr = " Exception Error in InspectionMobile GetPOdetailsData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
-
-
-            //try
-            //{
-
-            //        //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-            //        string sqlQuery = "SELECT TOP 1 ProductID_CMS, MSID, QTY, LotNumber, UnitOfMeasure, FileID_COFA FROM dbo.PODetails WHERE PODetailsID = @PDetailID";
-            //        dsPODetails = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlQuery, new SqlParameter("@PDetailID", prodDetailID));
-
-            //}
-            //catch (Exception ex)
-            //{
-            //    string strErr = " Exception Error in InspectionMobile GetPOdetailsData(). Details: " + ex.ToString();
-            //    ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-            //    System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-            //    ErrorLogging.sendtoErrorPage(1);
-            //    throw ex;
-            //}
+            
             return dsPODetails;
         }
 
@@ -337,40 +230,37 @@ namespace TransportationProject
             List<object[]> data = new List<object[]>();
             try
             {
-                
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    string sqlQuery = "SELECT MS.TruckType " +
-                                        "FROM dbo.MainSchedule AS MS " +
-                                        "INNER JOIN dbo.PODetails AS POD ON POD.MSID = MS.MSID " +
-                                        "WHERE POD.PODetailsID = @prodDetailsID";
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    string truckType = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlQuery, new SqlParameter("@prodDetailsID", prodDetailsID)));
+                string sqlQuery = "SELECT MS.TruckType " +
+                                    "FROM dbo.MainSchedule AS MS " +
+                                    "INNER JOIN dbo.PODetails AS POD ON POD.MSID = MS.MSID " +
+                                    "WHERE POD.PODetailsID = @prodDetailsID";
 
-                    if (truckType.ToLower() == "van")
-                    {
-                        //get location based on van type
-                        sqlQuery = "SELECT LocationShort, LocationLong FROM dbo.Locations WHERE (LocationShort ! = 'NOS' AND LocationShort != 'GS' AND LocationShort != 'LAB' AND LocationShort != 'DOCKBULK') ORDER BY LocationShort DESC";
-                    }
-                    else
-                    {
-                        //get location based on bulk type
-                        sqlQuery = "SELECT LocationShort, LocationLong FROM dbo.Locations WHERE (LocationShort ! = 'NOS' AND LocationShort != 'GS' AND LocationShort != 'LAB' AND LocationShort != 'DOCKVAN') ORDER BY LocationShort DESC";
-                    }
-                    DataSet dsAvailLocations = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlQuery);
-                    foreach (System.Data.DataRow row in dsAvailLocations.Tables[0].Rows)
-                    {
-                        data.Add(row.ItemArray);
-                    }
+                string truckType = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlQuery, new SqlParameter("@prodDetailsID", prodDetailsID)));
+
+                if (truckType.ToLower() == "van")
+                {
+                    //get location based on van type
+                    sqlQuery = "SELECT LocationShort, LocationLong FROM dbo.Locations WHERE (LocationShort ! = 'NOS' AND LocationShort != 'GS' AND LocationShort != 'LAB' AND LocationShort != 'DOCKBULK') ORDER BY LocationShort DESC";
+                }
+                else
+                {
+                    //get location based on bulk type
+                    sqlQuery = "SELECT LocationShort, LocationLong FROM dbo.Locations WHERE (LocationShort ! = 'NOS' AND LocationShort != 'GS' AND LocationShort != 'LAB' AND LocationShort != 'DOCKVAN') ORDER BY LocationShort DESC";
+                }
+                DataSet dsAvailLocations = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlQuery);
+                foreach (System.Data.DataRow row in dsAvailLocations.Tables[0].Rows)
+                {
+                    data.Add(row.ItemArray);
+                }
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile getAvailableLocations(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -391,36 +281,33 @@ namespace TransportationProject
                 int MSID = Convert.ToInt32(dsGridData.Tables[0].Rows[0]["MSID"]);
 
                 
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT MS.TruckType FROM dbo.MainSchedule AS MS WHERE MS.MSID = @MSID";
-                    truckType = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID))).Trim().ToUpper();
+                sqlCmdText = "SELECT MS.TruckType FROM dbo.MainSchedule AS MS WHERE MS.MSID = @MSID";
+                truckType = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID))).Trim().ToUpper();
 
-                    if (truckType == "VAN")
-                    {
-                        sqlCmdText = "SELECT SpotID, SpotDescription FROM TruckDockSpots Where SpotType = 'Van' AND isDisabled = 0 ORDER BY SpotDescription";
-                    }
-                    else
-                    {
-                        sqlCmdText = "SELECT SpotID, SpotDescription FROM TruckDockSpots Where SpotType = 'Bulk' AND isDisabled = 0 ORDER BY SpotDescription";
-                    }
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
+                if (truckType == "VAN")
+                {
+                    sqlCmdText = "SELECT SpotID, SpotDescription FROM TruckDockSpots Where SpotType = 'Van' AND isDisabled = 0 ORDER BY SpotDescription";
+                }
+                else
+                {
+                    sqlCmdText = "SELECT SpotID, SpotDescription FROM TruckDockSpots Where SpotType = 'Bulk' AND isDisabled = 0 ORDER BY SpotDescription";
+                }
+                dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
 
-                    //populate return object
-                    foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
-                    {
-                        data.Add(row.ItemArray);
-                    }
+                //populate return object
+                foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
+                {
+                    data.Add(row.ItemArray);
+                }
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile getAvailableDockSpots(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
 
@@ -447,7 +334,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText = null;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     switch (newLoc)
                     {
@@ -509,10 +396,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile updateLocation(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return returnData;
         }
@@ -527,79 +411,14 @@ namespace TransportationProject
             InspectionList inspList = new InspectionList();
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 inspList = InspectionsHelperFunctions.getMSInspectionListAndData(prodDetailID, InspectionListID, sql_connStr);
-
-                //using (var scope = new TransactionScope())
-                //{
-                //    DataSet dsGridData = GetPOdetailsData(prodDetailID);
-
-                //    //ErrorLogging.WriteEvent("1-" + dsGridData.Tables.Count.ToString(), EventLogEntryType.Information);
-                //    if (0 == dsGridData.Tables[0].Rows.Count)
-                //    {
-                //        throw new Exception("GetPOdetailsData() Failed");
-                //    }
-
-                //    string CMSproductID = dsGridData.Tables[0].Rows[0]["ProductID_CMS"].ToString();
-                //    int MSID = Convert.ToInt32(dsGridData.Tables[0].Rows[0]["MSID"]);
-
-                //    int MSInspectionListID = getMainscheduleInspectionListID(CMSproductID, MSID, InspectionListID);
-                //    //get data  for ui
-
-                //    //ErrorLogging.WriteEvent("2-" + MSInspectionListID.ToString(), EventLogEntryType.Information);
-                //    if (0 == MSInspectionListID)
-                //    {
-                //        throw new Exception("getMainscheduleInspectioinListID() Failed");
-                //    }
-
-                //    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                //    string sqlQuery = "SELECT InspectionListName, RunNumber, isHidden " +
-                //                          "FROM dbo.MainScheduleInspectionLists " +
-                //                          "WHERE MSInspectionListID = @MSLID";
-                //    DataSet resultData = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlQuery, new SqlParameter("@MSLID", MSInspectionListID));
-
-                //    string InspectionListName = resultData.Tables[0].Rows[0]["InspectionListName"].ToString();
-                //    int runNumber = Convert.ToInt32(resultData.Tables[0].Rows[0]["RunNumber"]);
-                //    bool isHidden = Convert.ToBoolean(resultData.Tables[0].Rows[0]["isHidden"]);
-
-                //    //ErrorLogging.WriteEvent("3-" + resultData.Tables.Count.ToString(), EventLogEntryType.Information);
-                //    inspList = new InspectionList(MSInspectionListID, MSID, InspectionListID, InspectionListName, CMSproductID, runNumber, isHidden);
-
-
-                //    sqlQuery = "SELECT MSInspectionListDetailID, MSInspectionListID, InspectionListID, InspectionHeaderID, SortOrder, InspectionHeaderName " +
-                //                                "FROM dbo.MainScheduleInspectionListsDetails " +
-                //                                "WHERE MSInspectionListID = @MSLID " +
-                //                                "ORDER BY SortOrder";
-                //    DataSet MSInspectionListDetailsData = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlQuery, new SqlParameter("@MSLID", MSInspectionListID));
-
-                //    //ErrorLogging.WriteEvent("4", EventLogEntryType.Information);
-                //    for (int i = 0; i < MSInspectionListDetailsData.Tables[0].Rows.Count; i++)
-                //    {
-
-                //        int MSInspectionListDetailID = Convert.ToInt32(MSInspectionListDetailsData.Tables[0].Rows[i]["MSInspectionListDetailID"]);
-                //        int InspectionHeaderID = Convert.ToInt32(MSInspectionListDetailsData.Tables[0].Rows[i]["InspectionHeaderID"]);
-                //        int SortOrder = Convert.ToInt32(MSInspectionListDetailsData.Tables[0].Rows[i]["SortOrder"]);
-                //        string InspectionHeaderName = MSInspectionListDetailsData.Tables[0].Rows[i]["InspectionHeaderName"].ToString();
-                //        Inspection nInspection = getInspection(MSInspectionListDetailID);
-
-                //        // ErrorLogging.WriteEvent("5", EventLogEntryType.Information);
-                //        if (0 == nInspection.MSInspectionID)
-                //        {
-                //            throw new Exception("getInspection() Failed");
-                //        }
-
-                //        InspectionListDetails inspListDetails = new InspectionListDetails(MSInspectionListDetailID, MSInspectionListID, InspectionHeaderID, InspectionHeaderName, SortOrder, nInspection);
-                //        inspList.addInspectionListDetail(inspListDetails);
-                //    }
-                //    scope.Complete();
-                //}
+                
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile getMSInspectionListAndData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return inspList;
         }
@@ -613,7 +432,7 @@ namespace TransportationProject
                 ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                 DataSet dsGridData = GetPOdetailsData(prodDetailID);
 
-                //ErrorLogging.WriteEvent("1-" + dsGridData.Tables.Count.ToString(), EventLogEntryType.Information);
+               
                 if (0 == dsGridData.Tables[0].Rows.Count)
                 {
                     throw new Exception("GetPOdetailsData() Failed");
@@ -624,7 +443,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     ChangeLog cl = new ChangeLog(ChangeLog.ChangeLogChangeType.UPDATE, "MainScheduleInspections", "InspectionComment", Convert.ToDateTime(now), zxpUD._uid, ChangeLog.ChangeLogDataType.NVARCHAR, TransportHelperFunctions.convertStringEmptyToDBNULL(comment).ToString(), null, "MSInspectionID", MSInspectionID.ToString());
                     cl.CreateChangeLogEntryIfChanged();
@@ -646,10 +465,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile updateInspectionComment(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return now.ToString();
         }
@@ -667,36 +483,33 @@ namespace TransportationProject
             try
             {
                 
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    DataSet dsGridData = GetPOdetailsData(prodDetailID);
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                DataSet dsGridData = GetPOdetailsData(prodDetailID);
 
-                    if (0 == dsGridData.Tables[0].Rows.Count)
-                    {
-                        throw new Exception("GetPOdetailsData() Failed");
-                    }
+                if (0 == dsGridData.Tables[0].Rows.Count)
+                {
+                    throw new Exception("GetPOdetailsData() Failed");
+                }
 
-                    int MSID = Convert.ToInt32(dsGridData.Tables[0].Rows[0]["MSID"]);
+                int MSID = Convert.ToInt32(dsGridData.Tables[0].Rows[0]["MSID"]);
 
-                    sqlCmdText = "SELECT FileID, MSID, MSF.FileTypeID, FileDescription, Filepath, FilenameNew, FilenameOld FROM dbo.MainScheduleFiles MSF " +
-                                        "INNER JOIN dbo.FileTypes FT ON FT.FileTypeID = MSF.FileTypeID " +
-                                        "WHERE isHidden = 0 AND MSID = @PMSID AND (MSF.FileTypeID = 3 OR MSF.FileTypeID = 4)";
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@PMSID", MSID));
+                sqlCmdText = "SELECT FileID, MSID, MSF.FileTypeID, FileDescription, Filepath, FilenameNew, FilenameOld FROM dbo.MainScheduleFiles MSF " +
+                                    "INNER JOIN dbo.FileTypes FT ON FT.FileTypeID = MSF.FileTypeID " +
+                                    "WHERE isHidden = 0 AND MSID = @PMSID AND (MSF.FileTypeID = 3 OR MSF.FileTypeID = 4)";
+                dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@PMSID", MSID));
 
-                    //populate return object
-                    foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
-                    {
-                        data.Add(row.ItemArray);
-                    }
+                //populate return object
+                foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
+                {
+                    data.Add(row.ItemArray);
+                }
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile getFileUploadsFromProdDetailID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -713,52 +526,49 @@ namespace TransportationProject
             try
             {
                 
-                    DataSet dsPOdata = GetPOdetailsData(prodDetailID);
-                    if (0 == dsPOdata.Tables[0].Rows.Count)
-                    {
-                        throw new Exception("GetPOdetailsData() Failed");
-                    }
-                    int MSID = Convert.ToInt32(dsPOdata.Tables[0].Rows[0]["MSID"]);
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                DataSet dsPOdata = GetPOdetailsData(prodDetailID);
+                if (0 == dsPOdata.Tables[0].Rows.Count)
+                {
+                    throw new Exception("GetPOdetailsData() Failed");
+                }
+                int MSID = Convert.ToInt32(dsPOdata.Tables[0].Rows[0]["MSID"]);
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    string sqlQuery = "SELECT TOP (1) MS.LocationShort, MS.StatusID, L.LocationLong, S.StatusText, MS.isRejected, MS.currentDockSpotID,  " +
-                                          "(SELECT TDS.SpotDescription FROM dbo.TruckDockSpots TDS WHERE MS.currentDockSpotID = TDS.SpotID AND (MS.LocationShort = 'DOCKBULK' OR MS.LocationShort = 'DOCKVAN')) AS currentSpot, " +
-                                          "MS.isOpenInCMS, MS.isDropTrailer " +
-                                          "FROM dbo.MainSchedule AS MS " +
-                                          "INNER JOIN dbo.Locations AS L ON MS.LocationShort = L.LocationShort " +
-                                          "INNER JOIN dbo.Status AS S ON S.StatusID = MS.StatusID " +
-                                          "WHERE MSID = @MSID";
-                    DataSet dsLocationData = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlQuery, new SqlParameter("@MSID", MSID));
+                string sqlQuery = "SELECT TOP (1) MS.LocationShort, MS.StatusID, L.LocationLong, S.StatusText, MS.isRejected, MS.currentDockSpotID,  " +
+                                        "(SELECT TDS.SpotDescription FROM dbo.TruckDockSpots TDS WHERE MS.currentDockSpotID = TDS.SpotID AND (MS.LocationShort = 'DOCKBULK' OR MS.LocationShort = 'DOCKVAN')) AS currentSpot, " +
+                                        "MS.isOpenInCMS, MS.isDropTrailer " +
+                                        "FROM dbo.MainSchedule AS MS " +
+                                        "INNER JOIN dbo.Locations AS L ON MS.LocationShort = L.LocationShort " +
+                                        "INNER JOIN dbo.Status AS S ON S.StatusID = MS.StatusID " +
+                                        "WHERE MSID = @MSID";
+                DataSet dsLocationData = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlQuery, new SqlParameter("@MSID", MSID));
 
-                    string locShort = Convert.ToString(dsLocationData.Tables[0].Rows[0]["LocationShort"]);
-                    int statShort = Convert.ToInt32(dsLocationData.Tables[0].Rows[0]["StatusID"]);
-                    bool isOpenInCMS = Convert.ToBoolean(dsLocationData.Tables[0].Rows[0]["isOpenInCMS"]);
-                    bool isDropTrailer = Convert.ToBoolean(dsLocationData.Tables[0].Rows[0]["isDropTrailer"]);
+                string locShort = Convert.ToString(dsLocationData.Tables[0].Rows[0]["LocationShort"]);
+                int statShort = Convert.ToInt32(dsLocationData.Tables[0].Rows[0]["StatusID"]);
+                bool isOpenInCMS = Convert.ToBoolean(dsLocationData.Tables[0].Rows[0]["isOpenInCMS"]);
+                bool isDropTrailer = Convert.ToBoolean(dsLocationData.Tables[0].Rows[0]["isDropTrailer"]);
 
-                    //NOTE:  statShort == 2 -- was removed because ZXP can not change status to weighing (#3) and wouldnt be able to change location
-                    if (statShort == 1 || statShort == 6 || statShort == 7 || statShort == 8 || statShort == 10 || statShort == 11 || statShort == 13 || statShort == 19 || statShort == 20)
-                    {
-                        canUpdateLoc = false;
-                    }
-                    if (statShort == 5 || statShort == 8 || statShort == 9 || statShort == 16 || statShort == 21)
-                    {
-                        canEditTest = true;
-                    }
+                //NOTE:  statShort == 2 -- was removed because ZXP can not change status to weighing (#3) and wouldnt be able to change location
+                if (statShort == 1 || statShort == 6 || statShort == 7 || statShort == 8 || statShort == 10 || statShort == 11 || statShort == 13 || statShort == 19 || statShort == 20)
+                {
+                    canUpdateLoc = false;
+                }
+                if (statShort == 5 || statShort == 8 || statShort == 9 || statShort == 16 || statShort == 21)
+                {
+                    canEditTest = true;
+                }
 
-                    //if drop trailer , PO open in cms and truck has departed
-                    if (locShort == "NOS" && statShort == 10 && isDropTrailer && isOpenInCMS)
-                    {
-                        canEditTest = true;
-                    }
+                //if drop trailer , PO open in cms and truck has departed
+                if (locShort == "NOS" && statShort == 10 && isDropTrailer && isOpenInCMS)
+                {
+                    canEditTest = true;
+                }
                    
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile checkIfControlsCanBeUpdated(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             returnData.Add(canUpdateLoc);
             returnData.Add(canEditTest);
@@ -793,7 +603,7 @@ namespace TransportationProject
                     cl = new ChangeLog(ChangeLog.ChangeLogChangeType.UPDATE, "MainScheduleInspectionResults", "SubmittedTimeStamp", timestamp, zxpUD._uid, ChangeLog.ChangeLogDataType.DATETIME, timestamp.ToString(), null, "MSInspectionID", MSInspectionID.ToString(), "testID", testID.ToString());
                     cl.CreateChangeLogEntryIfChanged();
 
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                     string sqlQuery = "UPDATE dbo.MainScheduleInspectionResults SET Result = @Result, SubmittedTimeStamp = @TIME, UserID = @USER " +
                                     "WHERE (TestID = @TID AND MSInspectionID = @INSPID)";
 
@@ -919,10 +729,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile setInspectionResult(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             List<object> returnData = new List<object>();
             returnData.Add(timestamp);
@@ -939,27 +746,24 @@ namespace TransportationProject
             int numOfNonFailedQuestions = -1;
             try
             {
-               
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    string sqlQuery = "SELECT ISNULL(COUNT(Result),0) " +
-                          "FROM dbo.MainScheduleInspectionResults MSIR " +
-                          "INNER JOIN dbo.MainScheduleInspections MSI ON MSI.MSInspectionID = MSIR.MSInspectionID " +
-                          "WHERE MSIR.MSInspectionID = @MSInspectionID AND Result IN (1, -1) ";
 
-                    numOfNonFailedQuestions = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlQuery, new SqlParameter("@MSInspectionID", MSInspectionID)));
-                    if (-1 == numOfNonFailedQuestions)
-                    {
-                        throw new Exception("checkifAnyQuestionsAreNotFailed Query Failed");
-                    }
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlQuery = "SELECT ISNULL(COUNT(Result),0) " +
+                        "FROM dbo.MainScheduleInspectionResults MSIR " +
+                        "INNER JOIN dbo.MainScheduleInspections MSI ON MSI.MSInspectionID = MSIR.MSInspectionID " +
+                        "WHERE MSIR.MSInspectionID = @MSInspectionID AND Result IN (1, -1) ";
+
+                numOfNonFailedQuestions = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlQuery, new SqlParameter("@MSInspectionID", MSInspectionID)));
+                if (-1 == numOfNonFailedQuestions)
+                {
+                    throw new Exception("checkifAnyQuestionsAreNotFailed Query Failed");
+                }
                    
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile checkifAllQuestionsAreFailed(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return numOfNonFailedQuestions;
         }
@@ -971,28 +775,26 @@ namespace TransportationProject
             int numOfFailedQuestions = -1;
             try
             {
-               
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    string sqlQuery = "SELECT ISNULL(COUNT(Result),0) " +
-                          "FROM dbo.MainScheduleInspectionResults MSIR " +
-                          "INNER JOIN dbo.MainScheduleInspections MSI ON MSI.MSInspectionID = MSIR.MSInspectionID " +
-                          "WHERE MSIR.MSInspectionID = @MSInspectionID AND Result IN (0) "; //0 = failed
+
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlQuery = "SELECT ISNULL(COUNT(Result),0) " +
+                        "FROM dbo.MainScheduleInspectionResults MSIR " +
+                        "INNER JOIN dbo.MainScheduleInspections MSI ON MSI.MSInspectionID = MSIR.MSInspectionID " +
+                        "WHERE MSIR.MSInspectionID = @MSInspectionID AND Result IN (0) "; //0 = failed
 
 
-                    numOfFailedQuestions = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlQuery, new SqlParameter("@MSInspectionID", MSInspectionID)));
+                numOfFailedQuestions = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlQuery, new SqlParameter("@MSInspectionID", MSInspectionID)));
 
-                    if (-1 == numOfFailedQuestions)
-                    {
-                        throw new Exception("checkifAnyQuestionsAreNotPassed Query Failed");
-                    }
+                if (-1 == numOfFailedQuestions)
+                {
+                    throw new Exception("checkifAnyQuestionsAreNotPassed Query Failed");
+                }
                    
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile checkifAnyQuestionsAreNotPassed(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return numOfFailedQuestions;
         }
@@ -1003,28 +805,26 @@ namespace TransportationProject
             int numOfUnansweredQuestions = -1;
             try
             {
-               
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    string sqlQuery = "SELECT ISNULL(COUNT(Result),0) " +
-                          "FROM dbo.MainScheduleInspectionResults MSIR " +
-                          "INNER JOIN dbo.MainScheduleInspections MSI ON MSI.MSInspectionID = MSIR.MSInspectionID " +
-                          "WHERE MSIR.MSInspectionID = @MSInspectionID AND Result IN (-999) "; //-999 = unanswered
+
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlQuery = "SELECT ISNULL(COUNT(Result),0) " +
+                        "FROM dbo.MainScheduleInspectionResults MSIR " +
+                        "INNER JOIN dbo.MainScheduleInspections MSI ON MSI.MSInspectionID = MSIR.MSInspectionID " +
+                        "WHERE MSIR.MSInspectionID = @MSInspectionID AND Result IN (-999) "; //-999 = unanswered
 
 
-                    numOfUnansweredQuestions = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlQuery, new SqlParameter("@MSInspectionID", MSInspectionID)));
+                numOfUnansweredQuestions = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlQuery, new SqlParameter("@MSInspectionID", MSInspectionID)));
 
-                    if (-1 == numOfUnansweredQuestions)
-                    {
-                        throw new Exception("checkForNumberOfUnansweredQuestions Query Failed");
-                    }
+                if (-1 == numOfUnansweredQuestions)
+                {
+                    throw new Exception("checkForNumberOfUnansweredQuestions Query Failed");
+                }
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile checkForNumberOfUnansweredQuestions(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return numOfUnansweredQuestions;
         }
@@ -1065,10 +865,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile canInspectionBeStarted(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             List<object> returnObj = new List<object>();
             returnObj.Add(canEdit);
@@ -1087,7 +884,7 @@ namespace TransportationProject
                 {
                     DataSet dsGridData = GetPOdetailsData(prodDetailID);
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                     if (0 == dsGridData.Tables[0].Rows.Count)
                     {
                         throw new Exception("GetPOdetailsData() Failed");
@@ -1152,10 +949,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile AddFileDBEntry(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1165,37 +959,34 @@ namespace TransportationProject
             bool isDone = false;
             try
             {
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    //find if there exists an inspection under the list with a sort order lower than the selected inspection that has not been completed
-                    sqlCmdText = "SELECT ISNULL(COUNT(MSI.MSInspectionID), 0) " +
-                                            "FROM dbo.MainScheduleInspections MSI " +
-                                            "INNER JOIN dbo.MainScheduleInspectionListsDetails MSILD ON MSI.MSInspectionListDetailID = MSILD.MSInspectionListDetailID " +
-                                            "WHERE MSILD.MSInspectionListID = @MSIListID " +
-                                            "AND MSI.isHidden = 0 " +
-                                            "AND MSI.InspectionEndEventID IS NULL " + //check if not completed
-                        //"AND MSI.wasAutoClosed = 0 " +          //TODO: CL: ask zxp if they should be able to continue other inspections if previous inspections have not been started but was autoclosed
-                                            "AND MSILD.SortOrder <= ( SELECT  MSILD_1.SortOrder " +
-                                                                    "FROM dbo.MainScheduleInspections MSI_1 " +
-                                                                    "INNER JOIN dbo.MainScheduleInspectionListsDetails MSILD_1 ON MSI_1.MSInspectionListDetailID = MSILD_1.MSInspectionListDetailID " +
-                                                                    "WHERE MSI_1.MSInspectionID = @MSInspID ) " +
-                                            "AND MSI.MSInspectionID <> @MSInspID";
-                    int countOfInspectionsNotCompleted = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSIListID", MSInspectListID),
-                                                                                                                                            new SqlParameter("@MSInspID", MSInspectID)));
-                    if (0 == countOfInspectionsNotCompleted)
-                    {
-                        isDone = true;
-                    }
+                //find if there exists an inspection under the list with a sort order lower than the selected inspection that has not been completed
+                sqlCmdText = "SELECT ISNULL(COUNT(MSI.MSInspectionID), 0) " +
+                                        "FROM dbo.MainScheduleInspections MSI " +
+                                        "INNER JOIN dbo.MainScheduleInspectionListsDetails MSILD ON MSI.MSInspectionListDetailID = MSILD.MSInspectionListDetailID " +
+                                        "WHERE MSILD.MSInspectionListID = @MSIListID " +
+                                        "AND MSI.isHidden = 0 " +
+                                        "AND MSI.InspectionEndEventID IS NULL " + //check if not completed
+                    //"AND MSI.wasAutoClosed = 0 " +          //TODO: CL: ask zxp if they should be able to continue other inspections if previous inspections have not been started but was autoclosed
+                                        "AND MSILD.SortOrder <= ( SELECT  MSILD_1.SortOrder " +
+                                                                "FROM dbo.MainScheduleInspections MSI_1 " +
+                                                                "INNER JOIN dbo.MainScheduleInspectionListsDetails MSILD_1 ON MSI_1.MSInspectionListDetailID = MSILD_1.MSInspectionListDetailID " +
+                                                                "WHERE MSI_1.MSInspectionID = @MSInspID ) " +
+                                        "AND MSI.MSInspectionID <> @MSInspID";
+                int countOfInspectionsNotCompleted = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSIListID", MSInspectListID),
+                                                                                                                                        new SqlParameter("@MSInspID", MSInspectID)));
+                if (0 == countOfInspectionsNotCompleted)
+                {
+                    isDone = true;
+                }
                    
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile haveAllPreviousInspectionsBeenDoneInOrder(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return isDone;
         }
@@ -1207,20 +998,17 @@ namespace TransportationProject
             try
             {
                
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    //Check if there exists a verification inspection of the same type under the selected list that was started by user excluding the selected inspection
-                    sqlCmdText = "SELECT ISNULL(UserID, 0) FROM dbo.MainScheduleInspections WHERE MSInspectionID = @MSInspID";
-                    userID = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSInspID", MSInspectID)));
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                //Check if there exists a verification inspection of the same type under the selected list that was started by user excluding the selected inspection
+                sqlCmdText = "SELECT ISNULL(UserID, 0) FROM dbo.MainScheduleInspections WHERE MSInspectionID = @MSInspID";
+                userID = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSInspID", MSInspectID)));
                 
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile getInspectionCreatorUserID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return userID;
         }
@@ -1233,42 +1021,39 @@ namespace TransportationProject
             try
             {
                 
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    //1) Check if there are same existing inspections of the selected started by users that are verifications test
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                //1) Check if there are same existing inspections of the selected started by users that are verifications test
 
-                    //Check if there exists a verification inspection of the same type under the selected list that was started by user excluding the selected inspection
-                    sqlCmdText = "SELECT ISNULL(COUNT(MSI.MSInspectionID), 0) " +
-                                            "FROM dbo.MainScheduleInspectionListsDetails  MSILD " +
-                                            "INNER JOIN dbo.MainScheduleInspections MSI ON MSILD.MSInspectionListDetailID = MSI.MSInspectionListDetailID " +
-                                            "WHERE MSILD.MSInspectionListID = @MSIListID  " +
-                                            "AND MSI.InspectionHeaderID =  " +                      //check for same type of inspection as selected
-                                                    "(	SELECT InspectionHeaderID " +
-                                                        "FROM dbo.MainScheduleInspections MSI_1  " +
-                                                        "WHERE MSI_1.MSInspectionID = @MSInspID " +
-                                                    ") " +
-                                            "AND MSI.needsVerificationTest = 1 " +                 //filter to make sure inspection is a verification test 
-                                            "AND MSI.isHidden = 0 " +
-                                            "AND USERID = @UID " +
-                                            "AND MSI.MSID = @MSID " +  //only count inspections under the truck/MSID
-                                            "AND MSI.wasAutoClosed = 0 " +
-                                            "AND MSI.MSInspectionID <> @MSInspID";
-                    int inspectionCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSIListID", MSInspectListID),
-                                                                                                                             new SqlParameter("@MSInspID", MSInspectID),
-                                                                                                                             new SqlParameter("@UID", userID),
-                                                                                                                             new SqlParameter("@MSID", MSID)));
-                    if (inspectionCount > 0)
-                    {  //if count > 0 then there exists an inspection by user of same type. User cannot perform inspection.
-                        didStart = true;
-                    }
+                //Check if there exists a verification inspection of the same type under the selected list that was started by user excluding the selected inspection
+                sqlCmdText = "SELECT ISNULL(COUNT(MSI.MSInspectionID), 0) " +
+                                        "FROM dbo.MainScheduleInspectionListsDetails  MSILD " +
+                                        "INNER JOIN dbo.MainScheduleInspections MSI ON MSILD.MSInspectionListDetailID = MSI.MSInspectionListDetailID " +
+                                        "WHERE MSILD.MSInspectionListID = @MSIListID  " +
+                                        "AND MSI.InspectionHeaderID =  " +                      //check for same type of inspection as selected
+                                                "(	SELECT InspectionHeaderID " +
+                                                    "FROM dbo.MainScheduleInspections MSI_1  " +
+                                                    "WHERE MSI_1.MSInspectionID = @MSInspID " +
+                                                ") " +
+                                        "AND MSI.needsVerificationTest = 1 " +                 //filter to make sure inspection is a verification test 
+                                        "AND MSI.isHidden = 0 " +
+                                        "AND USERID = @UID " +
+                                        "AND MSI.MSID = @MSID " +  //only count inspections under the truck/MSID
+                                        "AND MSI.wasAutoClosed = 0 " +
+                                        "AND MSI.MSInspectionID <> @MSInspID";
+                int inspectionCount = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSIListID", MSInspectListID),
+                                                                                                                            new SqlParameter("@MSInspID", MSInspectID),
+                                                                                                                            new SqlParameter("@UID", userID),
+                                                                                                                            new SqlParameter("@MSID", MSID)));
+                if (inspectionCount > 0)
+                {  //if count > 0 then there exists an inspection by user of same type. User cannot perform inspection.
+                    didStart = true;
+                }
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile didUserStartAnotherVerificationInspectionOfSameType(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return didStart;
         }
@@ -1292,7 +1077,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //loader  - EventTypeID = 7 --> "Inspection Started "
                     sqlCmdText = "INSERT INTO dbo.MainScheduleEvents (MSID, EventTypeID,Timestamp, UserId, isHidden) " +
@@ -1328,10 +1113,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile startInspection(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1340,6 +1122,7 @@ namespace TransportationProject
         {
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                 InspectionsHelperFunctions.endInspection(MSID, MSInspectionID, timeStamp, isAutoClosed, sql_connStr, zxpUD);
                
@@ -1347,10 +1130,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile endInspection(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1367,7 +1147,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                     ChangeLog cLog;
 
                     SqlParameter paramMSID = new SqlParameter("@MSID", SqlDbType.Int);
@@ -1420,10 +1200,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile setCompleteStatus(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1434,10 +1211,10 @@ namespace TransportationProject
             DataSet dataSet = new DataSet();
             try
             {
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT TOP 1 MSI.MSID, MS.PONumber, MS.TrailerNumber, MSIL.ProductID_CMS, PCMS.ProductName_CMS, MSE.TimeStamp AS InspectionEndTime, MSI.InspectionHeaderName " +
+                sqlCmdText = "SELECT TOP 1 MSI.MSID, MS.PONumber, MS.TrailerNumber, MSIL.ProductID_CMS, PCMS.ProductName_CMS, MSE.TimeStamp AS InspectionEndTime, MSI.InspectionHeaderName " +
                                             ",MSI.RunNumber, MSI.isFailed, MSE.UserId, U.FirstName, U.LastName " +
                                             "FROM dbo.MainScheduleInspections MSI " +
                                             "INNER JOIN dbo.MainScheduleInspectionListsDetails MSILD ON MSILD.MSInspectionListDetailID = MSI.MSInspectionListDetailID " +
@@ -1460,10 +1237,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile getInspectionInformationforAlert(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -1508,10 +1282,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile createCustomInspectionFailedMessage(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return customAlertMsg;
         }
@@ -1522,15 +1293,13 @@ namespace TransportationProject
             bool isLast = false;
             try
             {
-              isLast = InspectionsHelperFunctions.isLastAnsweredQuestion(testID, MSInspectionID, sql_connStr);
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                isLast = InspectionsHelperFunctions.isLastAnsweredQuestion(testID, MSInspectionID, sql_connStr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile isLastAnsweredQuestion(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return isLast;
         }
@@ -1541,16 +1310,14 @@ namespace TransportationProject
             bool isDealBreaker = false;
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 isDealBreaker = InspectionsHelperFunctions.isQuestionADealBreaker(MSInspectionID, testID, sql_connStr);
                    
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile isQuestionADealBreaker(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return isDealBreaker;
         }
@@ -1563,36 +1330,15 @@ namespace TransportationProject
 
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                verificationMSinspectionID = InspectionsHelperFunctions.getSecondaryDoubleVerificationInspectionIfExists(MSinspectionID, sql_connStr);
 
-                 verificationMSinspectionID = InspectionsHelperFunctions.getSecondaryDoubleVerificationInspectionIfExists(MSinspectionID, sql_connStr);
-
-                //string sqlCmdText;
-                ////sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-
-                ////get MSInspectionID of second verification test 
-                //sqlCmdText = "SELECT TOP 1 ISNULL(MSI.MSInspectionID,0)" +
-                //                        "FROM dbo.MainScheduleInspectionListsDetails  MSILD " +
-                //                        "INNER JOIN dbo.MainScheduleInspections MSI ON MSILD.MSInspectionListDetailID = MSI.MSInspectionListDetailID " +
-                //                        "INNER JOIN (SELECT MSI_1.InspectionHeaderID, MSI_1.MSID, MSI_1.MSInspectionListDetailID, MSILD_1.SortOrder, MSILD_1.MSInspectionListID " +
-                //                                    "FROM dbo.MainScheduleInspections MSI_1 " +
-                //                                    "INNER JOIN dbo.MainScheduleInspectionListsDetails MSILD_1 ON MSILD_1.MSInspectionListDetailID = MSI_1.MSInspectionListDetailID " +
-                //                                    "WHERE MSI_1.MSInspectionID = @MSInspID " +
-                //                                    ") OrigInspection ON OrigInspection.MSID = MSI.MSID AND OrigInspection.InspectionHeaderID = MSILD.InspectionHeaderID " +
-                //                        "WHERE MSI.needsVerificationTest = 1 " +
-                //                        "AND MSI.isHidden = 0 " +
-                //                        "AND MSILD.MSinspectionListID = OrigInspection.MSInspectionListID " +
-                //                        "ORDER BY MSILD.SortOrder DESC, RunNumber DESC";
-
-                //verificationMSinspectionID = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSInspID", MSinspectionID)));
 
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile getSecondaryDoubleVerificationInspectionIfExists(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return verificationMSinspectionID;
         }
@@ -1610,18 +1356,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in InspectionMobile setIsFailedStatus(int MSInspectionID, bool isFailed). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
-                throw excep;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile setIsFailedStatus(int MSInspectionID, bool isFailed). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
 
         }
@@ -1632,16 +1372,14 @@ namespace TransportationProject
         {
             try
             {
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
                 InspectionsHelperFunctions.setIsFailedStatus(MSInspectionID, isFailed, timestamp, sql_connStr, zxpUD);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile setIsFailedStatus(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1654,7 +1392,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     ChangeLog cLog = new ChangeLog(ChangeLog.ChangeLogChangeType.UPDATE, "MainScheduleInspections", "wasAutoClosed", timestamp, zxpUD._uid, ChangeLog.ChangeLogDataType.BIT, isAutoClosed.ToString(), null, "MSInspectionID", MSInspectionID.ToString());
                     cLog.CreateChangeLogEntryIfChanged();
@@ -1668,10 +1406,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile setAutoClosedStatus(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1685,10 +1420,10 @@ namespace TransportationProject
             {
                
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    //Result == -999 indicates question has not been answered
-                    sqlCmdText = "SELECT DISTINCT MS.MSID, ETA, PONumber, TrailerNumber, A.NewName, MS.LocationShort, LS.LocationLong, A.InspectionEndEventID, isRejected, MS.StatusID, S.StatusText, " +
+                //Result == -999 indicates question has not been answered
+                sqlCmdText = "SELECT DISTINCT MS.MSID, ETA, PONumber, TrailerNumber, A.NewName, MS.LocationShort, LS.LocationLong, A.InspectionEndEventID, isRejected, MS.StatusID, S.StatusText, " +
                                         "A.isFailed, MSIL.ProductID_CMS, ISNULL(PCMS.ProductName_CMS, MSIL.ProductID_CMS)  " +
                                     "FROM dbo.MainSchedule MS " +
                                     "INNER JOIN dbo.Locations LS ON LS.LocationShort = MS.LocationShort " +
@@ -1716,10 +1451,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in InspectionMobile getListofTrucksCurrentlyInZXPWithIncompleteTest(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }

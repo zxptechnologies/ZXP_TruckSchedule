@@ -15,9 +15,6 @@ namespace TransportationProject
 {
     public partial class Samples : System.Web.UI.Page
     {
-        protected static String sql_connStr;
-       // public static ZXPUserData zxpUD = new ZXPUserData();
-
         void Page_PreInit(Object sender, EventArgs e)
         {
             if (Request.Browser.IsMobileDevice)
@@ -41,15 +38,7 @@ namespace TransportationProject
                     System.Web.Security.FormsAuthenticationTicket ticket = System.Web.Security.FormsAuthentication.Decrypt(cookie.Value);
                     zxpUD = ZXPUserData.DeserializeZXPUserData(ticket.UserData);
 
-                    if (zxpUD._isAdmin || zxpUD._isDockManager || zxpUD._isInspector || zxpUD._isLabPersonnel || zxpUD._isLoader || zxpUD._isLabAdmin) //make sure this matches whats in Site.Master and Default
-                    {
-                        sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                        if (sql_connStr == String.Empty)
-                        {
-                            throw new Exception("Missing SQLConnectionString in web.config");
-                        }
-                    }
-                    else 
+                    if (!(zxpUD._isAdmin || zxpUD._isDockManager || zxpUD._isInspector || zxpUD._isLabPersonnel || zxpUD._isLoader || zxpUD._isLabAdmin)) //make sure this matches whats in Site.Master and Default
                     {
                         Response.BufferOutput = true;
                         Response.Redirect("ErrorPage.aspx?ErrorCode=5", false); //zxp live url
@@ -65,16 +54,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in Samples Page_Load(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples Page_Load(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
 
         }
@@ -97,30 +82,27 @@ namespace TransportationProject
             try
             {
                 
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT MS.TruckType FROM dbo.MainSchedule AS MS WHERE MS.MSID = @MSID";
-                    truckType = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
+                sqlCmdText = "SELECT MS.TruckType FROM dbo.MainSchedule AS MS WHERE MS.MSID = @MSID";
+                truckType = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
                     
 
-                    sqlCmdText = "SELECT SpotID, SpotDescription FROM TruckDockSpots Where SpotType = @SpotType AND isDisabled = 0 ORDER BY SpotDescription";
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@SpotType", truckType));
+                sqlCmdText = "SELECT SpotID, SpotDescription FROM TruckDockSpots Where SpotType = @SpotType AND isDisabled = 0 ORDER BY SpotDescription";
+                dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@SpotType", truckType));
 
-                    //populate return object
-                    foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
-                    {
-                        data.Add(row.ItemArray);
-                    }
+                //populate return object
+                foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
+                {
+                    data.Add(row.ItemArray);
+                }
                    
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples getAvailableDockSpots(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -135,26 +117,23 @@ namespace TransportationProject
             try
             {
                 
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT ISNULL(MS.currentDockSpotID, 0) FROM dbo.MainSchedule AS MS WHERE MS.MSID = @MSID";
+                sqlCmdText = "SELECT ISNULL(MS.currentDockSpotID, 0) FROM dbo.MainSchedule AS MS WHERE MS.MSID = @MSID";
+                currentOrAssignedSpot = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
+
+                if (currentOrAssignedSpot == 0)
+                {
+                    sqlCmdText = "SELECT MS.DockSpotID FROM dbo.MainSchedule AS MS WHERE MS.MSID = @MSID";
                     currentOrAssignedSpot = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
-
-                    if (currentOrAssignedSpot == 0)
-                    {
-                        sqlCmdText = "SELECT MS.DockSpotID FROM dbo.MainSchedule AS MS WHERE MS.MSID = @MSID";
-                        currentOrAssignedSpot = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
-                    }
+                }
                    
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples getCurrentDockSpot(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return currentOrAssignedSpot;
         }
@@ -173,7 +152,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "INSERT INTO dbo.MainScheduleEvents(MSID, UserId, TimeStamp, EventTypeID, isHidden) VALUES (@MSID, @UserId, @TimeStamp, 6098, 'false'); " +
                                             "SELECT SCOPE_IDENTITY()";
@@ -194,10 +173,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples deleteSample(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
         
@@ -216,8 +192,8 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-        
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+
                     //EventTypeID = 3052= Sample Approved
                     sqlCmdText = "INSERT INTO dbo.MainScheduleEvents (MSID, EventTypeID,Timestamp, UserId, isHidden) " +
                                     "VALUES (@MSID, 3052, @TSTAMP, @USER, 'false');" +
@@ -273,10 +249,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples approveSample(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -293,7 +266,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //EventTypeID = 3054= Undo Sample Approved
                     sqlCmdText = "INSERT INTO dbo.MainScheduleEvents (MSID, EventTypeID,Timestamp, UserId, isHidden) " +
@@ -325,10 +298,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples undoApproveSample(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -346,8 +316,8 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+
                     //EventTypeID = 3053= Sample Rejected
                     sqlCmdText = "INSERT INTO dbo.MainScheduleEvents (MSID, EventTypeID,Timestamp, UserId, isHidden) " +
                                     "VALUES (@MSID, 3053, @TSTAMP, @USER, 'false');" +
@@ -398,10 +368,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples rejectSample(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -419,7 +386,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //EventTypeID = 3055= Sample Rejected
                     sqlCmdText = "UPDATE dbo.MainScheduleEvents SET isHidden = 'true' WHERE isHidden = 'false' AND MSID = @MSID AND (EventTypeID = 3053); " +
@@ -450,10 +417,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples undoRejectSample(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -466,26 +430,23 @@ namespace TransportationProject
             try
             {
                 
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT LoadTypeShort, LoadTypeLong FROM dbo.LoadTypes WHERE (isUsedOnlyForInspections = 'false' OR isUsedOnlyForInspections is null) ORDER BY LoadTypeLong";
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
+                sqlCmdText = "SELECT LoadTypeShort, LoadTypeLong FROM dbo.LoadTypes WHERE (isUsedOnlyForInspections = 'false' OR isUsedOnlyForInspections is null) ORDER BY LoadTypeLong";
+                dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
 
-                    //populate return object
-                    foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
-                    {
-                        data.Add(row.ItemArray);
-                    }
+                //populate return object
+                foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
+                {
+                    data.Add(row.ItemArray);
+                }
                   
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples GetLoadOptions(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -499,26 +460,23 @@ namespace TransportationProject
             try
             {
                 
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT MSID, TrailerNumber FROM dbo.MainSchedule WHERE(LocationShort NOT IN ('NOS', 'GS')) AND isHidden = 0 AND TrailerNumber IS NOT NULL ORDER BY TrailerNumber";
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
+                sqlCmdText = "SELECT MSID, TrailerNumber FROM dbo.MainSchedule WHERE(LocationShort NOT IN ('NOS', 'GS')) AND isHidden = 0 AND TrailerNumber IS NOT NULL ORDER BY TrailerNumber";
+                dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
 
-                    //populate return object
-                    foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
-                    {
-                        data.Add(row.ItemArray);
-                    }
+                //populate return object
+                foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
+                {
+                    data.Add(row.ItemArray);
+                }
                   
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples getCurrentTrailers(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -531,27 +489,23 @@ namespace TransportationProject
 
             try
             {
-                
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT MSID, PONumber FROM dbo.MainSchedule WHERE (LocationShort != 'NOS' AND LocationShort != 'GS') AND isHidden = 0 ORDER BY PONumber";
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
+                sqlCmdText = "SELECT MSID, PONumber FROM dbo.MainSchedule WHERE (LocationShort != 'NOS' AND LocationShort != 'GS') AND isHidden = 0 ORDER BY PONumber";
+                dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
 
-                    //populate return object
-                    foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
-                    {
-                        data.Add(row.ItemArray);
-                    }
+                //populate return object
+                foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
+                {
+                    data.Add(row.ItemArray);
+                }
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples getAvailablePOForSamplesGridOptions(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -565,26 +519,23 @@ namespace TransportationProject
             try
             {
                 
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT PODetailsID, PD.ProductID_CMS FROM dbo.PODetails PD INNER JOIN dbo.MainSchedule MS ON MS.MSID = PD.MSID WHERE PD.MSID = @MSID AND MS.isHidden = 0";
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID));
+                sqlCmdText = "SELECT PODetailsID, PD.ProductID_CMS FROM dbo.PODetails PD INNER JOIN dbo.MainSchedule MS ON MS.MSID = PD.MSID WHERE PD.MSID = @MSID AND MS.isHidden = 0";
+                dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID));
 
-                    //populate return object
-                    foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
-                    {
-                        data.Add(row.ItemArray);
-                    }
+                //populate return object
+                foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
+                {
+                    data.Add(row.ItemArray);
+                }
                     
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples getPODetailProductsFromMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -599,63 +550,60 @@ namespace TransportationProject
             try
             {
                
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    //get current location
-                    sqlCmdText = "SELECT TOP (1) MS.LocationShort, L.LocationLong, " +
-                                         "(SELECT S.StatusText FROM dbo.Status AS S WHERE S.StatusID = MS.StatusID) AS currentStatus, " +
-                                         "(SELECT TDS.SpotDescription FROM dbo.TruckDockSpots TDS WHERE MS.currentDockSpotID = TDS.SpotID AND (MS.LocationShort = 'DOCKBULK' OR MS.LocationShort = 'DOCKVAN')) AS currentSpot " +
-                                         "FROM dbo.MainSchedule as MS " +
-                                         "INNER JOIN dbo.Locations L ON MS.LocationShort = L.LocationShort WHERE MSID = @MSID";
+                //get current location
+                sqlCmdText = "SELECT TOP (1) MS.LocationShort, L.LocationLong, " +
+                                        "(SELECT S.StatusText FROM dbo.Status AS S WHERE S.StatusID = MS.StatusID) AS currentStatus, " +
+                                        "(SELECT TDS.SpotDescription FROM dbo.TruckDockSpots TDS WHERE MS.currentDockSpotID = TDS.SpotID AND (MS.LocationShort = 'DOCKBULK' OR MS.LocationShort = 'DOCKVAN')) AS currentSpot " +
+                                        "FROM dbo.MainSchedule as MS " +
+                                        "INNER JOIN dbo.Locations L ON MS.LocationShort = L.LocationShort WHERE MSID = @MSID";
 
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID));
+                dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID));
 
-                    data.Add(dataSet.Tables[0].Rows[0].ItemArray);
+                data.Add(dataSet.Tables[0].Rows[0].ItemArray);
 
-                //get truck type
-                    sqlCmdText = "SELECT MS.TruckType FROM dbo.MainSchedule AS MS WHERE MSID = @MSID";
-                    truckType = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
+            //get truck type
+                sqlCmdText = "SELECT MS.TruckType FROM dbo.MainSchedule AS MS WHERE MSID = @MSID";
+                truckType = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
 
-                    if (truckType.ToLower() == "van")
-                    {
-                        //get location based on van type
-                        sqlCmdText = "SELECT L.LocationShort, LocationLong " +
-                                                "FROM dbo.LocationStatusRelation LSR " +
-                                                "INNER JOIN dbo.Locations L ON LSR.LocationShort = L.LocationShort " +
-                                                "INNER JOIN dbo.Status S ON S.StatusID = LSR.StatusID " +
-                                                "WHERE S.StatusID = 7 AND L.LocationShort != 'DOCKBULK'" + // status 7 = sampling
-                                                "ORDER BY LocationShort, SortOrder ";
-                    }
-                    else
-                    {
-                        //get location based on bulk type
-                        sqlCmdText = "SELECT L.LocationShort, LocationLong " +
-                                                "FROM dbo.LocationStatusRelation LSR " +
-                                                "INNER JOIN dbo.Locations L ON LSR.LocationShort = L.LocationShort " +
-                                                "INNER JOIN dbo.Status S ON S.StatusID = LSR.StatusID " +
-                                                "WHERE S.StatusID = 7 AND L.LocationShort != 'DOCKVAN'" + // status 7 = sampling
-                                                "ORDER BY LocationShort, SortOrder ";
-                    }
+                if (truckType.ToLower() == "van")
+                {
+                    //get location based on van type
+                    sqlCmdText = "SELECT L.LocationShort, LocationLong " +
+                                            "FROM dbo.LocationStatusRelation LSR " +
+                                            "INNER JOIN dbo.Locations L ON LSR.LocationShort = L.LocationShort " +
+                                            "INNER JOIN dbo.Status S ON S.StatusID = LSR.StatusID " +
+                                            "WHERE S.StatusID = 7 AND L.LocationShort != 'DOCKBULK'" + // status 7 = sampling
+                                            "ORDER BY LocationShort, SortOrder ";
+                }
+                else
+                {
+                    //get location based on bulk type
+                    sqlCmdText = "SELECT L.LocationShort, LocationLong " +
+                                            "FROM dbo.LocationStatusRelation LSR " +
+                                            "INNER JOIN dbo.Locations L ON LSR.LocationShort = L.LocationShort " +
+                                            "INNER JOIN dbo.Status S ON S.StatusID = LSR.StatusID " +
+                                            "WHERE S.StatusID = 7 AND L.LocationShort != 'DOCKVAN'" + // status 7 = sampling
+                                            "ORDER BY LocationShort, SortOrder ";
+                }
 
 
-                    dataSet = new DataSet();
-                    dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
+                dataSet = new DataSet();
+                dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
 
-                    //populate return object
-                    foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
-                    {
-                        data.Add(row.ItemArray);
-                    }
+                //populate return object
+                foreach (System.Data.DataRow row in dataSet.Tables[0].Rows)
+                {
+                    data.Add(row.ItemArray);
+                }
                    
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples GetLocationOptions(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -673,7 +621,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //EventTypeID = 2025= Sample Taken
                     sqlCmdText = "INSERT INTO dbo.MainScheduleEvents (MSID, EventTypeID,Timestamp, UserId, isHidden) " +
@@ -727,10 +675,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples takeProductSample(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return timeStamp;
         }
@@ -747,7 +692,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //EventTypeID = 3050= Undo Sample Taken
                     sqlCmdText = "UPDATE dbo.MainScheduleEvents SET isHidden = 'true' WHERE isHidden = 'false' AND MSID = @MSID AND (EventTypeID = 2025) " +
@@ -780,10 +725,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples undoTakeProductSample(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -798,7 +740,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     cLog = new ChangeLog(ChangeLog.ChangeLogChangeType.UPDATE, "Samples", "Comments", now, zxpUD._uid, ChangeLog.ChangeLogDataType.NVARCHAR, comments, null, "SampleID", sampleID.ToString());
                     cLog.CreateChangeLogEntryIfChanged();
@@ -821,10 +763,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples updateCommentLotusIDAndGravity(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -841,8 +780,8 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+
                     //EventTypeID = 8= Sample sent to lab
                     sqlCmdText = "INSERT INTO dbo.MainScheduleEvents (MSID, EventTypeID, Timestamp, UserId, isHidden) " +
                                             "VALUES (@MSID, 8, @TSTAMP, @USER, 'false');" +
@@ -871,10 +810,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples getAvailableDockSpots(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return timeStamp;
         }
@@ -892,7 +828,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //EventTypeID = 3038= Undo Sample sent to lab
                     sqlCmdText = "UPDATE dbo.MainScheduleEvents SET isHidden = 'true' WHERE isHidden = 'false' AND MSID = @MSID AND (EventTypeID = 8); " +
@@ -924,10 +860,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples getAvailableDockSpots(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -944,7 +877,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //EventTypeID = 9= Sample received by lab personnel
                     sqlCmdText = "INSERT INTO dbo.MainScheduleEvents (MSID, EventTypeID,Timestamp, UserId, isHidden) " +
@@ -976,10 +909,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples receiveProductSample(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return timeStamp;
         }
@@ -996,8 +926,8 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                    
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+
                     //EventTypeID = 3039= Undo Sample received by lab personnel
                     sqlCmdText = "UPDATE dbo.MainScheduleEvents SET isHidden = 'true' WHERE isHidden = 'false' AND MSID = @MSID AND (EventTypeID = 9); " +
                                             "INSERT INTO dbo.MainScheduleEvents (MSID, EventTypeID,Timestamp, UserId, isHidden) " +
@@ -1027,10 +957,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples undoReceiveProductSample(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1046,7 +973,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     if (0 == PODetailsID)
                     {
@@ -1085,10 +1012,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples createSample(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1103,9 +1027,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples ProcessFileAndData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return null;
         }
@@ -1122,7 +1044,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //First find filetypeID
                     sqlCmdText = "SELECT FileTypeID FROM dbo.FileTypes WHERE FileType = @FTYPE";
@@ -1150,10 +1072,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples AddFileDBEntry(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1166,14 +1085,14 @@ namespace TransportationProject
             try
             {
                
-                    string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sqlCmdText;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = string.Concat( "SELECT  MSID ,PODetailsID ,PONumber ,ProductID_CMS ,FileID ,Filepath ,FilenameOld ,SampleID, LotusID ,TimeSampleTaken ,TimeSampleSent ",
-                            ",TimeSampleReceived ,didLabNotReceived ,Comments ,FilenameNew ,TestApproved ,TrailerNumber ,FirstName ,LastName ,bypassCOFAComment ,SpecificGravity ",
-                            ",isOpenInCMS ,isRejected ,ProductName_CMS ",
-                             "FROM dbo.vw_SampleGridData ",
-                             "ORDER BY TestApproved, didLabNotReceived, TimeSampleReceived") ;
+                sqlCmdText = string.Concat( "SELECT  MSID ,PODetailsID ,PONumber ,ProductID_CMS ,FileID ,Filepath ,FilenameOld ,SampleID, LotusID ,TimeSampleTaken ,TimeSampleSent ",
+                        ",TimeSampleReceived ,didLabNotReceived ,Comments ,FilenameNew ,TestApproved ,TrailerNumber ,FirstName ,LastName ,bypassCOFAComment ,SpecificGravity ",
+                        ",isOpenInCMS ,isRejected ,ProductName_CMS ",
+                            "FROM dbo.vw_SampleGridData ",
+                            "ORDER BY TestApproved, didLabNotReceived, TimeSampleReceived") ;
 
                     dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText);
 
@@ -1187,10 +1106,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples getSampleGridData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -1201,22 +1117,18 @@ namespace TransportationProject
             List<object[]> data = new List<object[]>();
             try
             {
-                //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 TruckLogHelperFunctions.logByMSIDConnection(sql_connStr, MSID, data);
             }
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in Samples GetLogDataByMSID(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples GetLogDataByMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -1230,22 +1142,18 @@ namespace TransportationProject
             List<object[]> data = new List<object[]>();
             try
             {
-                //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 TruckLogHelperFunctions.logListConnection(sql_connStr, data);
             }
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in Samples GetLogList(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples GetLogList(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -1277,9 +1185,9 @@ namespace TransportationProject
             try
             {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
-                    sqlCmdText = "SELECT TOP (1) UserID FROM dbo.Users WHERE UserName = @Username AND Password = @Password AND isLabAdmin = 'true' AND isDisabled = 'false'";
+                sqlCmdText = "SELECT TOP (1) UserID FROM dbo.Users WHERE UserName = @Username AND Password = @Password AND isLabAdmin = 'true' AND isDisabled = 'false'";
                     string hashedPassword = DataTransformer.PasswordHash(password);
                     canBypasserID = Convert.ToInt32(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@Username", userName),
                                                                                                                        new SqlParameter("@Password", hashedPassword)));
@@ -1287,10 +1195,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples checkLabAdminCredentials(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return canBypasserID;
         }
@@ -1309,7 +1214,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     if (bypasserUserID == 0) //when user is already a lab admin, 0 is passed. 
                     {
@@ -1349,10 +1254,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples bypassCOFA(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1365,7 +1267,7 @@ namespace TransportationProject
             try
             {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT MS.MSID, MS.PONumber, MS.TrailerNumber,  MS.LocationShort " +
                                         "FROM dbo.MainSchedule as MS " +
@@ -1383,10 +1285,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples getAvailableDockSpots(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -1403,7 +1302,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText = null;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     switch (newLoc)
                     {
@@ -1462,10 +1361,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples updateLocation(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return returnData;
         }
@@ -1479,7 +1375,7 @@ namespace TransportationProject
             try
             {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT MS.MSID, PD.PODetailsID, MS.PONumber, PD.ProductID_CMS, " +
                         "MSF.FileID, MSF.Filepath, MSF.FilenameOld, S.SampleID, S.LotusID, " +
@@ -1516,10 +1412,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples getSampleGridDataByMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -1540,7 +1433,7 @@ namespace TransportationProject
             {
                
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT TOP (1) MS.LocationShort, MS.StatusID, L.LocationLong, S.StatusText " +
                                       "FROM dbo.MainSchedule AS MS " +
@@ -1590,10 +1483,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples getCurrentLocationAndStatus(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -1613,7 +1503,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //------INSERT NEW REQUEST 
                     sqlCmdText = "INSERT INTO dbo.Requests (MSID, TrailerNumber, Task, Requester, RequestPersonTypeID, RequestTypeID, isVisible) " +
@@ -1713,10 +1603,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples getAvailableDockSpots(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return returnData;
         }
@@ -1731,7 +1618,7 @@ namespace TransportationProject
             {
                 
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT MS.MSID, PD.PODetailsID, MS.PONumber, PD.ProductID_CMS, " +
                         "MSF.FileID, MSF.Filepath, MSF.FilenameOld, S.SampleID, S.LotusID, " +
@@ -1764,10 +1651,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in Samples getApprovedAndRejectedSampleGridData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -1781,7 +1665,7 @@ namespace TransportationProject
             {
                
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                     sqlCmdText = "SELECT POD.ProductID_CMS, pCMS.ProductName_CMS, S.Comments, MS.PONumber, MS.PONumber_ZXPOutbound, MS.CustomerID, MS.TrailerNumber, U.FirstName, U.LastName " +
                                         "FROM dbo.Samples S  " +
                                         "INNER JOIN dbo.PODetails POD ON POD.PODetailsID = POD.PODetailsID " +
@@ -1799,10 +1683,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in yardAndWaiting getTruckInfoForEventBasedCustomMessage(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
 
             return TruckData;
@@ -1954,10 +1835,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in samples createDetailsMessageForEventBasedAlerts(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
 
             return customAlertMsg;

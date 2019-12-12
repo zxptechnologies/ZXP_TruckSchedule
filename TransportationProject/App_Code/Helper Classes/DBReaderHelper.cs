@@ -25,7 +25,6 @@ namespace TransportationProject
         {
             var t = r.GetSqlValue(r.GetOrdinal(colName));
             if (t == DBNull.Value) return default(T);
-            T someDefault = default(T);
             T someOtherVal = (T)t;
 
             return ((INullable)t).IsNull ? default(T) : (T)t;

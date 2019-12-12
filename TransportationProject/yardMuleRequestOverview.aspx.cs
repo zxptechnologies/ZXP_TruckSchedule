@@ -12,9 +12,7 @@ namespace TransportationProject
 {
     public partial class yardMuleRequestOverview : System.Web.UI.Page
     {
-        protected static String sql_connStr;
-       // public static ZXPUserData zxpUD = new ZXPUserData();
-
+      
         void Page_PreInit(Object sender, EventArgs e)
         {
             if (Request.Browser.IsMobileDevice)
@@ -37,15 +35,7 @@ namespace TransportationProject
                     System.Web.Security.FormsAuthenticationTicket ticket = System.Web.Security.FormsAuthentication.Decrypt(cookie.Value);
                     zxpUD = ZXPUserData.DeserializeZXPUserData(ticket.UserData);
 
-                    if (zxpUD._isAdmin || zxpUD._isDockManager || zxpUD._isYardMule) //make sure this matches whats in Site.Master and Default
-                    {
-                        sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
-                        if (sql_connStr == String.Empty)
-                        {
-                            throw new Exception("Missing SQLConnectionString in web.config");
-                        }
-                    }
-                    else
+                    if (!(zxpUD._isAdmin || zxpUD._isDockManager || zxpUD._isYardMule)) //make sure this matches whats in Site.Master and Default
                     {
                         Response.BufferOutput = true;
                         Response.Redirect("/ErrorPage.aspx?ErrorCode=5", false);
@@ -60,16 +50,12 @@ namespace TransportationProject
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in yardMuleRequestOverview Page_Load(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in yardMuleRequestOverview Page_Load(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
 
         }
@@ -86,7 +72,7 @@ namespace TransportationProject
                 
                     string sqlCmdText;
                 ZXPUserData zxpUD = ZXPUserData.GetZXPUserDataFromCookie();
-                //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                 if (zxpUD._isAdmin)
                     {
@@ -97,38 +83,13 @@ namespace TransportationProject
                         AssigneeID = zxpUD._uid;
                     }
 
-                    sqlCmdText = "SELECT * FROM ( " +
-                    "SELECT R.MSID, MS.PONumber, R.RequestID, R.Task, R.Assignee, R.Requester, R.Comment, R.NewSpotID, MS.DockSpotID AS AssignedDockSpot, " +
-                    "TDS1.SpotDescription AS NewSpot, TDS2.SpotDescription AS OldSpot, U1.FirstName AS AssigneeFirstName, U1.LastName AS AssigneeLastName, " +
-                    "U2.FirstName AS RequesterFirstName, U2.LastName AS RequesterLastName, " +
-                    "(SELECT TOP (1) Timestamp FROM MainScheduleEvents MSE1 INNER JOIN MainScheduleRequestEvents MSRE ON MSRE.EventID = MSE1.EventID WHERE (isHidden = 0) AND (MSE1.MSID = R.MSID) AND (MSRE.RequestID = R.RequestID) AND (EventTypeID = 17) ORDER BY TimeStamp DESC ) TimeRequestSent," +
-                    "(SELECT TOP (1) Timestamp FROM MainScheduleEvents MSE1 INNER JOIN MainScheduleRequestEvents MSRE ON MSRE.EventID = MSE1.EventID WHERE (isHidden = 0) AND (MSE1.MSID = R.MSID) AND (MSRE.RequestID = R.RequestID) AND (EventTypeID = 21) ORDER BY TimeStamp DESC ) TimeRequestStart, " +
-                    "(SELECT TOP (1) Timestamp FROM MainScheduleEvents MSE1 INNER JOIN MainScheduleRequestEvents MSRE ON MSRE.EventID = MSE1.EventID WHERE (isHidden = 0) AND (MSE1.MSID = R.MSID) AND (MSRE.RequestID = R.RequestID) AND (EventTypeID = 18) ORDER BY TimeStamp DESC ) TimeRequestEnd, " +
-                    "RequestDueDateTime, MS.isRejected, MS.TrailerNumber, " +
-                    "(SELECT TOP (1) L.LocationLong FROM dbo.Locations AS L WHERE MS.LocationShort = L.LocationShort) AS Location, " +
-                    "(SELECT TOP (1) S.StatusText FROM dbo.Status AS S WHERE MS.StatusID = S.StatusID) AS Status, MS.isOpenInCMS, " +
-                    "MS.currentDockSpotID, (SELECT TDS3.SpotDescription FROM dbo.TruckDockSpots AS TDS3 WHERE MS.currentDockSpotID = TDS3.SpotID) AS CurrentSpot, " +
-                    "ISNULL(ProdDet.PDCount, 0) AS ProdCount, ProdDet.topProdID, PCMS.ProductName_CMS, SpotReserveTime " +
-                    "FROM Requests R " +
-                    "LEFT JOIN MainSchedule MS ON MS.MSID = R.MSID " +
-                    "LEFT JOIN Users U1 ON U1.UserID = R.Assignee " +
-                    "INNER JOIN Users U2 ON U2.UserID = R.Requester " +
-                    "LEFT JOIN TruckDockSpots TDS1 ON TDS1.SpotID = R.NewSpotID " +
-                    "LEFT JOIN TruckDockSpots TDS2 ON TDS2.SpotID = MS.DockSpotID " +
-                    "LEFT JOIN (SELECT MSID, COUNT(PODetailsID) AS PDCount, " +
-                    "(SELECT TOP 1 PD_A.ProductID_CMS " +
-                    "FROM dbo.PODetails PD_A " +
-                    "INNER JOIN dbo.ProductsCMS PCMS_A ON PD_A.ProductID_CMS = PCMS_A.ProductID_CMS " +
-                    "WHERE PD_A.MSID =  PD.MSID " +
-                    ") AS topProdID  " +
-                    "FROM dbo.PODetails PD  " +
-                    "GROUP BY MSID " +
-                    ") ProdDet ON ProdDet.MSID = MS.MSID " +
-                    "LEFT JOIN dbo.ProductsCMS PCMS ON PCMS.ProductID_CMS = ProdDet.topProdID " +
-                    "WHERE  (MS.isHidden = 0 OR MS.isHidden IS NULL) AND RequestPersonTypeID = 2 AND isVisible = 1  AND NOT (MS.StatusID = 10 AND MS.isDropTrailer = 0)" +
-                    ") AllData " +
-                    "WHERE (TimeRequestEnd > DATEADD(HOUR, -1, CURRENT_TIMESTAMP)  OR TimeRequestEnd IS NULL) " +
-                    "ORDER BY TimeRequestSent";
+
+                    sqlCmdText = string.Concat( "SELECT MSID, PONumber, RequestID, Task, Assignee, Requester, Comment , NewSpotID ",
+                        ", AssignedDockSpot, NewSpot, OldSpot, AssigneeFirstName, AssigneeLastName ",
+                        ", RequesterFirstName, RequesterLastName, TimeRequestSent, TimeRequestStart, TimeRequestEnd ",
+                        ", RequestDueDateTime, isRejected, TrailerNumber, Location, Status, isOpenInCMS ",
+                        ", currentDockSpotID, CurrentSpot, ProdCount, topProdID, ProductName_CMS, SpotReserveTime ",
+                        "FROM dbo.vw_YardmuleRequestsGridData");
                     dataSet = SqlHelper.ExecuteDataset(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", AssigneeID));
 
                     //populate return object
@@ -141,10 +102,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardMuleRequestOverview getYardMuleRequestGridData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -159,7 +117,7 @@ namespace TransportationProject
             {
                
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT PD.PODetailsID, PD.ProductID_CMS, PD.QTY, PD.LotNumber, PD.UnitOfMeasure, PCMS.ProductName_CMS " +
                                     "FROM dbo.PODetails PD " +
@@ -178,10 +136,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardMuleRequestOverview GetPODetailsFromMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
 
@@ -198,7 +153,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //1. select MSID based on requestID
                     sqlCmdText = "SELECT MSID FROM dbo.Requests WHERE RequestID = @RID";
@@ -236,10 +191,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardMuleRequestOverview getAvailableDockSpots(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
 
         }
@@ -258,7 +210,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //1. log into Main Schedule Events
                     //yard mule  - EventTypeID = 21 --> "Yard Mule Request started"
@@ -291,10 +243,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardMuleRequestOverview startRequest(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return timeStamp;
         }
@@ -316,7 +265,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     SqlParameter paramRID = new SqlParameter("@RID", SqlDbType.Int);
                     paramRID.Value = requestID;
@@ -457,10 +406,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardMuleRequestOverview completeRequest(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return timeStamp;
         }
@@ -475,7 +421,7 @@ namespace TransportationProject
             {
                 
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT * FROM ( " +
                                     "SELECT R.MSID, MS.PONumber, R.RequestID,  R.Task, " +
@@ -507,10 +453,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardMuleRequestOverview getCompletedRequestData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -526,7 +469,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //generic type - no need to change status or location
                     sqlCmdText = "INSERT INTO dbo.MainScheduleEvents(MSID, UserId, TimeStamp, EventTypeID, isHidden) VALUES (@MSID, @UserId, @TimeStamp, 3042, 'false'); " +
@@ -553,10 +496,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardMuleRequestOverview undoCompleteRequest(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -571,7 +511,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "UPDATE dbo.MainScheduleEvents SET isHidden = 'true' WHERE isHidden = 'false' AND MSID = @MSID AND (EventTypeID = 21); " +
                                             "INSERT INTO dbo.MainScheduleEvents(MSID, UserId, TimeStamp, EventTypeID, isHidden) VALUES (@MSID, @UserId, @TimeStamp, 3043, 'false'); " +
@@ -593,10 +533,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardMuleRequestOverview undoStartRequest(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -606,22 +543,18 @@ namespace TransportationProject
             List<object[]> data = new List<object[]>();
             try
             {
-                //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 TruckLogHelperFunctions.logByMSIDConnection(sql_connStr, MSID, data);
             }
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in YardMuleRequestOverview GetLogDataByMSID(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardMuleRequestOverview GetLogDataByMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -635,22 +568,18 @@ namespace TransportationProject
             List<object[]> data = new List<object[]>();
             try
             {
-                //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
                 TruckLogHelperFunctions.logListConnection(sql_connStr, data);
             }
             catch (SqlException excep)
             {
                 string strErr = " SQLException Error in YardMuleRequestOverview GetLogList(). Details: " + excep.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 2;
-                ErrorLogging.sendtoErrorPage(2);
+                ErrorLogging.LogErrorAndRedirect(2, strErr);
             }
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardMuleRequestOverview GetLogList(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             finally
             {
@@ -671,7 +600,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //1. find filetypeID
                     sqlCmdText = "SELECT FileTypeID FROM dbo.FileTypes WHERE FileType = @FTYPE";
@@ -730,10 +659,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardMuleRequestOverview getAvailableDockSpots(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -749,9 +675,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in yardMuleRequestOverview ProcessFileAndData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return null;
         }
@@ -767,7 +691,7 @@ namespace TransportationProject
             {
                 
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT MS.TruckType FROM dbo.MainSchedule AS MS WHERE MS.MSID = @MSID";
                     truckType = Convert.ToString(SqlHelper.ExecuteScalar(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@MSID", MSID)));
@@ -792,10 +716,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardMuleRequestOverview getAvailableDockSpots(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -810,7 +731,7 @@ namespace TransportationProject
             {
                 
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //get current location
                     sqlCmdText = "SELECT TOP (1) MS.LocationShort, L.LocationLong, " +
@@ -857,10 +778,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardMuleRequestOverview GetLocationOptions(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -876,7 +794,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "INSERT INTO dbo.MainScheduleEvents(MSID, UserId, TimeStamp, EventTypeID, isHidden) VALUES (@MSID, @UserId, @TimeStamp, 3042, 'false'); " +
                         "UPDATE dbo.MainScheduleEvents SET isHidden = 'true' WHERE EventID = (SELECT TOP (1) MSE.EventID FROM dbo.MainScheduleEvents AS MSE " +
@@ -941,10 +859,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardMuleRequestOverview updateLocationAndUndoRequestComplete(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -958,7 +873,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     //check request type 
                     sqlCmdText = "SELECT RequestTypeID FROM dbo.Requests WHERE RequestID = @RID";
@@ -975,10 +890,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardMuleRequestOverview checkRequestTypeBeforeUndoComplete(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return requiresNewLocation;
         }
@@ -994,7 +906,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     DayofWeekID = TransportationProject.trailerOverview.GetDayOfWeekID(DateTime.Today);
                     //check request type 
@@ -1009,10 +921,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardMuleRequestOverview verifySpotIsCurrentlyAvailable(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return rowCount;
         }
@@ -1029,7 +938,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     DayofWeekID = TransportationProject.trailerOverview.GetDayOfWeekID(DateTime.Today);
 
@@ -1080,10 +989,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardMuleRequestOverview getAvailableDockSpots(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -1099,7 +1005,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT Assignee FROM dbo.Requests WHERE RequestID = @RID";
 
@@ -1118,10 +1024,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardMuleRequestOverview checkIfUserIsAssignee(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return isSignedInUserAssignee;
         }
@@ -1143,7 +1046,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT TOP(1) MSRE.RequestID, MSE.EventTypeID, MSE.TimeStamp, Users.UserID, UserName from dbo.MainScheduleRequestEvents as MSRE " +
                                     "INNER JOIN dbo.MainScheduleEvents as MSE ON MSRE.EventID = MSE.EventID " +
@@ -1200,10 +1103,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardMuleRequestOverview getAvailableDockSpots(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return returnData;
         }
@@ -1220,7 +1120,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "SELECT FileID, MSID, MSF.FileTypeID, FileDescription, Filepath, FilenameNew, FilenameOld FROM dbo.MainScheduleFiles MSF " +
                                     "INNER JOIN dbo.FileTypes FT ON FT.FileTypeID = MSF.FileTypeID " +
@@ -1239,10 +1139,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardMuleRequestOverview GetFileUploadsFromMSID(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
             return data;
         }
@@ -1259,7 +1156,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     sqlCmdText = "UPDATE dbo.MainScheduleFiles SET FileDescription=@DESC WHERE FileID = @FID";
                     SqlHelper.ExecuteNonQuery(sql_connStr, CommandType.Text, sqlCmdText, new SqlParameter("@DESC", TransportHelperFunctions.convertStringEmptyToDBNULL(description)),
@@ -1274,10 +1171,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardMuleRequestOverview UpdateFileUploadData(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
 
@@ -1292,7 +1186,7 @@ namespace TransportationProject
                 using (var scope = new TransactionScope())
                 {
                     string sqlCmdText;
-                    //sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
+                    string sql_connStr = new TruckScheduleConfigurationKeysHelper().sql_connStr;
 
                     switch (fileType)
                     {
@@ -1326,10 +1220,7 @@ namespace TransportationProject
             catch (Exception ex)
             {
                 string strErr = " Exception Error in YardMuleRequestOverview getAvailableDockSpots(). Details: " + ex.ToString();
-                ErrorLogging.WriteEvent(strErr, EventLogEntryType.Error);
-                System.Web.HttpContext.Current.Session["ErrorNum"] = 1;
-                ErrorLogging.sendtoErrorPage(1);
-                throw ex;
+                ErrorLogging.LogErrorAndRedirect(1, strErr);
             }
         }
     }
