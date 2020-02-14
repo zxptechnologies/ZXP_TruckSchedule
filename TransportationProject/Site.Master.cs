@@ -124,6 +124,13 @@ namespace TransportationProject
                     AuditLog aLog = new AuditLog(zxpUD._uid);
                     aLog.createNewAuditLogEntry(aLog);
                     MenuItem temp = new MenuItem();
+                    if (true)
+                    {
+                        temp.NavigateUrl = "~/Default.aspx";
+                        temp.Text = "Home";
+                        NavigationMenu.Items.Add(temp);
+                        temp = new MenuItem();
+                    }
                     if (zxpUD._isAdmin || zxpUD._isDockManager || zxpUD._isGuard || zxpUD._isLabPersonnel || zxpUD._isLoader || zxpUD._isLabAdmin || zxpUD._isAccountManager)
                     {
                         temp.NavigateUrl = "~/trailerOverview.aspx";

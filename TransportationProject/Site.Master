@@ -53,7 +53,7 @@
     <%--Live Server--%>
         <link href="<%= Page.ResolveClientUrl("~/Scripts/IgniteUI/css/themes/infragistics/infragistics.theme.css") %>" rel="stylesheet" />
     <link href="<%= Page.ResolveClientUrl("~/Scripts/IgniteUI/css/structure/infragistics.css") %>" rel="stylesheet" />
-    <link href="<%= Page.ResolveClientUrl("~/Content/StyleModifications.css") %>" rel="stylesheet" />
+    <link href="<%= Page.ResolveClientUrl("/Content/StyleModifications.css") %>" rel="stylesheet" />
 
 <script src="<%= Page.ResolveClientUrl("~/Scripts/modernizr-2.6.2.js") %>"></script>
 <script src="<%= Page.ResolveClientUrl("~/Scripts/jquery-1.8.3.min.js") %>"></script>
@@ -92,7 +92,7 @@
 	
 	--%>
 	
-	
+ 
  <script type="text/javascript">
 
      function makeButtonIncrement(element, action, initialDelay) {
@@ -199,6 +199,9 @@ function gridScrollLeft() {
          //checkCookieAndRedirect();
          makeButtonIncrement(document.getElementById("imgLeftArrowGridScroll"), "left", 0);
          makeButtonIncrement(document.getElementById("imgRightArrowGridScroll"), "right", 0);
+         
+         makeButtonIncrement(document.getElementById("scrollItem"), "right", 0);
+         
 
          $(".arrowGridScrollButtons").hide();
          var isMobileDevice = checkIfMobileDevice();
@@ -235,23 +238,26 @@ function gridScrollLeft() {
 
     <header>
         <div class="content-wrapper">
-            <div class="float-left">
-                <p class="site-title">
-                    <%--<a runat="server" href="~/"><img src="../Images/ZXP_Large_resize300trans.png" /></a> internal testing--%>
-                     <%--<a runat="server" href="~/"><img src="Images/ZXP_Large_resize300trans.png" /></a>zxp live--%>
-		     <a runat="server" href="~/"><asp:Image ID="ZXPLOGO" runat="server" ImageUrl="~/Images/ZXP_Large_resize300trans.png" /></a> <%--zxp live --%>
-                    <%--<a id="A1" runat="server" href="~/"><asp:Image ID="ZXPLOGO" runat="server" ImageUrl="~/Images/ZXP_Large_resize300trans.png" /></a>--%> <%--zxp live --%>
-                </p>
-                <p><asp:Label ID="deploymentInfo" runat="server" ForeColor="Black" Font-Size="small"></asp:Label></p>
-            </div>
-            <div class="float-right">
-                <section id="login">
+            
+                
+            <div id="logo-section">
+                <div class="float-left">
+                    <div class="site-title">
+                        <%--<a runat="server" href="~/"><img src="../Images/ZXP_Large_resize300trans.png" /></a> internal testing--%>
+                         <%--<a runat="server" href="~/"><img src="Images/ZXP_Large_resize300trans.png" /></a>zxp live--%>
+		                <a runat="server" href="~/"><asp:Image ID="ZXPLOGO" runat="server" ImageUrl="~/Images/ZXP_Large_resize300trans.png" /></a> <%--zxp live --%>
+                        <%--<a id="A1" runat="server" href="~/"><asp:Image ID="ZXPLOGO" runat="server" ImageUrl="~/Images/ZXP_Large_resize300trans.png" /></a>--%> <%--zxp live --%>
+                        <div><asp:Label ID="deploymentInfo" runat="server" ForeColor="Black" Font-Size="Small"></asp:Label></div>
+                    </div>
+                </div>
+                <div class="float-right">
+                    <section id="login">
                     <asp:LoginView runat="server" ViewStateMode="Disabled">
                         <AnonymousTemplate>
-                            <ul>
-                              <%--  <li><a id="registerLink" runat="server" href="~/Account/Register">Register</a></li>--%>
-                                <li><a id="loginLink" runat="server" href="~/Account/Login">Log in</a></li>
-                            </ul>
+                            <p>
+                                <%--  <li><a id="registerLink" runat="server" href="~/Account/Register">Register</a></li>--%>
+                                    <a id="loginLink" runat="server" href="~/Account/Login">Log in</a>
+                            </p>
                         </AnonymousTemplate>
                         <LoggedInTemplate>
                             <p>
@@ -265,17 +271,20 @@ function gridScrollLeft() {
                     </asp:LoginView>
                     <a class="linkButton float-right" href="mailto:ts%40zxptech%2ecom?subject=Truckschedule Feedback">Send Feedback</a>
                 </section>
-               
-               <%--<button class="menuButton" id ="btnMenu"></button>--%>
-               <div id = "menuWithIcon"><img src="<%= Page.ResolveClientUrl("~/Images/menuIcon.png") %>" id="menuIcon" style='width:5%; height: auto; display: none' ></div>
-                    <span id = "menu">
-                        <asp:Menu ID="NavigationMenu" runat="server" Orientation="Horizontal">
-                            <Items>
-                                <asp:MenuItem NavigateUrl="~/Default.aspx" Text="Home"></asp:MenuItem>
-                            </Items>
-                        </asp:Menu>
-                   </span>
+                </div>
             </div>
+            <div class="float-right">
+               <%--<button class="menuButton" id ="btnMenu"></button>--%>
+                <span id = "menu">
+                    <asp:Menu ID="NavigationMenu" runat="server" Orientation="Horizontal">
+                        <Items>
+                            <%-- <asp:MenuItem NavigateUrl="~/Default.aspx" Text="Home"></asp:MenuItem>--%>
+                        </Items>
+                    </asp:Menu>
+                </span>
+            </div>
+            
+            
         </div>
     </header>
     <div id="body">
@@ -283,13 +292,7 @@ function gridScrollLeft() {
         <section class="content-wrapper main-content clear-fix">
             <asp:ContentPlaceHolder runat="server" ID="MainContent" />
         </section>
-        <br /><br /><br />
-        <div class ="arrowGridScrollButtons">
-            <div class="toolTipForScroll"><a id="leftArrowGridScroll"><img id="imgLeftArrowGridScroll" src ='<%= Page.ResolveClientUrl("~/Images/leftGridArrow.png") %>' style='width:30px; height: 30px;' /><span class="toolTipTextForScroll">Scroll left on grid(s)</span></a></div>
-            <div class="toolTipForScroll"><a id="rightArrowGridScroll"><img id="imgRightArrowGridScroll" src ='<%= Page.ResolveClientUrl("~/Images/rightGridArrow.png") %>' style='width:30px; height: 30px;' /><span class="toolTipTextForScroll">Scroll right on grid(s)</span></a></div>
-        </div>
-        <div class="toolTipForScroll"><a href="#" class="scrollup" ><img src ='<%= Page.ResolveClientUrl("~/Images/ScrollUpArrow.png") %>' style='width:50px; height: 50px;'/><span class="toolTipTextForScroll">To Top of Page</span></a></div>
-        <%--Progress Circle, Hidden until function calls to display --%> 
+        <br /><br /><br /> <%--Progress Circle, Hidden until function calls to display --%> 
         <div id="progressBackgroundFilter" style="display:none"></div>
         <div id="processMessage" style=" text-align:center; display:none; border:3px solid black"><br />
         <asp:Label ID="lblProgressText" runat="server" Text="Processing..." ClientIDMode = "Static"></asp:Label>
@@ -299,7 +302,60 @@ function gridScrollLeft() {
         </div>
         <%--End Progress Circle, Hidden until function calls to display --%> 
     </div>
+
+
+
     </form>
+    
+    <div id="scrollItem"></div>
+    <div id ="arrowGridScrollButtons">
+        <div id="arrow-center">
+            <div id="arrow-wrapper">
+                <div class="toolTipForScroll float-left">
+                    <div  style="margin-left:5px">
+                        <div>
+                            <a id="leftArrowGridScroll">
+                                <img id="imgLeftArrowGridScroll" src ='<%= Page.ResolveClientUrl("~/Images/leftGridArrow.png") %>' style='width:25px; height: 25px;' />
+                                <span class="toolTipTextForScroll">Scroll left on grid(s)</span>
+                            </a>
+                        </div>
+                        <div>
+                            Scroll Left
+                        </div>
+                    </div>
+                </div>
+                <div class="toolTipForScroll float-left">
+                    <div  style="margin-left:5px">
+                        <div>
+                            <a href="#" class="scrollup" >
+                                <img src ='<%= Page.ResolveClientUrl("~/Images/ScrollUpArrow.png") %>' style='width:30px; height: 30px;'/>
+                                <span class="toolTipTextForScroll">To Top of Page</span>
+                            </a>
+                        </div>
+                        <div>
+                           To Top
+                        </div>
+                    </div>
+
+                </div>  
+                <div class="toolTipForScroll float-left">
+                    <div style="margin-left:5px">
+                        <div>
+                            <a id="rightArrowGridScroll">
+                                <img id="imgRightArrowGridScroll" src ='<%= Page.ResolveClientUrl("~/Images/rightGridArrow.png") %>' style='width:25px; height: 25px;' />
+                                <span class="toolTipTextForScroll">Scroll right on grid(s)</span>
+                            </a>
+                        </div>
+                        <div>
+                            Scroll Right
+                        </div>
+                    </div>
+                </div>
+             </div>
+        </div>
+    </div>
 </body>
+    
+    
 </html>
 

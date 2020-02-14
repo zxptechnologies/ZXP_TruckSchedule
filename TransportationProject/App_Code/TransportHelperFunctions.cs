@@ -3,7 +3,7 @@ using System.Web;
 using System.Configuration;
 using System.IO;
 using System.Diagnostics;
-
+using System.Text.RegularExpressions;
 
 namespace TransportationProject
 {
@@ -59,6 +59,7 @@ namespace TransportationProject
             string newRootPath = ConfigurationManager.AppSettings["rootVirtualDirectoryUploadPath"];
             filepath = filepath.Replace("~/", string.Empty).Replace('/', '\\');
             filename = filename.Replace("~/", string.Empty).Replace('/', '\\');
+            filename = Regex.Replace(filename.Trim(), "[^A-Za-z0-9_. ]+", ""); //remove special characters from filename;
 
             string newFilePathForFilemove = string.Empty;
             string newFilePathForDBEntry = string.Empty;

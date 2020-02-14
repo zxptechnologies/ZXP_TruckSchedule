@@ -12,37 +12,63 @@
     border:solid;
     border-color: lightgrey;
 }
-#arrowGridScrollButtons{
 
-    }
+#arrowGridScrollButtons {
+    background-color: #0A5E82 !important;
+    position: fixed !important;
+    display: inline-block !important;
+    bottom: 0px !important;
+    height: 50px;
+    z-index: 1 !important;
+    padding-top: 10px;
+    width: 100%;
+    color: white;
+    font-size: 11px;
+}
+#arrow-center {
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+    margin: 0 auto;
+}
+#arrow-wrapper {
+    max-width: 155px;
+    margin: 0 auto;
+}
+
+#arrow-wrapper-mobile {
+    max-width: 43px;
+    margin: 0 auto;
+}
+
 #rightArrowGridScroll {
     width: 40px;
     height: 40px;
-    position: fixed;
-    bottom: 15px;
+    /*position: fixed;
     right: 90px;
+    bottom: 15px;
     display: inline-block;
-    z-index: 1;
+    z-index: 1;*/
 }
 
 #leftArrowGridScroll {
     width: 40px;
     height: 40px;
-    position: fixed;
-    bottom: 15px;
+    /*position: fixed;
     right: 128px;
+    bottom: 15px;
     display: inline-block;
-    z-index: 1;
+    z-index: 1;*/
 }
 
 .scrollup {
     width: 40px;
     height: 40px;
-    position: fixed;
+    /*position: fixed;
     bottom: 25px;
     right: 50px;
     display: inline-block;
-    z-index: 1;
+    z-index: 1;*/
 }
 .scrollup:hover {
     cursor: help;

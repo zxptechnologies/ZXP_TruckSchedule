@@ -229,6 +229,7 @@
     <Content Include="dataProcessingAndCleanUp.aspx" />
     <Content Include="dockManager.aspx" />
     <Content Include="ErrorPage.aspx" />
+    <Content Include="guardStationTest.aspx" />
     <Content Include="Images\10p_downarrow.png" />
     <Content Include="Images\10p_uparrow.png" />
     <Content Include="Images\camera48x48.png" />

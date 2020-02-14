@@ -105,44 +105,54 @@
  
     <header>
         <div class="content-wrapper">
-            <div class="float-left">
-                <p class="site-title">
-                    <%--<a runat="server" href="~/"><img src="../Images/ZXP_Large_resize300trans.png" /></a> internal testing--%>
-                    <a id="A1" runat="server" href="~/"><img src="~/Images/ZXP_Large_resize300trans.png" /></a><asp:Label ID="deploymentInfo" runat="server" ForeColor="Black" Font-Size="Medium"></asp:Label>  <%--zxp live--%>
-                    <%--<a id="A1" runat="server" href="~/"><asp:Image ID="ZXPLOGO" runat="server" ImageUrl="~/Images/ZXP_Large_resize300trans.png" /></a>--%> <%--zxp live --%>
-                </p>
+            <div id="logo-section">
+                <div class="float-left">
+                    <div class="site-title">
+                        <%--<a runat="server" href="~/"><img src="../Images/ZXP_Large_resize300trans.png" /></a> internal testing--%>
+                        <a id="A1" runat="server" href="~/"><img src="/Images/ZXP_Large_resize300trans.png" /></a>
+                        <div><asp:Label ID="deploymentInfo" runat="server" ForeColor="Black" Font-Size="Small"></asp:Label>  <%--zxp live--%></div>
+                        <%--<a id="A1" runat="server" href="~/"><asp:Image ID="ZXPLOGO" runat="server" ImageUrl="~/Images/ZXP_Large_resize300trans.png" /></a>--%> <%--zxp live --%>
+                    </div>
+                </div>
+                <div class="float-right">
+                    <section id="login">
+                        <asp:LoginView ID="LoginView1" runat="server" ViewStateMode="Disabled">
+                            <AnonymousTemplate>
+                                <ul>
+                                  <%--  <li><a id="registerLink" runat="server" href="~/Account/Register">Register</a></li>--%>
+                                    <li><a id="loginLink" runat="server" href="~/Account/Login">Log in</a></li>
+                                </ul>
+                            </AnonymousTemplate>
+                            <LoggedInTemplate>
+                                <p>
+                                   <%-- Hello, <a runat="server" class="username" href="~/Account/Manage" title="Manage your account">
+                                        <asp:LoginName runat="server" CssClass="username" /></a>!--%>
+                                    Hello, <asp:LoginName ID="LoginName1" runat="server" CssClass="username" />!
+                                    <%--<asp:LoginStatus runat="server" LogoutAction="Redirect" LogoutText="Log off" LogoutPageUrl="~/Account/Login.aspx?out=1" />--%>
+                                    <asp:LoginStatus ID="LoginStatus1" runat="server" LogoutAction="Redirect" LogoutText="Log off" LogoutPageUrl="~/Account/Login.aspx?out=1" />
+                                </p>
+                            </LoggedInTemplate>
+                        </asp:LoginView>
+                        <a class="linkButton float-right" href="mailto:ts%40zxptech%2ecom?subject=Truckschedule Feedback">Send Feedback</a>
+                    </section>
+                </div>
             </div>
             <div class="float-right">
-                <section id="login">
-                    <asp:LoginView ID="LoginView1" runat="server" ViewStateMode="Disabled">
-                        <AnonymousTemplate>
-                            <ul>
-                              <%--  <li><a id="registerLink" runat="server" href="~/Account/Register">Register</a></li>--%>
-                                <li><a id="loginLink" runat="server" href="~/Account/Login">Log in</a></li>
-                            </ul>
-                        </AnonymousTemplate>
-                        <LoggedInTemplate>
-                            <p>
-                               <%-- Hello, <a runat="server" class="username" href="~/Account/Manage" title="Manage your account">
-                                    <asp:LoginName runat="server" CssClass="username" /></a>!--%>
-                                Hello, <asp:LoginName ID="LoginName1" runat="server" CssClass="username" />!
-                                <%--<asp:LoginStatus runat="server" LogoutAction="Redirect" LogoutText="Log off" LogoutPageUrl="~/Account/Login.aspx?out=1" />--%>
-                                <asp:LoginStatus ID="LoginStatus1" runat="server" LogoutAction="Redirect" LogoutText="Log off" LogoutPageUrl="~/Account/Login.aspx?out=1" />
-                            </p>
-                        </LoggedInTemplate>
-                    </asp:LoginView>
-                    
-                    <a class="linkButton float-right" href="mailto:ts%40zxptech%2ecom?subject=Truckschedule Feedback">Send Feedback</a>
-                </section>
-                <div id = "menuWithIcon"><img src="<%= Page.ResolveClientUrl("~/Images/menuIcon.png") %>" id="menuIcon" style='width:5%; height: auto;'" >
-               <span id = "menu">
-                <asp:Menu ID="NavigationMenu" runat="server"  Orientation="Vertical" style="display:none;">
-                    <Items>
-                        <asp:MenuItem NavigateUrl="~/Default.aspx" Text="Home"></asp:MenuItem>
-                    </Items>
-                </asp:Menu>
-               </span>
-                </div>
+                <asp:LoginView runat="server" ViewStateMode="Disabled">
+                    <LoggedInTemplate>
+                        <div id = "menuWithIcon"><img src="<%= Page.ResolveClientUrl("~/Images/menuIcon.png") %>" id="menuIcon" style='width:5%; height: auto;'" >
+                          
+                        </div>
+                    </LoggedInTemplate>
+                </asp:LoginView> 
+                <span id = "menu">
+                    <asp:Menu ID="NavigationMenu" runat="server"  Orientation="Vertical" style="display:none;">
+                        <Items>
+                            <asp:MenuItem NavigateUrl="~/Default.aspx" Text="Home"></asp:MenuItem>
+                        </Items>
+                    </asp:Menu>
+                </span>
+                
             </div>
         </div>
     </header>
@@ -150,7 +160,7 @@
         <asp:ContentPlaceHolder runat="server" ID="FeaturedContent" />
         <section class="content-wrapper main-content clear-fix">
             <asp:ContentPlaceHolder runat="server" ID="MainContent" />
-        <a href="#" class="scrollup"><img src ='<%= Page.ResolveClientUrl("~/Images/ScrollUpArrow.png") %>' /></a>
+        <%--<a href="#" class="scrollup"><img src ='<%= Page.ResolveClientUrl("~/Images/ScrollUpArrow.png") %> ' style='width:30px; height: 30px;' /></a>--%>
         </section>
         
         <%--Progress Circle, Hidden until function calls to display --%> 
@@ -161,6 +171,8 @@
         <img id="imgLoader" alt="Loading" src="Images/loader.gif" /><%--Development Server--%>
             <%--<asp:Image id="imgLoader" runat="server" ImageUrl="~/Images/loader.gif" />--%><%--LIve Server--%>
         </div>
+
+
         <script>
             $(document).ready(function () {
 
@@ -221,6 +233,25 @@
         </div>
     </footer>--%>
     </form>
+        <div id ="arrowGridScrollButtons">
+        <div id="arrow-center">
+            <div id="arrow-wrapper-mobile">
+                <div class="toolTipForScroll float-left">
+                    <div  style="margin-left:5px">
+                        <div>
+                            <a href="#" class="scrollup" >
+                                <img src ='<%= Page.ResolveClientUrl("~/Images/ScrollUpArrow.png") %>' style='width:30px; height: 30px;'/>
+                                <span class="toolTipTextForScroll">To Top of Page</span>
+                            </a>
+                        </div>
+                        <div>
+                           To Top
+                        </div>
+                    </div>
+                </div> 
+             </div>
+        </div>
+    </div>
 
     
 	<script>
