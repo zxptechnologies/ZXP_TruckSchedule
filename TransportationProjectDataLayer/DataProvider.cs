@@ -10,6 +10,8 @@ using System.Data;
 using Microsoft.ApplicationBlocks.Data;
 using System.Diagnostics;
 using NLog;
+using Newtonsoft.Json;
+
 
 namespace TransportationProjectDataLayer
 {
@@ -53,13 +55,224 @@ namespace TransportationProjectDataLayer
             }
             catch (Exception ex)
             {
-                string strErr = " Exception Error in TrailerOverview GetTrailerGridData(). Details: " + ex.ToString();
+                string strErr = " Exception Error in DataProvider GetTrailerGridData(). Details: " + ex.ToString();
                 MessageLog alog = new MessageLog(MessageType.Exception, "User called function with param companyName =" + strErr);
                 logger.Error(alog.CreateAuditLogMessage());
                 throw;
             }
 
         }
+
+        public BulkReport GetBulkReport(int MSID, int UserID)
+        {
+            BulkReport bulkReport = new BulkReport();
+
+            try
+            {
+                SqlDataReader sReader;
+                using (SqlConnection sqlConn = new SqlConnection(getConnectionStringFromSettings()))
+                {
+                    string sqlCmdText = "sp_truckschedapp_getTruckScheduleBulkReport";
+                    sqlConn.Open();
+                    using (SqlCommand cmd = new SqlCommand(sqlCmdText, sqlConn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add(new SqlParameter("@MSID", MSID));
+                        cmd.Parameters.Add(new SqlParameter("@UserID", UserID));
+                        sReader = cmd.ExecuteReader();
+
+                    }
+
+                    while (sReader.Read())
+                    {
+
+                        bulkReport = new BulkReport(MSID, (int)sReader["CreatedByUserID"], (int)sReader["LastModifiedByUserID"], (int)sReader["TankStrapBeforeSectionID"], 
+                                                    (int)sReader["TankStrapAfterSectionID"], (DateTime)sReader["LastModifiedDateTimeUTC"]);
+
+                        bulkReport.LoaderUnloaderName = sReader["LoaderUnloaderName"].ToString();
+                        bulkReport.LogNumber = sReader["LogNumber"].ToString();
+                        bulkReport.ReleaseNumber = sReader["ReleaseNumber"].ToString();
+                        bulkReport.InputStartUTC = sReader["InputStartUTC"] != DBNull.Value ? (DateTime?)sReader["InputStartUTC"] : null;
+                        bulkReport.InputStartUTC = sReader["InputEndUTC"] != DBNull.Value ? (DateTime?)sReader["InputEndUTC"] : null;
+                        bulkReport.TankNumber = sReader["TankNumber"].ToString();
+                        bulkReport.TotalGalLoadedOrUnloaded = sReader["TotalGalLoadedOrUnloaded"] != DBNull.Value ? (double?)sReader["TotalGalLoadedOrUnloaded"] : null;
+                        bulkReport.FlushGal = sReader["FlushGal"] != DBNull.Value ? (double?)sReader["FlushGal"] : null;
+                        bulkReport.TotalNetGal = sReader["TotalNetGal"] != DBNull.Value ? (double?)sReader["TotalNetGal"] : null;
+                        bulkReport.BOLNetWeight = sReader["BOLNetWeight"] != DBNull.Value ? (double?)sReader["BOLNetWeight"] : null;
+                        bulkReport.Comments = sReader["Comments"].ToString();
+                        bulkReport.Seals = sReader["Seals"].ToString();
+                        
+                    }
+    
+                }
+
+                TankStrapping beforeStrap = GetTankStrap(bulkReport.BeforeTankStrap.TankStrapID);
+                bulkReport.BeforeTankStrap = beforeStrap;
+                TankStrapping afterStrap = GetTankStrap(bulkReport.AfterTankStrap.TankStrapID);
+                bulkReport.AfterTankStrap = afterStrap;
+
+            }
+            catch (Exception ex)
+            {
+                string strErr = " Exception Error in DataProvider GetBulkReport(). Details: " + ex.ToString();
+                string msg = string.Concat("User called function with param MSID =", MSID.ToString(), " , UserID= ", UserID.ToString(), " with exception  =",  strErr);
+                MessageLog alog = new MessageLog(MessageType.Exception, msg);
+                logger.Error(alog.CreateAuditLogMessage());
+                throw;
+
+            }
+
+            return bulkReport;
+
+
+        }
+
+
+
+        public TankStrapping GetTankStrap(int TankStrapID)
+        {
+            TankStrapping tankstrap = new TankStrapping();
+
+            try
+            {
+                SqlDataReader sReader;
+                using (SqlConnection sqlConn = new SqlConnection(getConnectionStringFromSettings()))
+                {
+                    string sqlCmdText = "sp_truckschedapp_getTruckScheduleTankStrap";
+                    sqlConn.Open();
+                    using (SqlCommand cmd = new SqlCommand(sqlCmdText, sqlConn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add(new SqlParameter("@TankStrapID", TankStrapID));
+                        sReader = cmd.ExecuteReader();
+
+                    }
+
+                    while (sReader.Read())
+                    {
+                        tankstrap = new TankStrapping((int)sReader["TankStrapID"], (bool) sReader["isBefore"]);
+
+
+                        tankstrap.TemperatureF = sReader["TemperatureF"] != DBNull.Value ? (double?) sReader["TemperatureF"] : null;
+                        tankstrap.Feet = sReader["Feet"] != DBNull.Value ? (int?)sReader["Feet"]: null;
+                        tankstrap.Inches = sReader["Inches"] != DBNull.Value ? (int?)sReader["Inches"]: null ;
+                        tankstrap.GalFromFtandIn = sReader["GalFromFtandIn"] != DBNull.Value ? (double?)sReader["GalFromFtandIn"] : null;
+                        tankstrap.Fraction = sReader["Fraction"].ToString();
+                        tankstrap.GalFromFraction = sReader["GalFromFraction"] != DBNull.Value ? (double?)sReader["GalFromFraction"] : null;
+                        tankstrap.Conv = sReader["Conv"].ToString();
+                        tankstrap.XGAL = sReader["XGAL"].ToString();
+
+                    }
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                string strErr = " Exception Error in DataProvider GetTankStrap(). Details: " + ex.ToString();
+                string msg = string.Concat("User called function with param TankStrapID =", TankStrapID.ToString(), " with exception  =", strErr);
+                MessageLog alog = new MessageLog(MessageType.Exception, msg);
+                logger.Error(alog.CreateAuditLogMessage());
+                throw;
+
+            }
+
+            return tankstrap;
+            
+        }
+
+        public void EditBulkReport(int MSID, int UserID, BulkReport bulkReportInfo)
+        {
+            try
+            {
+                //update tank straps
+                EditTankStrap(bulkReportInfo.BeforeTankStrap);
+                EditTankStrap(bulkReportInfo.AfterTankStrap);
+
+                //Edit BulkReport Entry
+                using (SqlConnection sqlConn = new SqlConnection(getConnectionStringFromSettings()))
+                {
+                    string sqlCmdText = "sp_truckschedapp_editTruckScheduleBulkReport";
+                    sqlConn.Open();
+                    using (SqlCommand cmd = new SqlCommand(sqlCmdText, sqlConn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add(new SqlParameter("@MSID", bulkReportInfo.MSID));
+                        cmd.Parameters.Add(new SqlParameter("@UserID", UserID));
+                        cmd.Parameters.Add(new SqlParameter("@LoaderUnloaderName", bulkReportInfo.LoaderUnloaderName));
+                        cmd.Parameters.Add(new SqlParameter("@LogNumber", bulkReportInfo.LogNumber));
+                        cmd.Parameters.Add(new SqlParameter("@ReleaseNumber", bulkReportInfo.ReleaseNumber));
+                        cmd.Parameters.Add(new SqlParameter("@InputStartUTC", bulkReportInfo.InputStartUTC));
+                        cmd.Parameters.Add(new SqlParameter("@InputEndUTC", bulkReportInfo.InputEndUTC));
+                        cmd.Parameters.Add(new SqlParameter("@TankNumber", bulkReportInfo.TankNumber));
+                        cmd.Parameters.Add(new SqlParameter("@TotalGalLoadedOrUnloaded", bulkReportInfo.TotalGalLoadedOrUnloaded));
+                        cmd.Parameters.Add(new SqlParameter("@FlushGal", bulkReportInfo.FlushGal));
+                        cmd.Parameters.Add(new SqlParameter("@TotalNetGal", bulkReportInfo.TotalNetGal));
+                        cmd.Parameters.Add(new SqlParameter("@BOLNetWeight", bulkReportInfo.BOLNetWeight));
+                        cmd.Parameters.Add(new SqlParameter("@Comments", bulkReportInfo.Comments));
+                        cmd.Parameters.Add(new SqlParameter("@LastModifiedDateTimeUTC", bulkReportInfo.LastModifiedDateTimeUTC));
+                        cmd.Parameters.Add(new SqlParameter("@Seals", bulkReportInfo.Seals); 
+                        
+                        cmd.ExecuteNonQuery();
+
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                string strErr = " Exception Error in DataProvider EditBulkReport(). Details: " + ex.ToString();
+                string strbulkReport = JsonConvert.SerializeObject(bulkReportInfo);
+                string msg = string.Concat("User called function with param MSID =", MSID.ToString(), ", UserID = ", UserID.ToString(), "bulkRpeportInfo =  ", strbulkReport, " with exception  =", strErr);
+                MessageLog alog = new MessageLog(MessageType.Exception, msg);
+                logger.Error(alog.CreateAuditLogMessage());
+                throw;
+
+            }
+
+        }
+        public void EditTankStrap(TankStrapping TankStrapInfo)
+        {
+            
+            try
+            {
+                using (SqlConnection sqlConn = new SqlConnection(getConnectionStringFromSettings()))
+                {
+                    string sqlCmdText = "sp_truckschedapp_editTruckScheduleTankStrap";
+                    sqlConn.Open();
+                    using (SqlCommand cmd = new SqlCommand(sqlCmdText, sqlConn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add(new SqlParameter("@TankStrapID", TankStrapInfo.TankStrapID));
+                        cmd.Parameters.Add(new SqlParameter("@TemperatureF", TankStrapInfo.TemperatureF));
+                        cmd.Parameters.Add(new SqlParameter("@Feet", TankStrapInfo.Feet));
+                        cmd.Parameters.Add(new SqlParameter("@Inches", TankStrapInfo.Inches));
+                        cmd.Parameters.Add(new SqlParameter("@GalFromFtandIn", TankStrapInfo.GalFromFtandIn));
+                        cmd.Parameters.Add(new SqlParameter("@Fraction", TankStrapInfo.Fraction));
+                        cmd.Parameters.Add(new SqlParameter("@GalFromFraction", TankStrapInfo.GalFromFraction));
+                        cmd.Parameters.Add(new SqlParameter("@Conv", TankStrapInfo.Conv));
+                        cmd.Parameters.Add(new SqlParameter("@XGAL", TankStrapInfo.XGAL));
+                        cmd.ExecuteNonQuery();
+
+                    }
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+                string strErr = " Exception Error in DataProvider EditTankStrap(). Details: " + ex.ToString();
+                string strTankStrap = JsonConvert.SerializeObject(TankStrapInfo);
+                string msg = string.Concat("User called function with param TankStrapID =", TankStrapID.ToString(), ", TankStrapInfo =", strTankStrap,  " with exception  =", strErr);
+                MessageLog alog = new MessageLog(MessageType.Exception, msg);
+                logger.Error(alog.CreateAuditLogMessage());
+                throw;
+
+            }
+
+        }
+
+
+
+
 
         public List<LoadTypes> GetLoadTypes(bool? isUsedForInspections)
         {
